@@ -1,0 +1,328 @@
+/* The Place (#place) — T7 gallery. 8 polaroid photo cards in a CSS
+   multi-column masonry (3 ≥980 / 2 ≥640 / 1 below) + client lightbox.
+   Colors/fonts/shadows all via globals.css tokens. Captions + alt text
+   verbatim from docs/details.md §6. */
+
+.place {
+  padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
+  background: var(--parchment);
+}
+
+.place-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(40px, 5vw, 64px);
+}
+
+/* --- title + lede --- */
+
+.place-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.place-lede {
+  margin: 0;
+  max-width: 38em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-top: 16px;
+}
+
+/* --- masonry wall: CSS multi-column (documented call in the tsx) ---
+   Vertical rhythm lives on the items (columns don't support row-gap);
+   32px margin-bottom + 32px column-gap = ≥ 32px on both axes. The
+   container is a plain multi-col list — no flex/grid children inside
+   the fragment so `break-inside: avoid` keeps holding. */
+
+.place-wall {
+  columns: 1;
+  column-gap: 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.place-item {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  margin-bottom: 32px;
+}
+
+.place-item:last-child {
+  margin-bottom: 0;
+}
+
+/* --- taped-polaroid cards (same idiom as About, re-expressed locally) --- */
+
+.place-card {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: zoom-in;
+  font: inherit;
+  text-align: center;
+}
+
+/* tilt ≤ 1.5° total — alternating ±0.8°, clearly calmer than About's ±1.2°,
+   and hover never exceeds it (rotation settles to 0) */
+.place-tilt-l .place-shot {
+  transform: rotate(-0.8deg);
+}
+
+.place-tilt-r .place-shot {
+  transform: rotate(0.8deg);
+}
+
+.place-card .place-shot {
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.place-card:hover .place-shot,
+.place-card:focus-visible .place-shot {
+  transform: rotate(0deg) translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.place-shot {
+  position: relative;
+  margin: 14px 0 0;
+  background: var(--paper);
+  padding: 14px 14px 0;
+  box-shadow: var(--shadow-soft);
+  border-radius: 3px;
+}
+
+.place-shot .place-tape {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  translate: -50% 0;
+  rotate: -2deg;
+  z-index: 2;
+}
+
+.place-tilt-r .place-tape {
+  rotate: 2.5deg;
+}
+
+/* photo box = zero-CLS reserved aspect box (wide 3/2 · tall 2/3 · square 1/1) */
+.place-shot-photo {
+  position: relative;
+  width: 100%;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--kraft);
+  box-shadow: inset 0 0 0 1px #1e254014;
+}
+
+.place-ar-wide {
+  aspect-ratio: 3 / 2;
+}
+
+.place-ar-tall {
+  aspect-ratio: 2 / 3;
+}
+
+.place-ar-square {
+  aspect-ratio: 1 / 1;
+}
+
+.place-shot-cap {
+  padding: 12px 8px 14px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.08rem;
+  line-height: 1.35;
+  color: var(--ink);
+  text-align: center;
+}
+
+/* --- lightbox --- */
+
+.place-lb {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: rgba(30, 37, 64, 0.88);
+  padding: clamp(24px, 4vw, 48px) var(--gutter);
+}
+
+.place-lb-box {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  max-width: 100%;
+}
+
+.place-lb-fig {
+  margin: 0;
+  animation: place-lb-in 0.4s var(--ease) both;
+}
+
+@keyframes place-lb-in {
+  from {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes place-lb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* reserved box for the lightbox photo; aspect-ratio from the layout hint */
+.place-lb-photo {
+  position: relative;
+  height: min(72svh, 140vw);
+  aspect-ratio: var(--ar, auto);
+  max-width: calc(100vw - var(--gutter) * 2);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #1e254010;
+  box-shadow: 0 10px 24px rgba(30, 37, 64, 0.4);
+}
+
+.place-lb-photo.place-ar-wide {
+  --ar: 3 / 2;
+}
+
+.place-lb-photo.place-ar-tall {
+  --ar: 2 / 3;
+}
+
+.place-lb-photo.place-ar-square {
+  --ar: 1 / 1;
+}
+
+.place-lb-cap {
+  margin-top: 16px;
+  max-width: 38em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  color: var(--paper);
+  text-align: center;
+}
+
+.place-lb-close,
+.place-lb-nav {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.25s var(--ease),
+    background-color 0.25s,
+    box-shadow 0.25s var(--ease);
+}
+
+.place-lb-close:hover,
+.place-lb-nav:hover {
+  background: var(--mustard-soft);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.place-lb-close {
+  position: absolute;
+  top: calc(var(--gutter) * -1 + 4px);
+  right: 0;
+}
+
+.place-lb-nav {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+}
+
+.place-lb-prev {
+  left: -48px;
+}
+
+.place-lb-next {
+  right: -48px;
+}
+
+/* narrow screens: nav arrows sit outside the flow edges */
+@media (max-width: 760px) {
+  .place-lb {
+    padding-inline: 72px;
+  }
+
+  .place-lb-prev {
+    left: 8px;
+  }
+
+  .place-lb-next {
+    right: 8px;
+  }
+
+  .place-lb-close {
+    top: 10px;
+    right: 8px;
+  }
+
+  .place-lb-photo {
+    height: min(64svh, 120vw);
+  }
+}
+
+/* --- reduced motion: scale-in becomes a plain opacity fade (globals keeps
+     the kill-switch; this is the explicit per-section block) --- */
+@media (prefers-reduced-motion: reduce) {
+  .place-lb-fig {
+    animation: place-lb-fade 0.3s var(--ease) both;
+  }
+
+  .place-card .place-shot,
+  .place-lb-close,
+  .place-lb-nav {
+    transition: none;
+  }
+}
+
+/* --- responsive masonry --- */
+
+@media (min-width: 640px) {
+  .place-wall {
+    columns: 2;
+  }
+}
+
+@media (min-width: 980px) {
+  .place-wall {
+    columns: 3;
+  }
+}
