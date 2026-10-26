@@ -17,12 +17,12 @@
 
 ## T0 — Foundations
 
-- [ ] `npm install framer-motion lucide-react` (NO MapLibre — Visit uses a Google Maps iframe).
-- [ ] Download production photos from `https://notepad-opal-three.vercel.app/images/*` (cafe-01…cafe-20 webp, `-sm`/`-md` variants as needed) into `public/images/`; grab `/logo-256.png` as `public/logo.png`.
-- [ ] Fonts: load **Fraunces** (variable, italic axis) + **Gaegu** (400/700) via `next/font/google`; expose CSS vars `--font-display`, `--font-hand`.
-- [ ] Rewrite `app/globals.css`: Tailwind v4 import replaced with warm token block (`:root` + `@theme inline`), warm shadow utilities, tape/ruled-paper/polaroid utilities, reduced-motion kill-switch.
-- [ ] Rewrite `app/layout.tsx`: metadata title `NotePads Study Hub Cafe · Iloilo City`, description from docs/details.md, lang="en", theme-color `#b85433`.
-- [ ] **DoD:** `npm run dev` still starts; tokens visible when body bg set to `--parchment`.
+- [x] `npm install framer-motion lucide-react` (NO MapLibre — Visit uses a Google Maps iframe).
+- [x] Download production photos from `https://notepad-opal-three.vercel.app/images/*` into `public/images/` (35 images incl. `-sm/-md` variants, `building.webp`, `workshop-poster.webp`) + `public/logo.png` (from `/logo-256.png`).
+- [x] Fonts: **Fraunces** (variable, `style: ["normal","italic"]`, axes `opsz/SOFT/WONK`) + **Gaegu** (400/700) via `next/font/google`; CSS vars `--font-fraunces`/`--font-gaegu` mapped to `--font-display`/`--font-hand` in `@theme inline`. NOTE: passing `weight: [...]` with `axes` fails in Next 16.4.3 — variable fonts must omit `weight`.
+- [x] Rewrite `app/globals.css`: Tailwind v4 import replaced with warm token block (`:root` + `@theme inline`), warm shadow utilities, tape/ruled-paper/polaroid utilities, reduced-motion kill-switch.
+- [x] Rewrite `app/layout.tsx`: metadata title `NotePads Study Hub Cafe · Iloilo City`, description from docs/details.md, lang="en", `export const viewport { themeColor: "#b85433" }` (metadata.themeColor is invalid in this Next version).
+- [x] **DoD:** `npm run dev` starts ✓; HTTP 200 verified with title/theme-color/fonts preloading; tokens visible on body (`background: var(--parchment)`).
 
 ## T1 — Design artifacts
 
@@ -137,3 +137,5 @@
 | Date | Task | Result |
 |---|---|---|
 | 2026-10-26 | Plan approved | task.md created |
+| 2026-10-26 | ui_design.md updated | v2 "Warm Scholar" spec documented (v1 kept as appendix) |
+| 2026-10-26 | T0 Foundations | DONE — deps installed, 36 assets downloaded, tokens/layout rewritten; fixed next/font `axes`+`weight` conflict; dev verified HTTP 200 |

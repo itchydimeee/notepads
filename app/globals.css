@@ -1,26 +1,118 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --parchment: #f7f0e3;
+  --paper: #fcf9ef;
+  --kraft: #ead9bd;
+  --walnut: #34281b;
+  --bark: #6b5343;
+  --terra: #b85433;
+  --mustard: #e2b064;
+  --sage: #a7b087;
+  --forest: #3a4a2f;
+  --cobalt: #43568f;
+  --dusty: #97a5b8;
+  --overlay-deep: #1d2a56;
+  --sky-warm: #e8ddd0;
+  --sage-soft: #c9d0b4;
+  --mustard-soft: #f0d8a8;
+  --dusty-soft: #c2ccd8;
+  --shadow-soft: 0 6px 16px rgba(52, 40, 27, 0.12);
+  --shadow-lift: 0 10px 24px rgba(52, 40, 27, 0.16);
+  --shadow-stick: 6px 6px 0 #b8543333;
+  --nav-h: 72px;
+  --maxw: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-parchment: var(--parchment);
+  --color-paper: var(--paper);
+  --color-kraft: var(--kraft);
+  --color-walnut: var(--walnut);
+  --color-bark: var(--bark);
+  --color-terra: var(--terra);
+  --color-mustard: var(--mustard);
+  --color-sage: var(--sage);
+  --color-forest: var(--forest);
+  --color-cobalt: var(--cobalt);
+  --color-dusty: var(--dusty);
+  --color-overlay-deep: var(--overlay-deep);
+  --color-sky-warm: var(--sky-warm);
+  --color-sage-soft: var(--sage-soft);
+  --color-mustard-soft: var(--mustard-soft);
+  --color-dusty-soft: var(--dusty-soft);
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-hand: var(--font-gaegu), "Comic Sans MS", cursive;
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-stick: var(--shadow-stick);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--parchment);
+  color: var(--walnut);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.35rem;
+  line-height: 1.6;
+}
+
+::selection {
+  background: #b85433;
+  color: #fcf9ef;
+}
+
+:focus-visible {
+  outline: 3px solid var(--cobalt);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- small utility layer (BEM-ish, no component library) --- */
+
+.u-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #34281b14 0 1px,
+    transparent 1px 38px
+  );
+}
+
+.u-dotgrid {
+  background-image: radial-gradient(#34281b12 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.u-tape {
+  width: 92px;
+  height: 28px;
+  background: #e2b064b8;
+  clip-path: polygon(
+    0 8%, 12% 0, 25% 8%, 38% 0, 50% 8%, 62% 0, 75% 8%, 88% 0, 100% 8%,
+    100% 92%, 88% 100%, 75% 92%, 62% 100%, 50% 92%, 38% 100%, 25% 92%, 12% 100%, 0 92%
+  );
+  box-shadow: 0 1px 2px rgba(52, 40, 27, 0.12);
+}
+
+.u-polaroid {
+  background: var(--paper);
+  padding: 14px 14px 52px;
+  box-shadow: var(--shadow-soft);
+  border-radius: 3px;
+}
+
+.u-sticker {
+  box-shadow: var(--shadow-stick);
 }
