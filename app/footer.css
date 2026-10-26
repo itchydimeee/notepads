@@ -1,0 +1,216 @@
+/* T11 — Footer. Deep navy --forest #202a52 ground, parchment wave divider,
+   brand block + drawn socials row, Explore anchors, and two re-renders of
+   the shared ContactStrip retinted by overriding the .cs scope vars
+   (--cs-ink / --cs-muted / --cs-ico) — the retint route documented in the
+   contact-strip.css header; contact-strip.css itself is NOT touched.
+   All tones below carry their computed WCAG ratio on #202a52
+   (lum-navy L = 0.0257; ratio = (L+0.05)/0.0757):
+     #fcf9ef paper     ≈ 13.2:1  (labels, headings)
+     #f7f0e3 parchment ≈ 12.2:1  (brand line)
+     #c8d0e4 bio tone  ≈ 9.0:1   (bio, links, muted text)
+     #aeb9f2 blue-ico  ≈ 7.3:1   (strip icons + hover)
+     #e2b064 mustard   ≈ 7.0:1   (care line + doodles, ≥ 3:1 decor duty)
+   every text tone ≥ 4.5:1 (DoD); --blue #3d4bb8 itself is 1.9:1 on navy
+   and is therefore never used as text here. */
+
+.footer {
+  background: var(--forest);
+  min-width: 0;
+}
+
+/* --- wave divider: one crisp wave, parchment on navy ---------------------- */
+.footer-wave {
+  display: block;
+  width: 100%;
+  height: clamp(44px, 6vw, 72px);
+}
+
+.footer-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  width: 100%;
+  min-width: 0;
+  /* Footer ≠ cramped: generous padding-y above the cleanliness floor. */
+  padding: clamp(2rem, 5vw, 3.5rem) var(--gutter) clamp(2.5rem, 6vw, 4rem);
+}
+
+/* --- grid: brand LEFT + Explore / Visit / Say hello; stacked mobile ------- */
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px 48px; /* ≥ 32px floor */
+  align-items: start;
+  min-width: 0;
+}
+
+.footer-grid > * {
+  min-width: 0;
+}
+
+@media (min-width: 980px) {
+  .footer-grid {
+    grid-template-columns:
+      minmax(0, 1.35fr) minmax(0, 0.75fr) minmax(0, 1fr) minmax(0, 1.1fr);
+  }
+}
+
+/* --- navy retint of the shared ContactStrip --------------------------------
+   Scope override only — every strip tone satisfies ≥ 4.5:1 on #202a52
+   (values above). Marker underline tint raised to the light tone family so
+   the affordance survives on navy too. */
+.footer .cs {
+  --cs-ink: var(--paper);    /* 13.2:1 */
+  --cs-muted: #c8d0e4;       /*  9.0:1 */
+  --cs-ico: #aeb9f2;         /*  7.3:1 */
+}
+
+/* Uniform column headings: the strip's h4 joins the Fredoka 700 parchment
+   family of .footer-heading (weight/size only — structure is the contract). */
+.footer .cs .cs-heading {
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.14;
+}
+
+.footer .cs .cs-line-link a,
+.footer .cs .cs-socials a {
+  text-decoration-color: #c8d0e466;
+}
+
+/* --- brand block ----------------------------------------------------------- */
+.footer-brand {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.55rem;
+  line-height: 1.1;
+  letter-spacing: 0;
+  color: var(--parchment); /* 12.2:1 */
+}
+
+.footer-bio {
+  margin: 14px 0 0;
+  max-width: 30em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: #c8d0e4; /* 9.0:1 */
+}
+
+/* ☕ is content from details.md §10, kept literal — spacing only. */
+.footer-bio-glyph {
+  margin-left: 6px;
+}
+
+/* --- standalone social links row (drawn marks, doc aria-labels) ------------ */
+.footer-socials ul {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.footer-socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px; /* tap target floor */
+  border-radius: 10px;
+  color: #aeb9f2; /* 7.3:1 — UI-component non-text ≥ 3:1, well past */
+}
+
+.footer-socials a:hover {
+  color: var(--paper);
+}
+
+/* --- Explore column (§10 verbatim labels + §1 anchors) --------------------- */
+.footer-heading {
+  margin: 0 0 18px;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.35rem;
+  line-height: 1.14;
+  letter-spacing: 0;
+  color: var(--paper); /* 13.2:1 */
+  /* More space below the heading than... no — generous SEPARATION after,
+     tighter above, per the spacing craft check. */
+}
+
+.footer-explore {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-explore a {
+  display: inline-block;
+  padding: 5px 0; /* flow list — line-height carries the 44px row */
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: #c8d0e4; /* 9.0:1 */
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #c8d0e455;
+  text-underline-offset: 3px;
+}
+
+.footer-explore a:hover {
+  color: var(--paper); /* 13.2:1 */
+}
+
+/* --- bottom bar ------------------------------------------------------------ */
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid #c8d0e42e; /* one hairline; no elevation declared twice */
+  min-width: 0;
+}
+
+.footer-copyright {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #c8d0e4; /* 9.0:1 */
+}
+
+/* Care line: mustard accents kept — text 7.0:1, doodles are decorative
+   flavor ≥ 3:1, aria-hidden in the TSX. */
+.footer-care {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--mustard); /* 7.0:1 on navy — permitted here, banned on light */
+}
+
+.footer-care-doodle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--mustard); /* 7.0:1 ≥ the 3:1 decor mark duty */
+}
+
+/* Focus ring on navy: the global outline token --blue-deep is 1.26:1 here,
+   so inside the footer the ring runs in parchment instead (still 3px,
+   offset 3px, radius from globals). Global T13 pass owns everywhere else. */
+.footer a:focus-visible {
+  outline-color: var(--parchment);
+}

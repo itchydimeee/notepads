@@ -136,7 +136,8 @@ const SOCIAL_ICONS: ComponentType<MarkProps>[] = [
 /* --- props ----------------------------------------------------------------- */
 
 export type ContactStripProps = {
-  /** Gate each row; defaults switch all rows on. */
+  /** Gate rows: no `blocks` = all rows on; passing `blocks` = exactly the
+      listed rows render (omitted keys are OFF). */
   blocks?: {
     address?: boolean;
     hours?: boolean;
@@ -158,13 +159,24 @@ export default function ContactStrip({
   headingLevel = 3,
   compact = false,
 }: ContactStripProps) {
-  const show = {
-    address: blocks?.address ?? true,
-    hours: blocks?.hours ?? true,
-    contact: blocks?.contact ?? true,
-    email: blocks?.email ?? true,
-    socials: blocks?.socials ?? true,
-  };
+  // No `blocks` → all rows on. Passing `blocks` is OPT-IN: omitted rows
+  // stay OFF (this is what keeps the footer's Visit/Say-hello columns
+  // from rendering identical content).
+  const show = blocks
+    ? {
+        address: !!blocks.address,
+        hours: !!blocks.hours,
+        contact: !!blocks.contact,
+        email: !!blocks.email,
+        socials: !!blocks.socials,
+      }
+    : {
+        address: true,
+        hours: true,
+        contact: true,
+        email: true,
+        socials: true,
+      };
 
   const Heading = ("h" + String(headingLevel)) as "h2" | "h3" | "h4";
   const cls = compact ? "cs cs-compact" : "cs";

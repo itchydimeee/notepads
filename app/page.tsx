@@ -5,6 +5,7 @@ import Place from "./components/place";
 import Saturdays from "./components/saturdays";
 import Reviews from "./components/reviews";
 import Visit from "./components/visit";
+import Footer from "./components/footer";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <Saturdays />
       <Reviews />
       <Visit />
+      <Footer />
     </>
   );
 }
