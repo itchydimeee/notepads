@@ -1,0 +1,249 @@
+/* Reviews (#reviews) — T9. Fredoka H2 + drawn ★ summary + 5 index-card
+   reviews on the parchment ground in a NATIVE scroll-snap row (no JS).
+   All colors/fonts/shadows via globals.css tokens (Ink & Indigo).
+   Copy verbatim from docs/details.md §8. */
+
+/* --- section ground: parchment (free from the body) ---------------------- */
+
+.rev {
+  padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
+  background: var(--parchment);
+}
+
+.rev-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* --- title + summary (no eyebrow — banned) ------------------------------- */
+
+.rev-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* Fredoka 700 summary: drawn filled stars + the verbatim remainder
+   ("5.0 from 5 five-star reviews · drag to browse"). Mustard fill keeps the
+   stars seasoning-toned like the site's check bullets; ink stroke keeps
+   their edge defined on parchment. */
+.rev-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.rev-summary-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--ink);
+}
+
+.rev-summary-stars svg {
+  fill: var(--mustard);
+}
+
+/* --- the native scroll-snap row ------------------------------------------
+   The row bleeds out of the content band (negative margin = the section
+   gutter) and gives that margin back as its own edge padding, so the first
+   card's left edge sits exactly at the content/gutter line the H2 sits on,
+   and the last card can settle with a gutter of air after it.
+   scroll-padding-inline follows the same gutter, keeping snap-align: start
+   honest on every viewport. proximity (not mandatory) — kinder for long
+   quote cards that need partial swipes to read. */
+
+.rev-row {
+  display: flex;
+  gap: 24px;
+  margin: 40px calc(var(--gutter) * -1) 0;
+  padding: 4px var(--gutter) 16px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--gutter);
+  list-style: none;
+
+  /* browser surface themed from the palette: thin, ink-tinted, rounded —
+     never hidden (the drag/scroll affordance stays visible on desktop) */
+  scrollbar-width: thin;
+  scrollbar-color: #1e254033 transparent;
+}
+
+.rev-row::-webkit-scrollbar {
+  height: 8px;
+}
+
+.rev-row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rev-row::-webkit-scrollbar-thumb {
+  background: #1e254033;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* keyboard users focus the row (cards hold no focusable elements) and
+   arrow-key through it; the global :focus-visible outline marks it. */
+.rev-row:focus-visible {
+  outline: 3px solid var(--blue-deep);
+  outline-offset: 3px;
+  border-radius: 12px;
+}
+
+/* --- index cards ----------------------------------------------------------
+   Tone cycle across the 5 cards (no two neighbours alike): paper /
+   mustard-soft / paper / dusty-soft / mustard-soft — the v3 derived tints,
+   not raw seasonings. Ink text on all three stays ≥ 4.5:1. */
+
+.rev-card {
+  position: relative;
+  display: flex;
+  flex: 0 0 clamp(280px, 78vw, 420px);
+  flex-direction: column;
+  gap: 6px;
+  border-radius: 14px;
+  padding: 26px 28px 30px;
+  box-shadow: var(--shadow-soft);
+}
+
+.rev-card-paper {
+  background: var(--paper);
+}
+
+.rev-card-mustard {
+  background: var(--mustard-soft);
+}
+
+.rev-card-dusty {
+  background: var(--dusty-soft);
+}
+
+/* ruled index-card lines behind the quote (the subject's own world),
+   faintest ink tint so the text above keeps full contrast */
+.rev-quote {
+  position: relative;
+  z-index: 1;
+  margin: 14px 0 0;
+  padding-top: 14px;
+  border-top: 2px dotted #1e254026;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #1e254010 0 1px,
+    transparent 1px 33px
+  );
+  background-position: 0 15px;
+}
+
+.rev-quote p {
+  margin: 0;
+  max-width: 32em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* quote watermark: one drawn overlap glyph per card, oversized, at .01 under
+   the .12 cap — contextual card furniture, not a floating section motif
+   (floating décor budget for this section: 0 — nothing escapes the cards) */
+.rev-quote-mark {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  rotate: 7deg;
+  z-index: 0;
+  color: var(--ink);
+  opacity: 0.1;
+}
+
+.rev-quote-mark svg {
+  fill: currentColor;
+}
+
+/* card furniture stays above the watermark */
+.rev-card-head,
+.rev-name,
+.rev-role {
+  position: relative;
+  z-index: 1;
+}
+
+.rev-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rev-card-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--ink);
+}
+
+.rev-card-stars svg {
+  fill: var(--mustard);
+}
+
+/* screen-reader rating for the drawn star strip */
+.sr-only-note {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.rev-name {
+  margin: 4px 0 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* role: small Gaegu line, parens kept verbatim from the source layout.
+   Ink (not ink-soft) so every tint stays ≥ 4.5:1 — hierarchy comes from
+   size + face, never gray or opacity. */
+.rev-role {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+/* --- motion ---------------------------------------------------------------
+   Nothing to neutralize: this section authors no animation or transition
+   (no bespoke reveal — T13 owns the shared reveal). The native scroll-snap
+   row keeps working as-is with prefers-reduced-motion. */
+
+/* --- breakpoints ---------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .rev-card {
+    padding: 22px 24px 26px;
+  }
+}

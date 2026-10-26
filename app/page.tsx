@@ -3,6 +3,7 @@ import About from "./components/about";
 import Menu from "./components/menu";
 import Place from "./components/place";
 import Saturdays from "./components/saturdays";
+import Reviews from "./components/reviews";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Menu />
       <Place />
       <Saturdays />
+      <Reviews />
     </>
   );
 }
