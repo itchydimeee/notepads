@@ -1,0 +1,308 @@
+/* Hero — parchment opening with copy left, taped polaroids right.
+   Photos crossfade inside the front polaroid; the ground stays paper. */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  background-color: var(--parchment);
+  background-image:
+    repeating-linear-gradient(
+      transparent 0 37px,
+      #34281b0e 37px 38px
+    ),
+    radial-gradient(#34281b0c 1.2px, transparent 1.2px);
+  background-size:
+    100% 38px,
+    24px 24px;
+  overflow: hidden;
+  padding: calc(var(--nav-h) + 24px) var(--gutter) 72px;
+}
+
+.hero-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  gap: 48px;
+  justify-items: center;
+  align-items: center;
+}
+
+.hero-copy {
+  max-width: 34em;
+  justify-items: start;
+  display: grid;
+  gap: 22px;
+}
+
+.hero-title {
+  margin: 0;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-style: italic;
+  font-weight: 900;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  color: var(--walnut);
+}
+
+.scribble {
+  position: relative;
+  white-space: nowrap;
+}
+
+.scribble::after {
+  content: "";
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: -0.1em;
+  height: 0.34em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 Q 20 2 40 7 T 78 6 T 118 7' fill='none' stroke='%23e9c98a' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
+}
+
+.hero-lede {
+  margin: 0;
+  font-family: var(--font-gaegu), cursive;
+  font-size: clamp(1.25rem, 2vw, 1.45rem);
+  line-height: 1.6;
+  color: var(--bark);
+}
+
+.hero-lede strong {
+  color: var(--walnut);
+  font-weight: 700;
+}
+
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 40px;
+  padding: 4px 16px;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+  font-family: var(--font-gaegu), cursive;
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--walnut);
+}
+
+.chip-dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sage);
+}
+
+.chip-dot.is-open {
+  background: #4e8a5f;
+}
+
+.chip-dot.is-open::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #4e8a5f;
+  opacity: 0.45;
+  animation: chip-ping 2s ease-out infinite;
+}
+
+.chip-dot.is-closed {
+  background: #c06a5a;
+}
+
+@keyframes chip-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  70%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.chip.loc .chip-ico {
+  color: var(--terra);
+}
+
+/* --- polaroid stack --- */
+
+.hero-shots {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 4 / 3;
+  margin-top: 8px;
+}
+
+.shot {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.shot.is-back {
+  transform: rotate(4deg) translate(14px, 10px);
+  width: 88%;
+  height: 88%;
+  margin-left: auto;
+  margin-right: -8px;
+}
+
+.shot-frame {
+  background: var(--paper);
+  padding: 12px 12px 46px;
+  border-radius: 4px;
+  box-shadow: var(--shadow-lift);
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.shot-photo {
+  position: relative;
+  flex: 1;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #34281b10;
+}
+
+.shot-photo img {
+  transition: opacity 0.9s ease;
+}
+
+.shot.is-back .shot-cap {
+  opacity: 0.85;
+}
+
+.shot-cap {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  font-family: var(--font-gaegu), cursive;
+  color: var(--bark);
+  font-size: 1rem;
+  line-height: 1.3;
+  height: 2.6em;
+  overflow: hidden;
+}
+
+.shot .u-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  translate: -50% 0;
+  rotate: -2deg;
+  z-index: 2;
+}
+
+.shot.is-back .u-tape {
+  rotate: 3deg;
+}
+
+/* --- sparkles + scroll cue --- */
+
+.hero-spark {
+  position: absolute;
+  color: var(--mustard);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.hero-spark.a {
+  top: 18%;
+  right: 12%;
+  animation: spark-twinkle 3.6s ease-in-out infinite;
+}
+
+.hero-spark.b {
+  top: 54%;
+  right: 42%;
+  animation: spark-twinkle 4.4s ease-in-out 1.2s infinite;
+}
+
+@keyframes spark-twinkle {
+  0%,
+  100% {
+    opacity: 0.12;
+    transform: scale(0.85) rotate(0deg);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1) rotate(12deg);
+  }
+}
+
+.hero-scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  translate: -50% 0;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--bark);
+  text-decoration: none;
+  font-family: var(--font-gaegu), cursive;
+  font-size: 0.95rem;
+}
+
+.hero-scroll svg {
+  animation: bob 2.4s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(7px);
+  }
+}
+
+/* --- responsive --- */
+
+@media (min-width: 980px) {
+  .hero-inner {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 56px;
+  }
+
+  .hero {
+    padding-bottom: 88px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip-dot.is-open::after,
+  .hero-spark,
+  .hero-scroll svg {
+    animation: none;
+  }
+}

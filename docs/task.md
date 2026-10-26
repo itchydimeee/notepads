@@ -55,11 +55,14 @@
 
 ## T4 — Hero
 
-- [ ] Full-height `--parchment` hero; 4 rotating photos (cafe-10, cafe-16, cafe-05, cafe-12) crossfade 6s, walnut overlay gradient.
-- [ ] Kicker `Study hub cafe · Mandurriao, Iloilo`; H1 `Where learning meets comfort` with mustard scribble under "comfort"; lede from docs.
-- [ ] CTAs `Flip the menu book` → `#menu` (scrolls to menu) + `Find us` → `#visit`; live Open/Closed chip (Asia/Manila logic).
-- [ ] Bobbing scroll cue; sparkles ≤ 2, opacity ≤ .25.
-- [ ] **DoD:** LCP image preloaded; no layout shift on slide change.
+- [x] Full-height parchment hero (100svh min, 38px rulings + dot grid) — `app/hero.css` + client island `app/components/hero.tsx`; scaffold `app/page.tsx` replaced.
+- [x] Photos live inside **taped polaroid frames** (front frame crossfades 4 real photos w/ Gaegu captions on `.9s` ease every 6s; back polaroid static cafe-03 counter shot, tilted +4°) — warmer and lighter than the v1 dark full-bleed overlay. Alt text from docs/details.md. First slide `priority` preloaded (LCP).
+- [x] H1 `Where learning meets comfort` Fraunces italic 900 `clamp(2.4rem,6vw,4.8rem)` lh 1.06, mustard wavy scribble under "comfort" (SVG data-uri mask).
+- [x] Lede folds the location line (eyebrow BANNED per craft-floor — location became part of copy + a chip); 2-line max, 34em measure.
+- [x] CTAs: `See the menu` (`btn-terra`) → #menu + `Find us` (`btn-ghost`) → #visit. Renamed from "Flip the menu book" since the flip-book was dropped in the redesign.
+- [x] Live chips: Open/Closed w/ sage/green dot + ping, computed in Asia/Manila via Intl (open 7–22 Mon–Sat, 10–20 Sun; status renders only after hydration to avoid SSG clock staleness, falls back to full-hours chip); "Today …" chip; location chip with terra MapPin icon.
+- [x] Decor: exactly 2 sparkles (mustard, opacity ≤ .3, slow twinkle), bobbing scroll cue to #about. Slides pause when hero is off screen (IntersectionObserver).
+- [x] **DoD:** verified on dev — HTTP 200, hero SSRs incl. title/photos/CTAs; no layout shift on slide change (fixed aspect frame, absolute-positioned slides).
 
 ## T5 — About
 
@@ -148,3 +151,4 @@
 | 2026-10-26 | T1 Design artifacts | DONE — PRODUCT.md moved to docs/ (user preference, overrides root-path default); concept-seed run, Warm Scholar pinned + brick-instructions discipline raise; DESIGN.md dropped, ui_design.md = single design reference |
 | 2026-10-26 | T2 Preloader | DONE — static server-rendered sheet + inline script (800ms min / 2.5s cap, autofade fallback), warm tokens; craft-floor read → eyebrow device BANNED for T4–T6 (spec amendment: no kicker/eyebrow labels; location line joins the lede or a chip) |
 | 2026-10-26 | T3 Nav | DONE — fixed 72px header, frosted scroll state, brand lockup, 6 links w/ terra underlines, active-section IO, mobile circle-reveal sheet w/ Escape+scroll-lock, shared .btn system in globals, smooth anchors |
+| 2026-10-26 | T4 Hero | DONE — parchment hero, polaroid-frame crossfade slideshow (4 photos + captions), mustard scribble H1, live Asia/Manila open/closed chips, 2 CTAs, hydration-safe clock; page.tsx replaced; 2 spec deviations logged (no eyebrow, CTA renamed) |
