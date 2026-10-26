@@ -30,16 +30,17 @@
 - [x] Create `docs/PRODUCT.md` (product truth per impeccable init — platform, users, positioning, evidence, commitments).
 - [x] Run the concept-seed direction roll (direction is **user-pinned**: Warm Scholar per `docs/ui_design.md`; a brief-pinned decision beats the roll). Challenger verdicts recorded: brick-build-instructions holds the clarity axis → accepted as a discipline raise (menu = numbered chapters with one 1:1 featured callout per chapter + grid-module alignment); others declined.
 - [x] **Design reference = `docs/ui_design.md` (v2 spec) — do NOT create a separate DESIGN.md.** Surface direction contract for the landing page lives in the impeccable surface brief (build-internal note), not in `docs/` and never in shipped source.
-- [ ] Read `.agents/skills/impeccable/reference/craft-floor.md` before the first UI edit (T2).
-- [ ] **DoD:** PRODUCT.md + surface brief exist; ui_design.md covers the warm scholar world (palette, type, motifs, motion) and matches the token table above.
+- [x] Read `.agents/skills/impeccable/reference/craft-floor.md` before the first UI edit (T2) — flagged the eyebrow ban (applied in T2 status note) and warm-shadow/type rules.
+- [x] **DoD:** PRODUCT.md + surface brief exist; ui_design.md covers the warm scholar world (palette, type, motifs, motion) and matches the token table above.
 
 ## T2 — Preloader
 
-- [ ] Ruled-paper sheet on `--parchment` (38px rules `#34281b14`, red terracotta margin line, 3 punched holes).
-- [ ] Coffee cup + steam (2 CSS keyframes, slower/cuter), brand name Fraunces italic 900 revealed by Gaegu-style brush wipe with terra nib.
-- [ ] Rotating notes (4 strings from details.md), progress counter, exit `translateY(-104%) rotate(-1.2deg) .85s cubic-bezier(.76,0,.24,1)`.
-- [ ] Min-hold 800ms, hard cap 2.5s (shorter than live site's 4s); instant fade under reduced motion.
-- [ ] **DoD:** paint before JS (inlined or blocking-first style), removed from DOM after exit.
+- [x] Ruled-paper sheet on warm tokens (38px rules `#34281b14`, terracotta margin line `#b8543355`, 3 punched holes) — `app/preloader.css`.
+- [x] Coffee cup SVG + 3 steam strokes (CSS `pre-steam` keyframes 2.6s, staggered), brand name Fraunces italic 900 revealed by clip-path ink wipe driven by a terra nib (bar + glowing dot).
+- [x] Rotating notes (4 strings from details.md, 700ms cycle), progress counter (italic Fraunces, tabular), exit `translateY(-104%) rotate(-1.2deg) .85s cubic-bezier(.76,0,.24,1)`.
+- [x] Min-hold 800ms, hard cap 2.5s; reduced-motion = immediate fade (`.3s` opacity, no transform).
+- [x] Architecture: server-rendered static sheet in `app/components/preloader.tsx` (paints before hydration, mirrors the production site's inline pattern) + inline vanilla script; `pre-autofade` CSS fallback removes the sheet even if scripting is blocked; `html.is-preloading` locks scroll during hold.
+- [x] **DoD:** verified HTTP 200 on dev with preloader markup + script in initial HTML; sheet removed from DOM after exit.
 
 ## T3 — Nav
 
@@ -142,3 +143,4 @@
 | 2026-10-26 | ui_design.md updated | v2 "Warm Scholar" spec documented (v1 kept as appendix) |
 | 2026-10-26 | T0 Foundations | DONE — deps installed, 36 assets downloaded, tokens/layout rewritten; fixed next/font `axes`+`weight` conflict; dev verified HTTP 200 |
 | 2026-10-26 | T1 Design artifacts | DONE — PRODUCT.md moved to docs/ (user preference, overrides root-path default); concept-seed run, Warm Scholar pinned + brick-instructions discipline raise; DESIGN.md dropped, ui_design.md = single design reference |
+| 2026-10-26 | T2 Preloader | DONE — static server-rendered sheet + inline script (800ms min / 2.5s cap, autofade fallback), warm tokens; craft-floor read → eyebrow device BANNED for T4–T6 (spec amendment: no kicker/eyebrow labels; location line joins the lede or a chip) |

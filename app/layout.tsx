@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Gaegu } from "next/font/google";
 import "./globals.css";
+import Preloader from "./components/preloader";
+import "./preloader.css";
 
 // Next 16 type defs allow only ('SOFT' | 'WONK' | 'opsz') for Fraunces axes;
 // italics come via style: ["normal", "italic"] instead of an "ital" axis.
@@ -31,6 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body className={`${fraunces.variable} ${gaegu.variable}`}>
+        <Preloader />
         {children}
       </body>
     </html>
