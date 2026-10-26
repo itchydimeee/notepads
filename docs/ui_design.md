@@ -1,237 +1,173 @@
-# NotePads Study Hub Cafe — UI Design System Documentation
+# NotePads — UI Design Spec (v2 "Warm Scholar" Redesign)
 
-> Source: https://notepad-opal-three.vercel.app/
-> Stack: React 19.3 + Vite, Tailwind v4 (with shadcn/ui token layer), Framer Motion, Lenis 1.3.26 (smooth scroll), MapLibre GL (map, code-split), lucide icons.
-> All colors, timings, easings, and breakpoints below are literal values extracted from the production CSS/JS unless marked (inferred).
+> **Status: CURRENT spec for the local rebuild.** This document defines the redesigned UI to be built in `notepads/`.
+> The v1 spec (design system extracted from the live production site `notepad-opal-three.vercel.app`) is preserved verbatim as the **Appendix** at the bottom — it is the *incumbent evidence*, explicitly **not** the target look.
+> Why the redesign: the v1 UI reads as "too clamped up and hard to read" — 0.98 display line-heights, container-query menu typography, 10–18px minimum paddings, 3-column menu walls, and cold cream + hard-cobalt + hard black offset shadows.
+> The redesign keeps the site's **notebook/stationery identity and a similar palette family** but warms it, opens the spacing, and fixes every readability offender at the source.
+> Implementation checklist: `docs/task.md` (T0–T14). Content source of truth: `docs/details.md`.
 
-## 1. Design Concept
+## 0. Design Concept — "Warm Scholar"
 
-The entire UI is themed as a **notebook / stationery spread** — the visitor is "a scholar" writing in a study pad. Core visual metaphors:
+Keep the scholar/notebook world (taped polaroids, ruled paper, red margin line, punched holes, doodles, study-pun microcopy) but shift the ground from cold cream + hard blue to **parchment + walnut + terracotta**, and treat motifs as seasoning rather than wallpaper (lower opacity, more margin around them).
 
-- Ruled-paper and graph-paper backgrounds
-- A red margin rule down the left side
-- Punched binder holes
-- Masking tape holding photos and cards
-- Torn paper edges
-- Ink-writing reveals (clip-path wipe with a pen nib)
-- Hand-drawn doodles (coffee cup, bean, sparkle, squiggle, smiley, bee, cat)
-- Hard "sticker" offset shadows instead of soft blur shadows
-- Polaroid photo frames with handwritten captions
-- The menu rendered as a physical 3D flip-book
-- Study-pun microcopy everywhere (see `details.md`)
+| Principle | v1 (live site) | v2 (this spec) |
+|---|---|---|
+| Ground | cold cream `#f8f7f0` | warm parchment `#f7f0e3` |
+| Dominant text color | deep navy `#131c57` | warm walnut `#34281b` |
+| Primary accent | cobalt blue `#1c3aae` everywhere | **terracotta `#b85433`**; cobalt demoted to links/focus only |
+| Shadows | `4px 4px 0 var(--ink)` hard black offsets | warm soft offsets (`rgba(52,40,27,.12)`), sticker shadow on CTAs only |
+| Display line-height | `.98` | `1.06–1.1` |
+| Body type | 1.28rem / lh 1.5 in `cqw` units on menu | fixed rem, lh `1.55–1.65`, max-width `38em`, no `cqw` text |
+| Menu | 3D flip-book + 3-column list wall | **warm tabbed chapters** |
+| Reviews | physics-drifting carousel | native scroll-snap cards |
+| Preloader hold | up to 4s | ≤ 2.5s hard cap |
+| Section padding-y | varies, tight | `clamp(4rem, 10vw, 7.5rem)` minimum |
 
-## 2. Color Palette
+## 1. Color Palette (v2 tokens — canonical)
 
-### Brand tokens (`:root`)
+### Core tokens (`:root`)
 
 | Token | Value | Usage |
 |---|---|---|
-| `--cream` | `#f8f7f0` | Body background, punch-hole fill |
-| `--paper` | `#fbfaf4` | Cards, preloader bg, light surfaces |
-| `--sand` | `#e8dcc3` / `#efe9d6` | Menu section background |
-| `--kraft` | `#e8dcc3` | Events section (kraft/graph paper) |
-| `--ink` | `#131c57` | Primary text, hard-shadow color |
-| `--ink-soft` | `#3b4686` | Secondary text |
-| `--cobalt` | `#1c3aae` | Primary brand blue — buttons, accents, selection, focus ring, `theme-color` |
-| `--cobalt-deep` | `#12276f` | Hero background |
-| `--sky` | `#dfe6fa` | Hover wash, chip backgrounds |
-| `--forest` | `#2d3a22` | Menu-book pages, wave shape |
-| `--terra` | `#c0451c` | Pen-nib red, margin lines, baked-goods pages, stars |
-| `--sage` | `#a9b48a` | Workshop card tone |
-| `--mustard` | `#e9b96e` | Accents, stars, tape, scribble highlights |
-| `--dusty` | `#8fa3bf` | Workshop card tone |
-| `--nav-h` | `76px` | Fixed header height |
+| `--parchment` | `#f7f0e3` | Body background (global ground) |
+| `--paper` | `#fcf9ef` | Cards, nav sheet, chat panel, light surfaces |
+| `--kraft` | `#ead9bd` | Alternating section backgrounds (menu, workshops) |
+| `--walnut` | `#34281b` | Primary text; soft-shadow tint base; dark doodles |
+| `--bark` | `#6b5343` | Secondary text, descriptions, captions (audit ≥ 4.5:1 on `--parchment`; darken to `#5c4636` if it fails) |
+| `--terra` | `#b85433` | Primary accent: CTAs, eyebrow ticks, margin lines, pen nib, stars, "save" notes, motto |
+| `--mustard` | `#e2b064` | Tape, scribble highlights, check bullets, star markers, warm chip fill |
+| `--sage` | `#a7b087` | Workshops/positive accents, session card tone |
+| `--forest` | `#3a4a2f` | Footer background, menu chapter headers, wave divider base |
+| `--cobalt` | `#43568f` | **Links, focus rings, status accents only** (never a section background or dominant fill) |
+| `--dusty` | `#97a5b8` | Neutral card tone (3rd workshop card) |
+| `--overlay-deep` | `#1d2a56` | Photo overlay shade on hero/lightbox ONLY (nearly invisible as a "color") |
+| `--nav-h` | `72px` | Fixed header height (was 76) |
 | `--maxw` | `1200px` | Content max width |
-| `--gutter` | `clamp(18px, 4vw, 48px)` | Page side padding |
-| `--ease` | `cubic-bezier(.22, 1, .36, 1)` | Default easing |
+| `--gutter` | `clamp(20px, 5vw, 64px)` | Page side padding (floor raised from 18px) |
+| `--ease` | `cubic-bezier(.22, 1, .36, 1)` | Single shared easing |
 
-### Derived / one-off values
+### Derived / utility values
 
-- Ruled lines: `#1c3aae21` (preloader), `#131c5714` (menu dots, graph grid)
-- Dotted grid: `#131c5712` (preloader, chat), `#131c5721` (menu section)
-- Margin line: `#c0451c73`; pen-nib glow: `#c0451c80`
-- Hero photo shades: `#0e164a` family at various alphas
-- Lightbox scrim: `#0a1034eb`; deep section shades: `#0a1034` family
-- Open/closed status dots: `#4ade80` (open, animated ping), `#f87171` (closed)
-- Tape: `#e9b96eb8` with `0 1px 2px #0000001f` shadow
-- Nav (scrolled): frosted `#f8f7f0e6` + `blur(14px) saturate(1.3)`
+- Ruled paper lines: `#34281b14` (graph/ruled grids; replaces cold blue rules)
+- Dotted grid: `#34281b12`
+- Margin line: `#b8543355` (terracotta at half alpha)
+- Status dots: open `#4e8a5f` (warm green, was `#4ade80`), closed `#c06a5a`
+- Tape: `#e2b064b8`, shadow `0 1px 2px rgba(52,40,27,.12)`
+- Tinted card tones: sage-soft `#c9d0b4`, mustard-soft `#f0d8a8`, dusty-soft `#c2ccd8`
+- Dark section (footer/hero overlay): `#2a2116`–`#34281b` range only, never blue
 
-### Tailwind/shadcn token layer (coexisting)
-
-`--background: #f8f7f0` · `--foreground: #131c57` · `--card: #fbfaf4` · `--primary: #1c3aae` · `--primary-foreground: #fbfaf4` · `--secondary: #e6ebfa` · `--ring: #1c3aae` · `--radius: 1rem`. A `.dark` block exists (shadcn boilerplate) but no dark-mode toggle is wired up the UI (inferred: unused).
-
-- Text selection: `background: var(--cobalt); color: var(--paper)`
-- Focus: `:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; border-radius: 6px }`
-
-## 3. Typography
-
-| Role | Font | Sample styling |
-|---|---|---|
-| Display (headings, brand) | **Fraunces** — Google Fonts variable serif (`ital,opsz,wght@0,9..144,400..900;1,…`) | Italic 900, `font-variation-settings: "opsz" 144, "SOFT" 100`, `letter-spacing: -.02em`, `line-height: .98` |
-| Body / handwriting | **Gaegu** (`wght@400;700`) | Body uses Gaegu 400 at `1.28rem`, `line-height: 1.5` |
-| Fallback stacks | `--font-display: "Fraunces", Georgia, serif` · `--font-hand: "Gaegu", Comic Sans MS, cursive` | |
-
-Fluid scale:
-
-- Site H2: `clamp(2.6rem, 6.4vw, 5.2rem)`
-- Hero title: `clamp(2.5rem, 7vw, 5.4rem)`
-- Lede: `clamp(1.3rem, 2vw, 1.55rem)`, max-width `34em`
-- Eyebrow: Gaegu 700, `1.15rem`, `letter-spacing: .22em`, uppercase, cobalt, with a `34px × 2px` tick line
-- Nav brand: Fraunces italic 900 `1.55rem`; mobile sheet links Fraunces italic 900 `clamp(2.6rem, 11vw, 4rem)`
-- **Menu book pages** use container-query units (`cqw`): page base `2.9cqw/1.25`; `.pg-title` `7.4cqw` Fraunces 900 italic (cover word `menu` up to `19cqw` lowercase); dish names `4.3cqw/800 italic`; prices `4cqw/900 italic`; page numbers `3.4cqw` at opacity `.55`
-
-## 4. Section Anatomy & Components
-
-### Preloader (inlined so it paints with first byte of HTML)
-
-- Notebook sheet on `#fbfaf4`: 38px repeating ruled lines `#1c3aae21` over a 24px dotted grid `#131c5712`; red margin rule `#c0451c73` (2px) at `clamp(34px, 7vw, 92px)`; three punched holes with `inset 0 2px 4px #131c5747`
-- Coffee cup SVG with 3 staggered steam paths (opacity `.18→.7`, translateY)
-- Brand name in Fraunces italic 900 with an ink-write reveal: ghost text at `#1c3aae21` + clip-path `inset(0 100% -20% 0)` wiping in, tracked by a `#c0451c` pen nib (2.5px bar + 9px glowing dot)
-- 320px progress rule; cycling loading notes; italic page-number percentage counter
-- Exit: `translateY(-104%) rotate(-1.2deg)` over `.85s cubic-bezier(.76,0,.24,1)`
-- Handshake: `window.__notepadsReady()` (fonts ready + hero image decoded; 3.5s fallback, 4s hard cap)
-
-### Nav
-
-- Fixed 76px header, transparent over hero → frosted paper when scrolled (`.is-scrolled`)
-- Circular logo, animated scaleX underline links (`transform .4s var(--ease)`)
-- "See the menu" CTA; burger opens a full-screen cobalt `.nav-sheet` with a circular clip-path reveal (`clip-path: circle(0%→150%)`, `.6s cubic-bezier(.76,0,.24,1)`) and staggered links (`.2s + i × .06s`)
-- Active-section tracking via IntersectionObserver (`-45% 0px -50% 0px`)
-
-### Hero
-
-- `100svh`, `--cobalt-deep` background, 7-photo Ken Burns slideshow (`8.5s linear forwards`, scale 1.12→1.02; auto-advance 6.5s, crossfade 1.6s, paused offscreen via IntersectionObserver)
-- Spring-in logo medallion (spring: `stiffness: 120, damping: 12, delay: .15`) with `0 0 0 3px var(--cobalt)` ring
-- Glass status chips (`#fbfaf41f` bg / `#fbfaf48c` border) with live Open/Closed logic + `ping` dot
-- Mustard scribble-highlight under key title words (`.scribble:after` masked wavy underline)
-- Bobbing scroll cue (`2.4s ease-in-out infinite`, translateY 8px), twinkling sparkles, squiggle doodle
-
-### About & Package
-
-- Display head + lede; stat cards (`2 hrs / ₱40 / 7–10`)
-- Three taped polaroids (rotate −5°/4°/−3°, hover flattens + scale 1.03)
-- Floating hand-drawn doodles at opacity .22
-- Amenity grid: cobalt icon circles; hover `translateY(-6px) rotate(-1deg)` + sky bg + cobalt shadow
-- Cobalt "Study Space Package" ticket card with cream punch holes and dashed perforation + mustard check bullets
-
-### Menu (centerpiece: the flip-book)
-
-- Sand background with cobalt radial glow and masked dot grid; Book/List segmented toggle
-- Book: `perspective: 2600px`; 12 page-spreads as 3D sheets; page flip `.62s cubic-bezier(.4,.02,.2,1)` (rotateY 0↔−180 via Framer Motion MotionValues); spread slide `.55s`; edge "peek" hover `.45s`
-- Layered page-edge shadows (`2px 1px #ebe6d6 … 9px 8px 18px #131c574d`), spine line, gutter gradients
-- Interactive: drag / tap edge / ← → keys / aria (`role=group`, `aria-roledescription=book`, live-region page status)
-- Chapters: forest-green coffee pages, terra baked goods pages with hand-drawn frame, torn-paper photo strips (JS seeded-random `polygon()` clip-paths)
-- Switches to single-page mode below `820px` (`matchMedia`)
-- List fallback: 3-column CSS layout of `.ml-card`s with dotted price leaders `#131c5740`
-
-### Gallery ("The Place")
-
-- 4-col dense mosaic of polaroid shots (`padding: 10px 10px 40px`, caption strip, ±1.8° tilt, taped corners)
-- Zoom-in hover badge; lightbox: `.25s` scrim fade, figure scale `.94→1` over `.4s cubic-bezier(.22,1,.36,1)`, Escape + arrow keys, swipe if drag > 90px
-
-### Saturday Workshops (Events)
-
-- Kraft-graph background: `repeating-linear-gradient` 40px grid `#131c5714` on both axes
-- Sticky taped poster (rotate −2.5°), cobalt title card (−.6°)
-- Session cards in sage/mustard/dusty tones with tape, date chips; past dates dimmed + badge-check
-- "What's included" dashed-border card; pricing table with dashed separators and terra "save ₱300/400" notes
-- Cobalt reserve panel with light ghost buttons; terra motto line
-
-### Reviews
-
-- Cobalt section with rain of review dots; 5.0★ summary
-- Self-drifting drag carousel (velocity-based, not a marquee): drift 34px/s, drag momentum with decay `0.04^t`, arrows add ±900 velocity; 3 duplicated sets for seamless wrap; masked edges
-- Index-card styled review cards (paper/mustard/sky variants), quote watermark at opacity .16, offset shadow `8px 10px #0a103473`, cobalt avatar initials
-
-### Location (Visit)
-
-- Info card (address/hours/phone/socials with lift-and-tilt icon hovers) beside a lazy MapLibre map in a cobalt-shadowed frame
-- Pulsing logo pin (`pinring`: scale 2.1 fade, 2.4s), paper popup card, zoom/fullscreen controls
-
-### Footer
-
-- Ink (`#131c57`) background with a flipped cream wave SVG on top
-- 4-col grid, mustard headings, dashed top rule, doodle sign-off `brewed with care` (cup/bean/sparkle SVGs)
-
-### Chat Widget "Notey"
-
-- Lazy chunk; 64px cobalt FAB (`border: 3px solid var(--ink)`, `4px 4px 0` shadow); speech-bubble nudge (`border-radius: 999px 999px 4px`)
-- 400×620 paper panel (`3px` border, `8px 8px 0` hard shadow + soft shadow), dotted-grid scroll area, dashed separators
-- Gaegu bubbles: bot on paper, user on cobalt; typing dots (`blink`, 1.1s, 3 dots staggered); quick-reply chips; pill input
-
-## 5. Motion Inventory
-
-All motion is reduced-motion aware — a global kill-switch at the end of the stylesheet:
+### Shadows (empty until replaced — every v1 hard-black shadow is banned)
 
 ```css
-@media (prefers-reduced-motion: reduce) {
-  * { transition-duration: .001ms !important; animation-duration: .001ms !important;
-      animation-iteration-count: 1 !important; }
-}
+--shadow-soft:  0 6px 16px rgba(52,40,27,.12);   /* default card */
+--shadow-lift:  0 10px 24px rgba(52,40,27,.16);  /* hover lift */
+--shadow-stick: 6px 6px 0 #b8543333;             /* CTA "sticker" moment only */
 ```
 
-Plus targeted handling: preloader fades via opacity `.3s`, Lenis scrolls instantly (duration 0, `smoothWheel: false`), book flips become instant, hero shows a static image.
+Selection: `background: #b85433; color: #fcf9ef`. Focus: `outline: 3px solid #43568f; outline-offset: 3px; border-radius: 6px`.
 
-| Effect | Timing / easing | Source |
+## 2. Typography
+
+| Role | Font | v2 rules |
 |---|---|---|
-| Preloader steam | `2.4s ease-in-out infinite`, delays .35s/.7s | CSS `pre-steam` |
-| Preloader exit | `.85s cubic-bezier(.76,0,.24,1)` translateY(-104%) + rotate(-1.2deg) | CSS/vanilla JS |
-| Hero Ken Burns | `8.5s linear` scale 1.12→1.02; crossfade 1.6s | CSS `kenburns` |
-| Twinkle doodles | `3.2s/4s/5s ease-in-out infinite` | CSS `twinkle` |
-| Open-dot ping | `2s infinite` scale 1→3.2 | CSS `ping` |
-| Scroll cue bob | `2.4s` translateY 8px | CSS `bob` |
-| Book flip | `.62s cubic-bezier(.4,.02,.2,1)` rotateY 0↔−180 | Framer Motion |
-| Nav underline / scrolled | `.4s var(--ease)` | CSS |
-| Nav sheet reveal | `.6s cubic-bezier(.76,0,.24,1)` clip-path circle | CSS |
-| Buttons | shadow/transform `.35s var(--ease)`; hover shadow 4px→7px + translate(−2px,−2px); active 1px + translate(2px,2px) | CSS |
-| Amenity cards | hover `translateY(-6px) rotate(-1deg)` `.4s` | CSS |
-| Scroll reveals (shared `Reveal`) | Framer Motion `whileInView`: duration `.9`, ease `[.22,1,.36,1]`, y:36, once, viewport −80px | JS |
-| Polaroids / gallery | 1s / .8s staggered entrances; hover rotate→0, scale 1.025–1.03 | Framer Motion |
-| Map pin ring | `2.4s ease-out infinite` | CSS `pinring` |
-| Chat typing dots | `1.1s infinite`, delays .18s/.36s | CSS `blink` |
-| Reviews carousel | rAF physics: 34px/s drift, drag momentum, decay `0.04^t` | JS |
-| Smooth scroll (Lenis) | duration `1.15`, exponential easing, `autoRaf`; anchor scrolls ~1.6s, nav offset 76px | JS |
+| Display | **Fraunces** variable (ital, opsz, wght 400–900), italic 700–900 | `line-height: 1.06–1.1` (v1: .98); `letter-spacing: -0.01em` (v1: -.02em); opsz max 144 |
+| Body / hand | **Gaegu** 400/700 | `1.35rem`, `line-height: 1.55–1.65`, max-width `38em` (v1: 1.28rem / 1.5 / 34em) |
+| Stacks | `--font-display: "Fraunces", Georgia, serif` · `--font-hand: "Gaegu", "Comic Sans MS", cursive` | loaded via `next/font/google`, CSS vars |
 
-## 6. Responsive Breakpoints
+Fluid scale (higher floors than v1, less aggressive max so big text never fights dense text):
 
-All literal, CSS + JS (`matchMedia`):
+- Site H2: `clamp(2.2rem, 5vw, 4.4rem)`
+- Hero title: `clamp(2.4rem, 6vw, 4.8rem)`
+- Lede: `clamp(1.25rem, 2vw, 1.5rem)`
+- Eyebrow: Gaegu 700 `1.05–1.15rem`, `letter-spacing: .18em` (v1: .22em), uppercase, terracotta + `30px × 2px` tick
+- Nav brand: Fraunces italic 900 `1.5rem`; mobile sheet links `clamp(1.8rem, 6vw, 3rem)` (v1: up to 4rem)
+- **Menu text: fixed rem only** — dish names `1.05–1.15rem/800`, prices `1rem–1.1rem/700 tabular-nums`, no `cqw` anywhere, no opacity-below-.6 on text (v1 page numbers at .55 are banned)
 
-| Breakpoint | Effect |
-|---|---|
-| ≤ 520px | Amenities, collage, mosaic, chat stack |
-| ≤ 560px | Footer stacks |
-| ≤ 620px | Sessions / inclusions grids |
-| ≤ 640px | Lightbox arrows + hero scroll cue/squiggle hidden |
-| ≤ 820px | Menu book typography bump; JS switches book to **single-page mode** |
-| ≤ 899px | Chat nudge hidden |
-| ≤ 900px | Mosaic → 2 columns |
-| ≤ 920px | Nav collapses to burger; location section stacks |
-| ≤ 980px | About / package / events sections stack |
+## 3. Spacing & Density Rules
 
-Lazy-mount IntersectionObserver gates: 700px (menu book), 900px (map min-height), 1000px (Location & Chatbot chunks). Tailwind container scale: 40/48/64/80/96rem.
+- Spacing scale: `4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96` (px). No in-between odd values except clamp() fluid formulas.
+- Section padding-y: `clamp(4rem, 10vw, 7.5rem)` — non-negotiable floor of 4rem on mobile.
+- Card padding: ≥ 24px on all content-bearing cards (v1 polaroids at 10px are banned).
+- Line-length: prose ≤ `38em`; price lists ≤ 720px wide.
+- Max visible density: menu shows 6–10 items per active tab; workshops split into card tiles instead of enumerated walls; gallery dedup photos (8 max) vs v1's 11 photo surfaces.
+- Doodles/decor: opacity ≤ .25 for floating motifs; never adjacent to body text.
 
-## 7. CSS Architecture
+## 4. Section-by-Section v2 Anatomy
 
-- **Two stacked token systems:**
-  1. Tailwind v4 `@theme` + shadcn/ui layer (oklch values, `--radius: 1rem`, `.dark` variant) — used by primitive components (chat form, controls)
-  2. Hand-authored brand layer (`--cream … --dusty`, `--font-display/--font-hand`, `--ease`, `--nav-h`, `--maxw`, `--gutter`) — powers the custom design system
-- **Layers:** Tailwind `@layer properties/theme/base/utilities` + `@property` registrations for custom properties (transform/shadow/scroll-fade/shimmer), then a fully custom component layer with terse BEM-ish class names (`.btn`, `.nav`, `.hero-*`, `.pg-*`, `.pg-num...`, `.rv-*`, `.ev-*`, `.chat-*`)
-- **Layout techniques:** container queries (`container-type: size` on book faces, `cqw` page typography), `clamp()` fluid type/spacing, CSS columns (menu list), mask fades
-- **Performance:** inlined preloader CSS (paints before JS), font preconnect/preload, code-split Chatbot/Location chunks, responsive `-sm/-md.webp` image variants, hero preload + decode handshake, next-slide preloading
-- **Libraries:** Framer Motion (reveals, springs, drag, 3D book), Lenis (smooth scroll, `respectReducedMotion`), MapLibre GL (code-split), lucide icons; ambient loops pure CSS keyframes
+1. **Preloader** — ruled-parchment sheet, 3 punched holes, terracotta margin line, steam cup (slower keyframes), Fraunces italic 900 name reveal with terra nib, rotating notes (4 strings), progress counter. Exit `.85s cubic-bezier(.76,0,.24,1)` translateY(-104%) rotate(-1.2deg). Min-hold 800ms, cap 2.5s; reduced-motion = simple fade.
+2. **Nav** — fixed 72px; transparent → frosted `#fcf9e6e6` blur(12px) on scroll; circular logo; scaleX underline links; CTA "See the menu" as terra sticker button; mobile burger → clip-path circle sheet on parchment.
+3. **Hero** — 100svh `--parchment`; 4 rotating photos (cafe-10/16/05/12) crossfade 6s under a walnut `#2a2116` gradient overlay ≥ 45% at text side; kicker + H1 + lede; 2 CTAs; live Open/Closed chip (Asia/Manila); 2 sparkles max.
+4. **About** — H2 + 2 short lede paragraphs (38em), stat cards (`2 hrs`/`₱40`/`7–10`) padded ≥ 24px, ≤ 2 taped polaroids, 8-amenity grid with terra icon circles, ₱350 Study Space Package ticket card (punch holes + dashed perforation, mustard checks).
+5. **Menu (tabbed)** — `--kraft` bg + soft walnut dot grid; category chip tabs; per-tab airy price rows (name + dotted leader `#34281b26` + tabular price), terracotta `*` markers for "printed menu" items; ₱350 welcome ticket on top; mobile = scrollable chip row; ARIA tablist + arrow keys.
+6. **The Place** — 8 polaroid photos (captions from details.md), CSS masonry 3/2/1, tilt ≤ 1.5°, lightbox scrim `rgba(42,33,22,.88)`, keyboard + swipe.
+7. **Saturdays** — kraft memo board; `No Gadget Kids Workshops` + `Learn · Create · Imagine`; 3 session cards (sage/mustard-soft/dusty-soft) w/ 2026 dates (past dimmed + ✓); inclusions chips; pricing rows (₱1,299 / ₱2,298 save ₱300 / ₱3,497 save ₱400); reserve panel with terra ghost buttons; motto terracotta `Because the best things happen offline.`
+8. **Reviews** — ★5.0 summary; 5 index cards in a native scroll-snap row (NO JS drift carousel); paper/mustard-soft/sky-warm tints; quote watermark ≤ .12.
+9. **Visit** — H2 `Find your seat`; **shared `ContactStrip`** (address lines, hours, phone/WhatsApp, email, socials) reused by footer; Google Maps **iframe embed** (lazy) in warm-framed card; `Get directions`; approximate-pin note.
+10. **Footer** — `--forest` bg with parchment wave divider; Explore links; ContactStrip reprise; `brewed with care` doodles; link contrast ≥ 4.5:1 on forest.
+11. **Notey chatbot** — 56px terra FAB (`--shadow-stick`), dismissible nudge; 380×600 `--paper` panel with dotted-grid scroll area, dashed separators, Gaegu bubbles (bot paper / user terra), typing dots, quick-reply chips, pill input. Intent KB = port of details.md table (menus, rates, hours w/ live status, location, contact, recommend, workshops, unknown-handlers for payment/parking/delivery/diets/pets, thanks/bye).
 
-## 8. Accessibility Notes
+## 5. Motion (v2 rules)
 
-- `prefers-reduced-motion` honored in 4 independent places (global CSS kill-switch, preloader fade, Lenis instant mode, instant book flips + static hero)
-- Focus-visible cobalt outline (3px, offset 3px)
-- Full keyboard support on the book (arrow keys), lightbox (Escape/arrows), carousel (drag with ARIA announcement)
-- ARIA roles/labels throughout: `aria-roledescription="book"`, carousel drag hint, dialog lightbox, live-region page status, labeled controls (`Zoom in`, `Toggle fullscreen`, etc.)
+- **One shared easing** `--ease: cubic-bezier(.22,1,.36,1)` for all transitions; reveal = rise 28px + fade, duration .8s, stagger `i × 60ms` max, once, viewport −72px.
+- Ambient loops (steam, twinkle ≤2 items, bob, typing dots) remain pure CSS, slower and softer than v1.
+- Hero: crossfade 6s (no Ken Burns zoom — calmer); lightbox scale .96→1 `.4s`; buttons lift `--shadow-soft → --shadow-lift` + translateY(-2px) `.25s`.
+- Smooth scroll: native `scroll-behavior: smooth` OR Lenis duration 1.0 — pick one, no library unless needed.
+- Reduced motion: global kill-switch (`transition/animation-duration: .001ms!important; iteration-count:1!important`), preloader fade, hero static photo, scroll-snap rows still work.
 
-## 9. Design Takeaways (for building a similar site)
+## 6. Accessibility (v2 minimums)
 
-1. Lead with one strong metaphor and commit everywhere — notebook paper, flip-book menu, scholar microcopy, doodles, tape.
-2. Hard offset shadows (`Npx Npx 0 var(--ink)`) give a sticker/print character while staying cheap to render.
-3. Pair a variable serif display (Fraunces italic 900) with a handwriting font (Gaegu) — display hierarchy carries the design.
-4. Ambient motion (steam, twinkle, bob, drift) comes from short pure-CSS keyframes; entrance/interaction motion from Framer Motion with a single shared easing `[.22,1,.36,1]`.
-5. Respect reduced motion as a first-class mode, not an afterthought.
-6. Turn the biggest product surface (the menu) into the signature interaction (3D book) with a pragmatic list fallback and print-photo lightbox.
+- Contrast: `--bark` on `--parchment` ≥ 4.5:1; white/parchment text on `--forest` ≥ 4.5:1; `--mustard` never used as text color on light ground (decoration only).
+- Focus-visible: 3px cobalt outline offset 3px, radius 6px, everywhere.
+- Tap targets ≥ 44px; menu tabs keyboard-switchable; lightbox Escape/arrows; chatbot Escape closes; skip-to-content link.
+- Bike-shed rule: any icon-only control gets an aria-label from details.md vocabulary.
+
+## 7. CSS Architecture (v2)
+
+- Tailwind v4 (`@import "tailwindcss"`) + `@theme inline` mapping the token names and font vars.
+- Custom component layer with BEM-ish names (`.nav`, `.hero`, `.menu-tabs`, `.tab-row`, `.card-polaroid`, `.tape`, `.chip`, `.btn-terra`, `.btn-ghost`, `.chat-*`) — same naming spirit as v1, warm values.
+- Utilities: `.tape` (mustard zigzag), `.ruled` (38px lines), `.dotted-grid`, `.polaroid`, `.sticker` (sticker shadow), `Reveal` (shared Framer Motion wrapper targeting `opacity 0→1, y 28→0`).
+- Framer Motion for enter/reveal/springs only; ambient loops in CSS; no physics carousels.
+
+---
+
+# Appendix — v1 Production Reference (extraction, 2026-10-26)
+
+> The original design system extracted from `https://notepad-opal-three.vercel.app/` (React 19.3 + Vite, Tailwind v4 + shadcn tokens, Framer Motion, Lenis 1.3.26, MapLibre GL, lucide). Preserved for evidence and content-parity checks. **Do not reuse its cold tokens, hard shadows, or density values — the v2 spec above replaces them.** Items below marked (inferred) were not literal source values.
+
+## A1. v1 Palette (superseded)
+
+| Token | Value | Usage |
+|---|---|---|
+| `--cream` `#f8f7f0` | body bg | cold ground (v2 → parchment) |
+| `--paper` `#fbfaf4` | cards | (v2 → warmer) |
+| `--sand` `#efe9d6`/`--kraft` `#e8dcc3` | menu/events bg | (v2 → kraft `#ead9bd`) |
+| `--ink` `#131c57` | text + hard shadows | (v2 → walnut) |
+| `--ink-soft` `#3b4686` | secondary text | (v2 → bark) |
+| `--cobalt` `#1c3aae` / `--cobalt-deep` `#12276f` | brand-dominant | (v2 → demoted `#43568f`, overlay `#1d2a56`) |
+| `--sky` `#dfe6fa`, `--forest` `#2d3a22`, `--terra` `#c0451c`, `--sage` `#a9b48a`, `--mustard` `#e9b96e`, `--dusty` `#8fa3bf` | accents | family retained with warmed values |
+
+## A2. v1 Typography (superseded)
+
+- Fraunces display italic 900: `line-height .98`, `letter-spacing -.02em`, `font-variation-settings "opsz" 144 "SOFT" 100`
+- Gaegu body 400 `1.28rem/1.5`, lede max-width 34em
+- H2 `clamp(2.6rem,6.4vw,5.2rem)`; hero `clamp(2.5rem,7vw,5.4rem)`; eyebrow `.22em` uppercase
+- Menu book pages in `cqw` container units (page base `2.9cqw/1.25`; `.pg-title` 7.4cqw; cover `menu` 19cqw; dish 4.3cqw/800 italic). **Banned in v2.**
+
+## A3. v1 Signature Effects (motif reference — re-implement warmed)
+
+- Preloader notebook sheet: ruled 38px lines + 24px dot grid + red margin line + punched holes; ink-write clip-path reveal with terra nib; steam paths; progress counter; exit `translateY(-104%) rotate(-1.2deg) .85s cubic-bezier(.76,0,.24,1)`
+- 3D menu flip-book: `perspective 2600px`, rotateY ±180 `.62s cubic-bezier(.4,.02,.2,1)`, page-edge shadows — replaced by tabbed menu; only the "menu book" language/heritage naming survives
+- Masking tape `.tape` `#e9b96eb8` 92×28px zigzag clip-path; torn strips via seeded-random polygons
+- Hard sticker shadows `4px 4px 0 var(--ink)` family — replaced by warm soft shadows
+- Hero Ken Burns `8.5s` slides every 6.5s; glass chips `#fbfaf41f`; open-dot ping
+- Lenis smooth scroll duration 1.15; Framer Motion reveals `[.22,1,.36,1]` y36 .9s
+- Reviews physics-drift carousel 34px/s with 3 duplicated sets — replaced by scroll-snap
+- Paper-grain `feTurbulence` fixed overlay opacity .3 (v2: optional, ≤ .18)
+
+## A4. v1 Breakpoints (superseded by one fluid-density approach)
+
+≤520 / ≤560 / ≤620 / ≤640 / ≤820 (book single-page) / ≤899 / ≤900 / ≤920 (nav burger) / ≤980. v2 keeps this ladder only where stacking still needed; lead with generous mobile spacing rather than 9 cascading breakpoints.
+
+## A5. Asset Manifest (still canonical)
+
+35 images under `/images/` (cafe-01…cafe-16 + `-sm/-md` variants, `building.webp`, `workshop-poster.webp`, `logo.webp`), favicon `/favicon.png`, OG image `/images/cafe-10.webp`. Photos carry alt text in `docs/details.md` — reuse verbatim.
