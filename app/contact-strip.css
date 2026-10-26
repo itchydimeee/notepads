@@ -1,0 +1,199 @@
+/* ContactStrip — shared contact block for #visit (T10) and the T11 Footer.
+   All fonts/colors/shadows ride the globals.css Ink & Indigo tokens.
+   Reuse contract for the footer: .cs carries SCOPE VARS (--cs-ink,
+   --cs-muted, --cs-ico) — a footer rule like
+     .footer .cs { --cs-ink: var(--paper); --cs-muted: #c8d0e4; --cs-ico: #aeb9f2; }
+   re-tints the whole strip on the --forest navy ground; the layout below is
+   fluid (wrap everywhere, no fixed px widths), so it also holds inside a
+   narrow footer column with .cs-compact. Validate any navy column's
+   contrast ≥ 4.5:1 when wiring T11 (ui_design.md §6). */
+
+.cs {
+  --cs-ink: var(--ink);
+  --cs-muted: var(--ink-soft);
+  --cs-ico: var(--blue);
+
+  display: block;
+  width: 100%;
+  min-width: 0;
+  color: var(--cs-ink);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+}
+
+/* Doc-word heading above the rows (only when `heading` is supplied):
+   Fredoka 600, one consistent step under the section H2 — hierarchy by
+   face/size, no eyebrow device. */
+.cs-heading {
+  margin: 0 0 18px;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 1.45rem;
+  line-height: 1.14;
+  letter-spacing: 0;
+  color: var(--cs-ink);
+}
+
+/* One <address> for the whole block (semantic contact info). */
+.cs-body {
+  display: block;
+  font-style: normal;
+}
+
+/* Rows: icon rail + content column. Grid gives every row the same rail,
+   and 1fr min-width:0 lets long strings (gmail address, WhatsApp label)
+   wrap instead of overflowing — the no-horizontal-scroll guarantee. */
+.cs-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 4px 14px;
+  padding: 16px 0;
+}
+
+.cs-row + .cs-row {
+  border-top: 2px dotted #1e254026;
+}
+
+/* first row has no dotted rule above it; the border sits on .cs-row + .cs-row */
+.cs-row:first-child {
+  padding-top: 0;
+}
+
+/* Blue accent icon: one consistent 20px stroke family, tone --cs-ico.
+   Decorative + accent (ink text carries the reading), so contrast duty
+   stays on the text column per ui_design.md §6. */
+.cs-ico {
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px; /* sits on the label's cap-height line */
+  color: var(--cs-ico);
+}
+
+.cs-content {
+  min-width: 0;
+}
+
+/* Label = the doc's own info-list words (Address / Hours / Call or text /
+   Email). Fredoka 600 small line — a label, not an eyebrow (it belongs to
+   its own row and is never separated from its content). */
+.cs-label {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 1.02rem;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--cs-ink);
+}
+
+.cs-line {
+  margin: 2px 0 0;
+  font-size: 1.2rem;
+  line-height: 1.45;
+  color: var(--cs-muted);
+}
+
+/* Links: Gaegu bold, underline with a comfortable offset in this handwritten
+   face; --cs-muted on parchment is ≥ 4.5:1 (checked in the T13 contrast
+   audit it joins); text color never drops below the muted token. */
+.cs-line-link a {
+  color: var(--cs-muted);
+  font-weight: 700;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #3d4bb855;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere; /* long mailto/urls fold, never push the column */
+  transition: text-decoration-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+.cs-line-link a:hover {
+  color: var(--cs-ico);
+  text-decoration-color: var(--cs-ico);
+}
+
+.cs-line-link svg {
+  display: inline-block;
+  vertical-align: -2px;
+  margin-right: 4px;
+  color: var(--cs-ico);
+}
+
+/* Socials: three icon + text links, behaving like the rest of the strip.
+   They share the dotted rule above via .cs-row + .cs-row. The ul is placed
+   in the grid's 2nd column so the content edge matches the other rows'
+   exactly (the icon rail is empty here — each link carries its own drawn
+   brand mark instead of one house icon). */
+.cs-row-socials {
+  grid-template-columns: 28px minmax(0, 1fr);
+  padding-bottom: 0;
+}
+
+.cs-socials {
+  grid-column: 2;
+  margin: 0;
+  padding: 10px 0 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+
+.cs-socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--cs-muted);
+  font-weight: 700;
+  font-size: 1.18rem;
+  line-height: 1.4;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #3d4bb855;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+.cs-socials a:hover {
+  color: var(--cs-ico);
+  text-decoration-color: var(--cs-ico);
+}
+
+.cs-socials svg {
+  flex: 0 0 auto;
+  color: var(--cs-ico);
+}
+
+/* --- compact (T11 footer columns): tighter type + rhythm ------------------- */
+
+.cs-compact .cs-row {
+  display: block;
+  padding: 10px 0;
+}
+
+.cs-compact .cs-row:first-child {
+  padding-top: 0;
+}
+
+.cs-compact .cs-ico {
+  display: none; /* narrow columns: rows read as clean text + labels */
+}
+
+.cs-compact .cs-label {
+  font-size: 0.95rem;
+}
+
+.cs-compact .cs-line {
+  font-size: 1.05rem;
+}
+
+.cs-compact .cs-socials {
+  padding-top: 6px;
+  gap: 6px 14px;
+}
+
+.cs-compact .cs-socials a {
+  font-size: 1.05rem;
+}

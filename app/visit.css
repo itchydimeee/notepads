@@ -1,0 +1,134 @@
+/* Visit (#visit) — T10. Fredoka H2 + lede, shared ContactStrip LEFT,
+   warm-framed Google Maps iframe RIGHT on parchment ground. All colors/
+   fonts/shadows via globals.css tokens (Ink & Indigo). Copy verbatim from
+   docs/details.md §9 + §Site Identity. Décor budget: 0 floating motifs —
+   the framed map card is the section's single elevated moment. */
+
+/* --- section ground: parchment (free from the body) ----------------------- */
+
+.visit {
+  padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
+  background: var(--parchment);
+}
+
+.visit-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* --- title + lede (no eyebrow — banned) ----------------------------------- */
+
+.visit-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* Lede: Gaegu, ≤ 38em prose measure, secondary ink tone
+   (--ink-soft #4d5878 on parchment ≥ 4.5:1 — the T13 audit token). */
+.visit-lede {
+  margin: 18px 0 0;
+  max-width: 38em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* --- the two-column layout: strip LEFT + map RIGHT ------------------------
+   Stacked by default (strip first = the mobile reading order), two equal
+   fluid columns from 980px. minmax(0,1fr) + min-width:0 keep long strings
+   (gmail address, wa.me label) wrapping honestly instead of forcing any
+   horizontal scroll — the 390px DoD guarantee. Gap floor 32px of the
+   cleanliness bar. */
+
+.visit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px 48px;
+  align-items: start;
+  margin-top: 40px;
+  min-width: 0;
+}
+
+.visit-grid > * {
+  min-width: 0;
+}
+
+@media (min-width: 980px) {
+  .visit-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* --- the map column --------------------------------------------------------
+   Card = the one elevated moment: warm --paper frame over the map +
+   --shadow-soft (the section's depth claim, declared once). */
+
+.visit-mapcol {
+  display: block;
+}
+
+.visit-mapcard {
+  background: var(--paper);
+  padding: 12px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Reserved aspect box — the late-loading iframe gets a fixed room at every
+   breakpoint: ~4/5 portrait on mobile (com fuller screen per street grid),
+   ~16/10 landscape from 980px. Zero layout shift when the tile rasterizes. */
+.visit-mapframe {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--kraft); /* honest pre-load ground in the map's own world */
+}
+
+@media (min-width: 980px) {
+  .visit-mapframe {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+.visit-map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Buttons under the card: wrap-friendly flex, gap on the 12 spacing step —
+   never a fixed-width row that would overflow 390px. */
+.visit-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* `Get directions`: the primary call — blue-tinted ghost (blue is the
+   sanctioned link/accent tone at ≈7:1 on parchment per ui_design.md §6).
+   Hover weight comes from the shared .btn-ghost lift in globals.css. */
+.visit-btn-primary {
+  color: var(--blue);
+  border-color: #3d4bb866;
+}
+
+/* Small Gaegu map note under the card; ink (not gray/opacity) for
+   legibility, hierarchy via size only. */
+.visit-mapnote {
+  margin: 14px 0 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
