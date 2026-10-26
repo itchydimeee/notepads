@@ -1,0 +1,344 @@
+/* About — parchment continuation of the hero: Fredoka H2 + dual lede,
+   3 stat cards, ≤ 2 taped polaroids, 8-amenity grid, ₱350 package ticket.
+   All colors/fonts via globals.css tokens. */
+
+.about {
+  padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
+  background: var(--parchment);
+}
+
+.about-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  gap: clamp(40px, 5vw, 64px);
+}
+
+/* --- title + lede --- */
+
+.about-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: var(--ink);
+  max-width: 22ch;
+}
+
+.about-lede {
+  display: grid;
+  gap: 16px;
+  max-width: 38em;
+  justify-items: start;
+}
+
+.about-lede p {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.about-lede strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* --- stat cards --- */
+
+.about-stats {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+}
+
+.about-stat {
+  background: var(--paper);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 28px 32px;
+  display: grid;
+  gap: 6px;
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.about-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.about-stat-value {
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 3.4vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.about-stat-label {
+  font-size: 1.08rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+/* --- taped polaroids --- */
+
+.about-shots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+
+.about-shot {
+  position: relative;
+  margin: 14px 0 0;
+  width: min(100%, 320px);
+}
+
+.about-shot:nth-child(odd) {
+  transform: rotate(-1.2deg);
+}
+
+.about-shot:nth-child(even) {
+  transform: rotate(1.2deg);
+}
+
+.about-shot .u-tape {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  translate: -50% 0;
+  rotate: -2deg;
+  z-index: 2;
+}
+
+.about-shot:nth-child(even) .u-tape {
+  rotate: 2.5deg;
+}
+
+.about-shot-photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  overflow: hidden;
+  background: #1e254010;
+}
+
+.about-shot-cap {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* --- amenity grid (4 / 2 / 1) --- */
+
+.about-amenities {
+  display: grid;
+  gap: 32px;
+  grid-template-columns: 1fr;
+}
+
+.about-amenity {
+  background: var(--paper);
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  padding: 24px;
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  align-content: start;
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.about-amenity:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.amenity-ico {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--paper);
+  display: grid;
+  place-items: center;
+}
+
+.amenity-name {
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.12rem;
+  line-height: 1.25;
+  letter-spacing: 0;
+  color: var(--ink);
+  margin: 0;
+}
+
+.amenity-desc {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* --- ₱350 Study Space Package ticket (the one elevated card) --- */
+
+.about-ticket {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  justify-self: center;
+  background: var(--paper);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lift);
+  padding: 32px;
+  transform: rotate(-0.4deg);
+}
+
+.about-ticket-head {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+  padding: 0 12px 22px;
+}
+
+.about-ticket-label {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--blue);
+}
+
+.about-ticket-price {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.about-ticket-sub {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+/* perforation: dashed line spanning the full card + two punched holes
+   (parchment cutouts ringed in blue — the sticker punch detail) */
+
+.about-ticket-perf {
+  position: relative;
+  margin: 4px -32px 26px;
+  border-top: 2px dashed #1e254026;
+}
+
+.about-ticket-hole {
+  position: absolute;
+  top: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 60%, #3d4bb833 61% 82%, transparent 83%),
+    radial-gradient(circle, var(--parchment) 0 72%, transparent 73%);
+}
+
+.about-ticket-hole.start {
+  left: -14px;
+}
+
+.about-ticket-hole.end {
+  right: -14px;
+}
+
+.about-ticket-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.about-ticket-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 1.06rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.about-ticket-check {
+  color: var(--mustard);
+  flex: none;
+  margin-top: 4px;
+}
+
+.about-ticket-n {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.about-ticket-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+
+.about-ticket-foot svg {
+  color: var(--blue);
+  flex: none;
+}
+
+/* --- responsive --- */
+
+@media (min-width: 640px) {
+  .about-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .about-amenities {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-ticket-list li {
+    font-size: 1.12rem;
+  }
+}
+
+@media (min-width: 980px) {
+  .about-lede {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: none;
+  }
+
+  .about-amenities {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

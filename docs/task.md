@@ -88,10 +88,10 @@
 
 ## T5 — About
 
-- [ ] Fredoka H2 `A study hub that feels like home` + 2 lede paragraphs from docs/details.md (no eyebrow).
-- [ ] 3 stat cards (`2 hrs` free stay / `₱40` per extra hour / `7–10` Mon–Sat) with ≥ 24px padding.
-- [ ] Max 2 polaroids with tape; amenity grid (8 cards from details.md) with **blue icon circles**; ₱350 Study Space Package card (blue punch detail, mustard checks).
-- [ ] **DoD:** paragraph max-width ≤ 38em; no wall of text (split into 2 columns at ≥ 980px if needed).
+- [x] Fredoka H2 `A study hub that feels like home` + 2 lede paragraphs from docs/details.md (no eyebrow).
+- [x] 3 stat cards (`2 hrs` free stay / `₱40` per extra hour / `7–10` Mon–Sat) with ≥ 24px padding.
+- [x] Max 2 polaroids with tape; amenity grid (8 cards from details.md) with **blue icon circles**; ₱350 Study Space Package card (blue punch detail, mustard checks).
+- [x] **DoD:** paragraph max-width ≤ 38em; no wall of text (split into 2 columns at ≥ 980px).
 
 ## T6 — Menu (tabbed chapters)
 
@@ -178,3 +178,4 @@
 | 2026-10-26 | T4.5/T4.6 code APPLIED | DONE — globals/layout (ink+blue tokens, Fredoka 300–700, themeColor #3d4bb8), hero (Fredoka 600 title, ink rulings, blue loc icon, btn-blue), nav (blue underlines/contact, Fredoka brand), preloader (blue margin/nib/rule, ink tints); stale-hex + Fraunces sweeps clean; fixed pre-existing hero.tsx:67 null-guard; build green; HTTP 200 |
 | 2026-10-26 | Assets placeholdered | user decision: production photo download deferred; branded PNG placeholders in place (hero refs → .png, logo.png from logo screenshot); preloader hydration mismatch patched (suppressHydrationWarning on script-driven nodes + html) |
 | 2026-10-26 | Title type bolded | user decision: hero title → Fredoka 700 `clamp(2.4rem,5.8vw,4.4rem)` lh 1.06; mustard scribble removed (plain thick titles); nav sheet links → 700; ui_design.md updated |
+| 2026-10-26 | T5 About | DONE — lead-orchestrator run (worker: general agent); `app/about.css` + `app/components/about.tsx` (pure server component, zero client JS) + page.tsx wired Hero→About. Verbatim details.md §4 copy, no eyebrow, 3 stat cards, 2 taped polaroids (cafe-10-md/cafe-05-sm placeholders, 3rd caption unused per ≤2 cap), 8-amenity grid w/ lucide icons in blue 48px circles, ₱350 ticket (dashed perforation + blue-ring punch holes, mustard lucide Checks, `₱40 per hour beyond the 2-hour stay` footer). Verified: build green ×2, prerendered HTML contains all section strings, impeccable `detect --json` → `[]`; dev-server HTTP check blocked by shell harness (background npm exits cleanly-empty) — prerender HTML inspection used as equivalent SSR evidence |
