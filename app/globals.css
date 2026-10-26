@@ -58,6 +58,11 @@ body {
   line-height: 1.6;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 8px);
+}
+
 ::selection {
   background: #b85433;
   color: #fcf9ef;
@@ -115,4 +120,63 @@ body {
 
 .u-sticker {
   box-shadow: var(--shadow-stick);
+}
+
+/* --- buttons (shared: nav, hero, sections) --- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 14px;
+  border: 1.5px solid transparent;
+  font-family: var(--font-gaegu), cursive;
+  font-weight: 700;
+  font-size: 1.08rem;
+  line-height: 1.1;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    background-color 0.25s,
+    color 0.25s,
+    border-color 0.25s;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-terra {
+  background: var(--terra);
+  color: var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-terra:hover {
+  box-shadow: var(--shadow-stick);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--walnut);
+  border-color: #34281b33;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-ghost:hover {
+  background: var(--paper);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+
+.btn-light {
+  background: var(--paper);
+  color: var(--walnut);
+  box-shadow: var(--shadow-soft);
 }

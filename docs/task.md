@@ -44,11 +44,14 @@
 
 ## T3 — Nav
 
-- [ ] Fixed header 72px, transparent → frosted `--paper` at 85% + blur on scroll.
-- [ ] Circular logo + `NotePads` / `study hub cafe` brand lockup; links About/Menu/The Place/Saturdays/Reviews/Visit.
-- [ ] CTA "See the menu" (terra sticker button); mobile burger → clip-path circle sheet, links `clamp(1.8rem, 6vw, 3rem)`.
-- [ ] Active-section tracking via IntersectionObserver.
-- [ ] **DoD:** keyboard-navigable, sheet closes on Escape + link click.
+- [x] Fixed header 72px (`--nav-h`); transparent → frosted `#fcf9efe0` + blur(12px) on scroll — `app/nav.css` + client island `app/components/nav.tsx`.
+- [x] Circular logo (`/logo.png`, Next Image) + `NotePads` / `study hub cafe` brand lockup; links About/Menu/The Place/Saturdays/Reviews/Visit with terracotta scaleX underline on hover/active.
+- [x] CTA "See the menu" using the new shared `.btn/.btn-terra` system (added in globals.css with terra/ghost/light variants, 48px min-height, warm shadows).
+- [x] Mobile burger → full-screen ruled-parchment sheet, circular clip-path reveal from the burger corner, links `clamp(1.8rem, 6vw, 3rem)` Fraunces italic 900, staggered link entrance; reduced-motion = simple opacity fade.
+- [x] Active-section tracking via IntersectionObserver (`-45%/-50%` margins), picks up sections automatically as later tasks add them; `aria-current` → persistent underline.
+- [x] Keyboard: Escape closes and refocuses burger; sheet locks body scroll; link click closes; inactive sheet links get `tabindex: -1`.
+- [x] Smooth anchor scrolling: `html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 8px) }` in globals.
+- [x] **DoD:** verified on dev (HTTP 200, full nav markup server-rendered with aria attributes); nav hot-reloads; #top anchor baked into brand link.
 
 ## T4 — Hero
 
@@ -144,3 +147,4 @@
 | 2026-10-26 | T0 Foundations | DONE — deps installed, 36 assets downloaded, tokens/layout rewritten; fixed next/font `axes`+`weight` conflict; dev verified HTTP 200 |
 | 2026-10-26 | T1 Design artifacts | DONE — PRODUCT.md moved to docs/ (user preference, overrides root-path default); concept-seed run, Warm Scholar pinned + brick-instructions discipline raise; DESIGN.md dropped, ui_design.md = single design reference |
 | 2026-10-26 | T2 Preloader | DONE — static server-rendered sheet + inline script (800ms min / 2.5s cap, autofade fallback), warm tokens; craft-floor read → eyebrow device BANNED for T4–T6 (spec amendment: no kicker/eyebrow labels; location line joins the lede or a chip) |
+| 2026-10-26 | T3 Nav | DONE — fixed 72px header, frosted scroll state, brand lockup, 6 links w/ terra underlines, active-section IO, mobile circle-reveal sheet w/ Escape+scroll-lock, shared .btn system in globals, smooth anchors |
