@@ -1,17 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Gaegu } from "next/font/google";
+import { Fredoka, Gaegu } from "next/font/google";
 import "./globals.css";
 import Preloader from "./components/preloader";
 import Nav from "./components/nav";
 import "./preloader.css";
 import "./nav.css";
 
-// Next 16 type defs allow only ('SOFT' | 'WONK' | 'opsz') for Fraunces axes;
-// italics come via style: ["normal", "italic"] instead of an "ital" axis.
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  style: ["normal", "italic"],
-  axes: ["opsz", "SOFT", "WONK"],
+const fredoka = Fredoka({
+  variable: "--font-fredoka",
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -28,13 +25,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#b85433",
+  themeColor: "#3d4bb8",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en">
-      <body className={`${fraunces.variable} ${gaegu.variable}`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${fredoka.variable} ${gaegu.variable}`}>
         <Preloader />
         <Nav />
         {children}

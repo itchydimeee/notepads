@@ -79,31 +79,37 @@ export default function Preloader() {
       </div>
       <div className="pre-body">
         <svg viewBox="0 0 72 62" fill="none" strokeLinecap="round" strokeLinejoin="round" className="pre-cup">
-          <g stroke="#b85433" strokeWidth="3" className="pre-steam">
+          <g stroke="#3d4bb8" strokeWidth="3" className="pre-steam">
             <path d="M30 14c0-4 4-4 4-8" />
             <path d="M38 16c0-4 4-4 4-8" />
             <path d="M34 22c0-4 4-4 4-8" />
           </g>
           <path
             d="M20 26h32v14a12 12 0 0 1-12 12h-8a12 12 0 0 1-12-12V26Z"
-            stroke="#34281b"
+            stroke="#1e2540"
             strokeWidth="3"
             fill="#fcf9ef"
           />
-          <path d="M52 28h4a6 6 0 0 1 6 6c0 4-3 7-7 7" stroke="#34281b" strokeWidth="3" />
-          <path d="M14 58h44" stroke="#34281b" strokeWidth="3" />
+          <path d="M52 28h4a6 6 0 0 1 6 6c0 4-3 7-7 7" stroke="#1e2540" strokeWidth="3" />
+          <path d="M14 58h44" stroke="#1e2540" strokeWidth="3" />
         </svg>
         <span className="pre-name">
           <span className="pre-name-ghost">NotePads</span>
-          <span className="pre-name-ink">NotePads</span>
-          <span className="pre-nib" />
+          <span className="pre-name-ink" suppressHydrationWarning>
+            NotePads
+          </span>
+          <span className="pre-nib" suppressHydrationWarning />
         </span>
         <span className="pre-rule">
-          <i />
+          <i suppressHydrationWarning />
         </span>
-        <p className="pre-note">{NOTES[0]}…</p>
+        <p className="pre-note" suppressHydrationWarning>
+          {NOTES[0]}…
+        </p>
       </div>
-      <span className="pre-count">0</span>
+      <span className="pre-count" suppressHydrationWarning>
+        0
+      </span>
       <script dangerouslySetInnerHTML={{ __html: SCRIPT }} />
     </div>
   );

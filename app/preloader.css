@@ -1,4 +1,4 @@
-/* Preloader — a warm notebook sheet that paints with the first byte.
+/* Preloader — an ink & indigo notebook sheet that paints with the first byte.
    Markup lives in components/preloader.tsx; the sheet exits via a small
    inline script there. Removed from the DOM after the exit transition. */
 
@@ -13,14 +13,14 @@ html.is-preloading body {
   z-index: 400;
   display: grid;
   place-items: center;
-  color: var(--walnut);
+  color: var(--ink);
   background-color: var(--parchment);
   background-image:
     repeating-linear-gradient(
       transparent 0 37px,
-      #34281b14 37px 38px
+      #1e254014 37px 38px
     ),
-    radial-gradient(#34281b0f 1.2px, transparent 1.2px);
+    radial-gradient(#1e25400f 1.2px, transparent 1.2px);
   background-size:
     100% 38px,
     24px 24px;
@@ -52,7 +52,7 @@ html.is-preloading body {
   bottom: 0;
   left: clamp(34px, 7vw, 92px);
   width: 2px;
-  background: #b8543355;
+  background: #3d4bb855;
 }
 
 .pre .pre-holes {
@@ -70,7 +70,7 @@ html.is-preloading body {
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--parchment);
-  box-shadow: inset 0 2px 4px #34281b2e;
+  box-shadow: inset 0 2px 4px #1e25402e;
 }
 
 /* --- content --- */
@@ -118,21 +118,20 @@ html.is-preloading body {
   margin-top: clamp(2px, 1vh, 8px);
   font-size: clamp(2.4rem, 8vw, 4.4rem);
   line-height: 1.06;
-  letter-spacing: -0.01em;
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-style: italic;
-  font-weight: 900;
+  letter-spacing: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
   white-space: nowrap;
 }
 
 .pre .pre-name-ghost {
-  color: #34281b21;
+  color: #1e254021;
 }
 
 .pre .pre-name-ink {
   position: absolute;
   inset: 0;
-  color: var(--walnut);
+  color: var(--ink);
   clip-path: inset(0 100% 0 0);
 }
 
@@ -142,8 +141,8 @@ html.is-preloading body {
   bottom: 14%;
   width: 2.5px;
   border-radius: 2px;
-  background: var(--terra);
-  box-shadow: 0 0 10px #b8543380;
+  background: var(--blue);
+  box-shadow: 0 0 10px #3d4bb880;
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -157,8 +156,8 @@ html.is-preloading body {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: var(--terra);
-  box-shadow: 0 0 8px #b8543380;
+  background: var(--blue);
+  box-shadow: 0 0 8px #3d4bb880;
 }
 
 .pre .pre-rule {
@@ -166,7 +165,7 @@ html.is-preloading body {
   width: min(300px, 64vw);
   height: 4px;
   border-radius: 4px;
-  background: #34281b26;
+  background: #1e254026;
   overflow: hidden;
 }
 
@@ -174,7 +173,7 @@ html.is-preloading body {
   display: block;
   height: 100%;
   border-radius: 4px;
-  background: var(--terra);
+  background: var(--blue);
   transform: scaleX(0);
   transform-origin: 0 50%;
 }
@@ -182,7 +181,7 @@ html.is-preloading body {
 .pre .pre-note {
   margin: 0;
   min-height: 1.5em;
-  color: var(--bark);
+  color: var(--ink-soft);
   font-size: clamp(1.05rem, 2.2vw, 1.25rem);
 }
 
@@ -190,12 +189,11 @@ html.is-preloading body {
   position: absolute;
   bottom: clamp(16px, 3vw, 34px);
   right: clamp(20px, 4vw, 46px);
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-style: italic;
-  font-weight: 800;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   font-size: clamp(1.5rem, 3.2vw, 2.2rem);
-  color: #34281b66;
+  color: #1e254066;
 }
 
 /* --- reduced motion: simple fade, no transforms --- */

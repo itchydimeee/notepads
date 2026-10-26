@@ -87,7 +87,7 @@ export default function Nav() {
           ))}
         </nav>
 
-        <a href="#menu" className="btn btn-terra nav-cta">
+        <a href="#menu" className="btn btn-blue nav-cta">
           See the menu
         </a>
 

@@ -1,4 +1,4 @@
-/* Nav — fixed warm paper header over a parchment site.
+/* Nav — fixed ink-on-paper header over a parchment site.
    Transparent over the hero, frosted paper once the page scrolls.
    The mobile sheet reveals out of the burger with a circular clip-path. */
 
@@ -19,7 +19,7 @@
   background: #fcf9efe0;
   backdrop-filter: blur(12px) saturate(1.15);
   -webkit-backdrop-filter: blur(12px) saturate(1.15);
-  box-shadow: 0 6px 16px rgba(52, 40, 27, 0.08);
+  box-shadow: 0 6px 16px rgba(30, 37, 64, 0.08);
 }
 
 .nav-inner {
@@ -39,7 +39,7 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  color: var(--walnut);
+  color: var(--ink);
 }
 
 .nav-logo {
@@ -56,16 +56,15 @@
 }
 
 .nav-brand-name {
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-style: italic;
-  font-weight: 900;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
   font-size: 1.45rem;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
 }
 
 .nav-brand-sub {
   font-family: var(--font-gaegu), cursive;
-  color: var(--bark);
+  color: var(--ink-soft);
   font-size: 0.82rem;
   letter-spacing: 0.08em;
 }
@@ -82,7 +81,7 @@
 .nav-links a {
   position: relative;
   text-decoration: none;
-  color: var(--walnut);
+  color: var(--ink);
   font-family: var(--font-gaegu), cursive;
   font-weight: 700;
   font-size: 1.05rem;
@@ -98,7 +97,7 @@
   bottom: 4px;
   height: 3px;
   border-radius: 3px;
-  background: var(--terra);
+  background: var(--blue);
   transform: scaleX(0);
   transform-origin: 0 50%;
   transition: transform 0.4s var(--ease);
@@ -130,7 +129,7 @@
   border-radius: 12px;
   border: 0;
   background: var(--paper);
-  color: var(--walnut);
+  color: var(--ink);
   box-shadow: var(--shadow-soft);
   cursor: pointer;
   transition:
@@ -154,9 +153,9 @@
   background-image:
     repeating-linear-gradient(
       transparent 0 37px,
-      #34281b12 37px 38px
+      #1e254012 37px 38px
     ),
-    radial-gradient(#34281b0c 1.2px, transparent 1.2px);
+    radial-gradient(#1e25400c 1.2px, transparent 1.2px);
   background-size:
     100% 38px,
     24px 24px;
@@ -184,10 +183,9 @@
 
 .nav-sheet-links a {
   text-decoration: none;
-  color: var(--walnut);
-  font-family: var(--font-fraunces), Georgia, serif;
-  font-style: italic;
-  font-weight: 900;
+  color: var(--ink);
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
   font-size: clamp(1.8rem, 6vw, 3rem);
   line-height: 1.1;
   padding: 8px 0;
@@ -224,15 +222,15 @@
 
 .nav-sheet-contact {
   margin-top: 28px;
-  color: var(--bark);
+  color: var(--ink-soft);
   font-family: var(--font-gaegu), cursive;
   font-size: 1rem;
   line-height: 1.55;
 }
 
 .nav-sheet-contact a {
-  color: var(--terra);
-  text-decoration-color: #b8543355;
+  color: var(--blue);
+  text-decoration-color: #3d4bb855;
   text-underline-offset: 3px;
 }
 

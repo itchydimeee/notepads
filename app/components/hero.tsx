@@ -2,18 +2,18 @@
 
 import Image from "next/image";
 import { ChevronDown, MapPin } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import "../hero.css";
 
-// Real production photos, warm crops of the space; alt text from docs/details.md.
+// Placeholder photos (branded PNG stubs; real photos to be swapped in — alt text from docs/details.md).
 const SLIDES = [
-  { src: "/images/cafe-10-md.webp", alt: "The NotePads lounge with the logo wall", caption: "the lounge, in its natural state" },
-  { src: "/images/cafe-16-md.webp", alt: "The NotePads Study Hub Café sign at night", caption: "look for the glowing sign" },
-  { src: "/images/cafe-05-sm.webp", alt: "Study stations and red chairs", caption: "stations with a plug and a view" },
-  { src: "/images/cafe-12-sm.webp", alt: "The open pantry", caption: "pantry within reach" },
+  { src: "/images/cafe-10-md.png", alt: "The NotePads lounge with the logo wall", caption: "the lounge, in its natural state" },
+  { src: "/images/cafe-16-md.png", alt: "The NotePads Study Hub Café sign at night", caption: "look for the glowing sign" },
+  { src: "/images/cafe-05-sm.png", alt: "Study stations and red chairs", caption: "stations with a plug and a view" },
+  { src: "/images/cafe-12-sm.png", alt: "The open pantry", caption: "pantry within reach" },
 ];
 
-const BACK_SHOT = { src: "/images/cafe-03-sm.webp", alt: "The NotePads coffee counter with warm hanging lights", caption: "the counter with warm lights" };
+const BACK_SHOT = { src: "/images/cafe-03-sm.png", alt: "The NotePads coffee counter with warm hanging lights", caption: "the counter with warm lights" };
 
 function manilaNow() {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -25,7 +25,6 @@ function manilaNow() {
   }).formatToParts(new Date());
   const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "";
   const hour = parseInt(get("hour"), 10);
-  const minute = get("minute");
   const sun = get("weekday") === "Sun";
   const open = sun ? hour >= 10 && hour < 20 : hour >= 7 && hour < 22;
   const closes = sun ? "8 PM" : "10 PM";
@@ -36,20 +35,31 @@ function manilaNow() {
 
 const LIVE_HOURS = "Open Mon–Sat 7 AM – 10 PM · Sun 10 AM – 8 PM";
 
+// External Manila-clock store. Live status only after hydration — an SSG-rendered
+// clock could go stale or mismatch between server render and first client render.
+// The server snapshot is null (full-hours fallback chip); after hydration the
+// subscription ticks and re-renders with the live value.
+let clockSnapshot: ReturnType<typeof manilaNow> | null = null;
+
+function subscribeClock(onChange: () => void) {
+  const tick = () => {
+    clockSnapshot = manilaNow();
+    onChange();
+  };
+  tick();
+  const t = setInterval(tick, 60_000);
+  return () => clearInterval(t);
+}
+
+const getClockSnapshot = () => clockSnapshot;
+const getServerClockSnapshot = () => null;
+
 export default function Hero() {
   const [slide, setSlide] = useState(0);
   const [visible, setVisible] = useState(true);
-  // Live status only after hydration — an SSG-rendered clock could go stale
-  // or mismatch between server render and first client render.
-  const [status, setStatus] = useState<ReturnType<typeof manilaNow> | null>(null);
+  const status = useSyncExternalStore(subscribeClock, getClockSnapshot, getServerClockSnapshot);
 
   const slides = useMemo(() => SLIDES, []);
-
-  useEffect(() => {
-    setStatus(manilaNow());
-    const t = setInterval(() => setStatus(manilaNow()), 60_000);
-    return () => clearInterval(t);
-  }, []);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval>;
@@ -64,7 +74,7 @@ export default function Hero() {
       threshold: 0.15,
     });
     const el = document.getElementById("top");
-    io.observe(el);
+    if (el) io.observe(el);
     return () => io.disconnect();
   }, []);
 
@@ -80,8 +90,7 @@ export default function Hero() {
       <div className="hero-inner">
         <div className="hero-copy">
           <h1 className="hero-title">
-            Where learning <br />
-            meets <span className="scribble">comfort</span>
+            Where learning meets comfort
           </h1>
           <p className="hero-lede">
             Your cozy corner for coffee, focus, and fresh ideas — <strong>free Wi-Fi, charging,
@@ -89,7 +98,7 @@ export default function Hero() {
             Building, Mandurriao, Iloilo City.
           </p>
           <div className="hero-ctas">
-            <a href="#menu" className="btn btn-terra">
+            <a href="#menu" className="btn btn-blue">
               See the menu
             </a>
             <a href="#visit" className="btn btn-ghost">

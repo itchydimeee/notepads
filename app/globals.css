@@ -4,22 +4,23 @@
   --parchment: #f7f0e3;
   --paper: #fcf9ef;
   --kraft: #ead9bd;
-  --walnut: #34281b;
-  --bark: #6b5343;
+  --ink: #1e2540;
+  --ink-soft: #4d5878;
   --terra: #b85433;
   --mustard: #e2b064;
   --sage: #a7b087;
-  --forest: #3a4a2f;
-  --cobalt: #43568f;
+  --forest: #202a52;
+  --blue: #3d4bb8;
+  --blue-deep: #2a3482;
   --dusty: #97a5b8;
   --overlay-deep: #1d2a56;
   --sky-warm: #e8ddd0;
   --sage-soft: #c9d0b4;
   --mustard-soft: #f0d8a8;
   --dusty-soft: #c2ccd8;
-  --shadow-soft: 0 6px 16px rgba(52, 40, 27, 0.12);
-  --shadow-lift: 0 10px 24px rgba(52, 40, 27, 0.16);
-  --shadow-stick: 6px 6px 0 #b8543333;
+  --shadow-soft: 0 6px 16px rgba(30, 37, 64, 0.12);
+  --shadow-lift: 0 10px 24px rgba(30, 37, 64, 0.16);
+  --shadow-stick: 6px 6px 0 #3d4bb833;
   --nav-h: 72px;
   --maxw: 1200px;
   --gutter: clamp(20px, 5vw, 64px);
@@ -30,20 +31,20 @@
   --color-parchment: var(--parchment);
   --color-paper: var(--paper);
   --color-kraft: var(--kraft);
-  --color-walnut: var(--walnut);
-  --color-bark: var(--bark);
-  --color-terra: var(--terra);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
   --color-mustard: var(--mustard);
   --color-sage: var(--sage);
   --color-forest: var(--forest);
-  --color-cobalt: var(--cobalt);
+  --color-blue: var(--blue);
+  --color-blue-deep: var(--blue-deep);
   --color-dusty: var(--dusty);
   --color-overlay-deep: var(--overlay-deep);
   --color-sky-warm: var(--sky-warm);
   --color-sage-soft: var(--sage-soft);
   --color-mustard-soft: var(--mustard-soft);
   --color-dusty-soft: var(--dusty-soft);
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-fredoka), Georgia, serif;
   --font-hand: var(--font-gaegu), "Comic Sans MS", cursive;
   --shadow-soft: var(--shadow-soft);
   --shadow-lift: var(--shadow-lift);
@@ -52,7 +53,7 @@
 
 body {
   background: var(--parchment);
-  color: var(--walnut);
+  color: var(--ink);
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-size: 1.35rem;
   line-height: 1.6;
@@ -64,12 +65,12 @@ html {
 }
 
 ::selection {
-  background: #b85433;
+  background: #3d4bb8;
   color: #fcf9ef;
 }
 
 :focus-visible {
-  outline: 3px solid var(--cobalt);
+  outline: 3px solid var(--blue-deep);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -90,13 +91,13 @@ html {
 .u-ruled {
   background-image: repeating-linear-gradient(
     to bottom,
-    #34281b14 0 1px,
+    #1e254014 0 1px,
     transparent 1px 38px
   );
 }
 
 .u-dotgrid {
-  background-image: radial-gradient(#34281b12 1px, transparent 1px);
+  background-image: radial-gradient(#1e254012 1px, transparent 1px);
   background-size: 18px 18px;
 }
 
@@ -108,7 +109,7 @@ html {
     0 8%, 12% 0, 25% 8%, 38% 0, 50% 8%, 62% 0, 75% 8%, 88% 0, 100% 8%,
     100% 92%, 88% 100%, 75% 92%, 62% 100%, 50% 92%, 38% 100%, 25% 92%, 12% 100%, 0 92%
   );
-  box-shadow: 0 1px 2px rgba(52, 40, 27, 0.12);
+  box-shadow: 0 1px 2px rgba(30, 37, 64, 0.12);
 }
 
 .u-polaroid {
@@ -151,21 +152,21 @@ html {
   transform: translateY(1px);
 }
 
-.btn-terra {
-  background: var(--terra);
+.btn-blue {
+  background: var(--blue);
   color: var(--paper);
   box-shadow: var(--shadow-soft);
 }
 
-.btn-terra:hover {
+.btn-blue:hover {
   box-shadow: var(--shadow-stick);
   transform: translateY(-2px);
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--walnut);
-  border-color: #34281b33;
+  color: var(--ink);
+  border-color: #1e254033;
   box-shadow: var(--shadow-soft);
 }
 
@@ -177,6 +178,6 @@ html {
 
 .btn-light {
   background: var(--paper);
-  color: var(--walnut);
+  color: var(--ink);
   box-shadow: var(--shadow-soft);
 }
