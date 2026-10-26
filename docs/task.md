@@ -26,10 +26,12 @@
 
 ## T1 — Design artifacts
 
-- [ ] Run `.agents/skills/impeccable/scripts/impeccable.cmd context` (Windows); load `reference/new-work.md` + `concept-seed` flow.
-- [ ] Write `notepads/DESIGN.md` (warm scholar world: palette above, type rules, motifs, motion rules) + surface brief for the landing page.
-- [ ] Read `.agents/skills/impeccable/reference/craft-floor.md` before the first UI edit.
-- [ ] **DoD:** DESIGN.md + brief exist and match the token table above.
+- [x] Run `.agents/skills/impeccable/scripts/impeccable.cmd context` (Windows); load `reference/new-work.md` + `concept-seed` flow.
+- [x] Create `docs/PRODUCT.md` (product truth per impeccable init — platform, users, positioning, evidence, commitments).
+- [x] Run the concept-seed direction roll (direction is **user-pinned**: Warm Scholar per `docs/ui_design.md`; a brief-pinned decision beats the roll). Challenger verdicts recorded: brick-build-instructions holds the clarity axis → accepted as a discipline raise (menu = numbered chapters with one 1:1 featured callout per chapter + grid-module alignment); others declined.
+- [x] **Design reference = `docs/ui_design.md` (v2 spec) — do NOT create a separate DESIGN.md.** Surface direction contract for the landing page lives in the impeccable surface brief (build-internal note), not in `docs/` and never in shipped source.
+- [ ] Read `.agents/skills/impeccable/reference/craft-floor.md` before the first UI edit (T2).
+- [ ] **DoD:** PRODUCT.md + surface brief exist; ui_design.md covers the warm scholar world (palette, type, motifs, motion) and matches the token table above.
 
 ## T2 — Preloader
 
@@ -128,7 +130,7 @@
 - [ ] Responsive sweep 390 / 768 / 1200: no horizontal overflow, menu tabs scrollable, tap targets ≥ 44px.
 - [ ] Content parity spot-check vs docs/details.md (menu prices, workshop dates, contact info, reviews).
 - [ ] Warmth checklist re-verified (line-heights, spacings, warm shadows, cobalt only for links/focus).
-- [ ] **DoD:** dev server mnual-verified; final `npm run build` green; DESIGN.md matches shipped UI.
+- [ ] **DoD:** dev server manual-verified; final `npm run build` green; shipped UI matches `docs/ui_design.md` (the single design reference — no separate DESIGN.md). Also update `ui_design.md` if any shipped decision diverged from spec.
 
 ---
 
@@ -139,3 +141,4 @@
 | 2026-10-26 | Plan approved | task.md created |
 | 2026-10-26 | ui_design.md updated | v2 "Warm Scholar" spec documented (v1 kept as appendix) |
 | 2026-10-26 | T0 Foundations | DONE — deps installed, 36 assets downloaded, tokens/layout rewritten; fixed next/font `axes`+`weight` conflict; dev verified HTTP 200 |
+| 2026-10-26 | T1 Design artifacts | DONE — PRODUCT.md moved to docs/ (user preference, overrides root-path default); concept-seed run, Warm Scholar pinned + brick-instructions discipline raise; DESIGN.md dropped, ui_design.md = single design reference |
