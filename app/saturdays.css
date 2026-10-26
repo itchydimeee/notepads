@@ -1,0 +1,496 @@
+/* Saturdays (#saturdays) — T8. Kids-workshops memo board on the kraft
+   ground with an ink-tinted dot grid (same treatment as menu.css,
+   re-expressed locally since CSS can't be imported across sections).
+   Colors / fonts / shadows all via globals.css tokens (Ink & Indigo).
+   Copy + links verbatim from docs/details.md §7. */
+
+/* --- section ground: kraft board + ink-tinted dot grid ----------------- */
+
+.sat {
+  padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
+  background-color: var(--kraft);
+  background-image: radial-gradient(#1e254012 1.2px, transparent 1.5px),
+    radial-gradient(#1e25400c 1.1px, transparent 1.4px);
+  background-size: 22px 22px;
+  background-position: 0 0, 11px 11px;
+}
+
+.sat-inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  gap: clamp(40px, 5vw, 64px);
+}
+
+/* --- title + lede (no eyebrow — banned) -------------------------------- */
+
+.sat-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.sat-lede {
+  margin: 16px 0 0;
+  max-width: 38em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  line-height: 1.62;
+  color: var(--ink-soft);
+}
+
+/* --- the one elevated moment: taped paper memo card on the board -------
+   Décor budget (whole section): its tape (motif 1) + the ruled margin
+   line (motif 2). Nothing else floats. */
+
+.sat-board {
+  position: relative;
+  max-width: 700px;
+  background: var(--paper);
+  border-radius: 16px;
+  box-shadow: var(--shadow-lift);
+  padding: 34px 34px 28px 60px;
+  margin-left: 8px;
+  transform: rotate(-0.5deg);
+}
+
+.sat-board-tape {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  translate: -50% 0;
+  rotate: -3deg;
+  z-index: 2;
+}
+
+/* margin line: blue ruled-paper detail, same alpha as the app-wide margin */
+.sat-board-line {
+  position: absolute;
+  top: -16px;
+  bottom: -16px;
+  left: 36px;
+  width: 2px;
+  border-radius: 2px;
+  background: #3d4bb855;
+}
+
+.sat-board-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  line-height: 1.14;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.sat-board-tag {
+  margin: 8px 0 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.3;
+  color: var(--blue);
+}
+
+.sat-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.sat-fact {
+  display: inline-flex;
+  align-items: center;
+  background: var(--parchment);
+  border: 1.5px solid #1e254022;
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* --- inclusions: row of paper chips ------------------------------------ */
+
+.sat-incl {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.sat-incl-label {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+}
+
+.sat-incl-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sat-incl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--paper);
+  border: 1.5px solid #1e254020;
+  border-radius: 999px;
+  padding: 8px 16px;
+  box-shadow: 0 2px 8px rgba(30, 37, 64, 0.1);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.sat-incl-chip svg {
+  color: var(--blue);
+}
+
+/* --- 3 session cards (tones + drawn icons + varied scaffolds) ---------- */
+
+.sat-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-radius: 18px;
+  padding: 26px 26px 24px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* the three derived tints (ui_design.md §1) — not the raw seasonings */
+.sat-card-art {
+  background: var(--sage-soft);
+}
+
+.sat-card-barista {
+  background: var(--mustard-soft);
+}
+
+.sat-card-cookie {
+  background: var(--dusty-soft);
+}
+
+/* drawn lucide icon chips: one consistent marker on every card */
+.sat-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(30, 37, 64, 0.1);
+}
+
+.sat-ico-tip {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  rotate: 8deg;
+}
+
+/* art card: vertical poster head (icon chip above the name) */
+.sat-name {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.55rem;
+  line-height: 1.18;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* taglines: hierarchy by weight/size (craft floor — emphasis is never
+   opacity or gray); ink at 400 on the toned card keeps ≥ 4.5:1 */
+.sat-tag {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 400;
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* barista card: mirrored head + dashed ticket-stub dates footer */
+.sat-barista-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.sat-barista-top .sat-name {
+  flex: 1 1 auto;
+  padding-top: 8px;
+}
+
+.sat-dates-stub {
+  margin-top: auto;
+  border-top: 2px dashed #1e254026;
+  padding-top: 14px;
+}
+
+/* cookie card: single flowing run for name + tagline (see tsx note) */
+.sat-poster {
+  margin: 12px 0 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.4rem;
+  line-height: 1.24;
+  letter-spacing: 0;
+  color: var(--ink);
+  max-width: 30ch;
+}
+
+/* dates: verbatim string + drawn check once the session has passed.
+   "Dimmed" = the darker ink-soft shade #454e6e (sanctioned darkening of
+   --ink-soft) — never mustard, never a sub-4.5:1 gray. */
+.sat-dates {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.sat-dates.is-past {
+  color: #454e6e;
+}
+
+/* --- lower band: pricing rows + reserve panel -------------------------- */
+
+.sat-lower {
+  display: grid;
+  gap: clamp(32px, 4vw, 48px);
+}
+
+@media (min-width: 1060px) {
+  .sat-lower {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: start;
+  }
+}
+
+.sat-panel {
+  border-radius: 16px;
+  padding: 30px 32px;
+  box-shadow: var(--shadow-soft);
+}
+
+.sat-panel-pricing {
+  background: var(--paper);
+}
+
+.sat-panel-reserve {
+  background: var(--parchment);
+}
+
+.sat-panel-h {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* pricing: name + dotted price leader + tabular price + save note.
+   Rows, not a same-size card row (craft floor). Savings get the --blue
+   accent consistently (≈7:1 on paper/parchment — readable motivator). */
+.sat-rows {
+  max-width: 640px;
+  margin-top: 14px;
+}
+
+.sat-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 12px 0;
+  margin: 0;
+}
+
+.sat-pkg {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.sat-leader {
+  flex: 1 1 auto;
+  min-width: 40px;
+  border-bottom: 2px dotted #1e254026;
+  transform: translateY(-5px);
+}
+
+.sat-price {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sat-save {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+/* reserve panel: blue ghost buttons (globals .btn base + local blue tint;
+   no terra fills). All 4 contact routes render in both reserve states. */
+.sat-reserve-body {
+  margin: 14px 0 0;
+  max-width: 34em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.sat-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.sat-btns .btn-ghost {
+  color: var(--blue);
+  border-color: #3d4bb866;
+}
+
+.sat-btns .btn-ghost:hover {
+  color: var(--blue-deep);
+  border-color: #2a3482;
+}
+
+.sat-small {
+  margin: 20px 0 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.sat-motto {
+  margin: 22px 0 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.3;
+  color: var(--blue);
+}
+
+/* --- motion: one shared easing, one authored panel-in moment -----------
+   Base: ~.4s ease-out on load. Where scroll-driven animations are
+   supported, the same keyframes run against the scroll timeline so they
+   play as the panels enter the viewport instead of a page load. */
+
+@keyframes sat-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sat-panel-in {
+  animation: sat-panel-in 0.4s var(--ease) both;
+}
+
+@supports (animation-timeline: view()) {
+  .sat-panel-in {
+    animation: sat-panel-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}
+
+/* explicit reduced-motion neutralizer (on top of the globals kill-switch) */
+@media (prefers-reduced-motion: reduce) {
+  .sat-panel-in {
+    animation: none;
+  }
+
+  .sat .btn,
+  .sat-btns .btn-ghost {
+    transition: none;
+  }
+}
+
+/* --- breakpoints -------------------------------------------------------- */
+
+@media (max-width: 980px) {
+  .sat-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .sat-poster {
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .sat-board {
+    padding: 28px 22px 24px 46px;
+  }
+
+  .sat-board-line {
+    left: 28px;
+  }
+
+  .sat-panel {
+    padding: 24px 22px;
+  }
+}
