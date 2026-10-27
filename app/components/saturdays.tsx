@@ -11,13 +11,14 @@
 // (payment / parking are not published and are not shown).
 import { Check, Coffee, Cookie, Palette } from "lucide-react";
 import { useEffect, useState } from "react";
+import Accent from "./accent";
 import Reveal from "./reveal";
 import "../saturdays.css";
 
 /* --- constants ----------------------------------------------------------------
    Verbatim strings kept OUTSIDE JSX (menu.tsx / place.tsx idiom) so ₱, —, ·,
-   en-dashes and apostrophes survive prerender untouched. */
-const H2 = "Saturdays at NotePads";
+   en-dashes and apostrophes survive prerender untouched. v4: the H2 gains the
+   shared accent word (dates, prices, phone numbers stay verbatim §7). */
 const LEDE =
   "Give your child the gift of creativity, one gadget-free Saturday at a time. We're inviting parents to let their little ones unplug, explore, and create in a fun, hands-on environment where they can learn new skills, build confidence, and make new friends.";
 
@@ -152,7 +153,7 @@ export default function Saturdays() {
       <div className="sat-inner">
         <Reveal>
           <h2 id="saturdays-title" className="sat-title">
-            {H2}
+            <Accent>Saturdays</Accent> at NotePads
           </h2>
           <p className="sat-lede">{LEDE}</p>
         </Reveal>

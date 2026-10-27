@@ -2,25 +2,34 @@
 
 :root {
   --parchment: #f7f0e3;
-  --paper: #fcf9ef;
+  /* warm apricot-cream block ground (hero / page-top accents) — clearly
+     warmer than parchment so the top region never blends with the nav */
+  --blush: #faf0dd;
+  --paper: #fdfaf2;
   --kraft: #ead9bd;
   --ink: #1e2540;
   --ink-soft: #4d5878;
   --terra: #b85433;
   --mustard: #e2b064;
+  --honey: #d9a441;
+  /* deep honey for LARGE heading accent text on cream (≈3.5:1 — large-text
+     duty only; never body/small text) */
+  --gold-text: #b07f19;
   --sage: #a7b087;
   --forest: #202a52;
-  --blue: #3d4bb8;
-  --blue-deep: #2a3482;
+  --blue: #1c3aae;
+  --blue-deep: #142c80;
   --dusty: #97a5b8;
   --overlay-deep: #1d2a56;
   --sky-warm: #e8ddd0;
   --sage-soft: #c9d0b4;
   --mustard-soft: #f0d8a8;
   --dusty-soft: #c2ccd8;
+  --butter-soft: #f6e3b4;
+  --peach-soft: #f8e3d2;
   --shadow-soft: 0 6px 16px rgba(30, 37, 64, 0.12);
   --shadow-lift: 0 10px 24px rgba(30, 37, 64, 0.16);
-  --shadow-stick: 6px 6px 0 #3d4bb833;
+  --shadow-stick: 6px 6px 0 #1c3aae33;
   --nav-h: 72px;
   --maxw: 1200px;
   --gutter: clamp(20px, 5vw, 64px);
@@ -29,11 +38,14 @@
 
 @theme inline {
   --color-parchment: var(--parchment);
+  --color-blush: var(--blush);
   --color-paper: var(--paper);
   --color-kraft: var(--kraft);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-mustard: var(--mustard);
+  --color-honey: var(--honey);
+  --color-gold-text: var(--gold-text);
   --color-sage: var(--sage);
   --color-forest: var(--forest);
   --color-blue: var(--blue);
@@ -44,6 +56,8 @@
   --color-sage-soft: var(--sage-soft);
   --color-mustard-soft: var(--mustard-soft);
   --color-dusty-soft: var(--dusty-soft);
+  --color-butter-soft: var(--butter-soft);
+  --color-peach-soft: var(--peach-soft);
   --font-display: var(--font-fredoka), Georgia, serif;
   --font-hand: var(--font-gaegu), "Comic Sans MS", cursive;
   --shadow-soft: var(--shadow-soft);
@@ -59,14 +73,19 @@ body {
   line-height: 1.6;
 }
 
+/* v4: Fredoka headings wear slightly tight tracking (per ui_design.md §2). */
+h1, h2, h3 {
+  letter-spacing: -0.01em;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--nav-h) + 8px);
 }
 
 ::selection {
-  background: #3d4bb8;
-  color: #fcf9ef;
+  background: #1c3aae;
+  color: #fdfaf2;
 }
 
 :focus-visible {
@@ -121,6 +140,67 @@ html {
 
 .u-sticker {
   box-shadow: var(--shadow-stick);
+}
+
+/* --- accent word (ui_design.md §2.1, revised 2026-10-27) --------------------
+   ONE per main heading. The word itself is deep-honey GOLD text
+   (--gold-text #b07f19, ≈3.5:1 on cream — large-heading duty only) with a
+   light oblique; a hand-drawn honey swash HUGS the baseline (same width
+   family as the word — never a detached low line). Draw-in: armed only
+   after hydration (data-armed), so SSR/no-JS shows the swash fully drawn;
+   reduced-motion never arms (swash stays drawn). */
+
+.accent-word {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.accent-word-text {
+  display: inline-block;
+  color: var(--gold-text);
+  transform: skewX(-8deg);
+  transform-origin: 50% 100%;
+}
+
+.accent-word-swash {
+  position: absolute;
+  left: -2%;
+  bottom: -0.12em;
+  width: 104%;
+  height: 0.26em;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.accent-word-swash path {
+  fill: none;
+  stroke: var(--honey);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  opacity: 0.95;
+  transition: stroke-dashoffset 0.5s var(--ease);
+}
+
+.accent-word[data-armed="1"] .accent-word-swash path {
+  stroke-dashoffset: 100;
+}
+
+.accent-word[data-armed="1"].is-in .accent-word-swash path {
+  stroke-dashoffset: 0;
+}
+
+/* Dark-ground variant: brighter gold text (--mustard, 7.0:1 on --forest
+   navy), no swash. */
+
+.accent-word--goldtext .accent-word-text {
+  color: var(--mustard);
+}
+
+.accent-word--goldtext .accent-word-swash {
+  display: none;
 }
 
 /* --- buttons (shared: nav, hero, sections) --- */

@@ -25,7 +25,7 @@
   font-style: normal;
   font-size: clamp(2rem, 4.6vw, 4rem);
   line-height: 1.12;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
@@ -42,7 +42,7 @@
   font-weight: 700;
   font-size: clamp(1.1rem, 1.8vw, 1.4rem);
   line-height: 1.2;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
@@ -126,8 +126,12 @@
   background: var(--paper);
 }
 
-.rev-card-mustard {
-  background: var(--mustard-soft);
+.rev-card-butter {
+  background: var(--butter-soft);
+}
+
+.rev-card-peach {
+  background: var(--peach-soft);
 }
 
 .rev-card-dusty {
@@ -219,7 +223,7 @@
   font-style: normal;
   font-size: 1.35rem;
   line-height: 1.2;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 

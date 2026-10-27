@@ -10,7 +10,7 @@
      #c8d0e4 bio tone  ≈ 9.0:1   (bio, links, muted text)
      #aeb9f2 blue-ico  ≈ 7.3:1   (strip icons + hover)
      #e2b064 mustard   ≈ 7.0:1   (care line + doodles, ≥ 3:1 decor duty)
-   every text tone ≥ 4.5:1 (DoD); --blue #3d4bb8 itself is 1.9:1 on navy
+   every text tone ≥ 4.5:1 (DoD); --blue #1c3aae itself is ~1.8:1 on navy
    and is therefore never used as text here. */
 
 .footer {
@@ -85,7 +85,7 @@
   font-style: normal;
   font-size: 1.55rem;
   line-height: 1.1;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--parchment); /* 12.2:1 */
 }
 
@@ -136,7 +136,7 @@
   font-style: normal;
   font-size: 1.35rem;
   line-height: 1.14;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--paper); /* 13.2:1 */
   /* More space below the heading than... no — generous SEPARATION after,
      tighter above, per the spacing craft check. */

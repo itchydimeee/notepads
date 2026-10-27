@@ -10,6 +10,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Reveal from "./reveal";
+import Accent from "./accent";
 import "../place.css";
 
 type RatioHint = "wide" | "tall" | "square";
@@ -75,8 +76,9 @@ const SHOTS: Shot[] = [
   },
 ];
 
+// v4 copy: headline carries the accent word; lede stays warm (details facts).
 const LEDE =
-  "Warm lights, red chairs, a pantry within reach and a seat with a plug. Here's a peek around the 2nd floor.";
+  "Warm lights, red chairs, a pantry within reach and a seat with a plug waiting. Take a peek around the 2nd floor — tap any photo for a closer look.";
 
 // Single content column (--maxw) minus gutters/gap, split by the masonry
 // column count at each breakpoint (3 ≥980, 2 ≥640, 1 below).
@@ -163,7 +165,7 @@ export default function Place() {
         <Reveal>
           <header className="place-head">
             <h2 id="place-title" className="place-title">
-              Come on in
+              Come on <Accent>in</Accent>
             </h2>
             <p className="place-lede">{LEDE}</p>
           </header>

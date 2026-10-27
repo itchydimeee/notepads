@@ -11,19 +11,20 @@ import {
   Wifi,
 } from "lucide-react";
 import "../about.css";
+import Accent from "./accent";
 import Reveal from "./reveal";
 
-// All copy verbatim from docs/details.md §4 (About). Strings kept as constants
-// so apostrophes/₱/– survive JSX untouched.
+// v4 copy: warm, short, human (ui_design.md §0.1 / PRODUCT.md) — facts still
+// verbatim from docs/details.md §4 (address, rates, package contents).
 // T13: transitions ride the shared <Reveal> wrapper only (one shared utility).
 // Stagger = spec cap i × 60ms over the 4 group members (head/stats/amenities/
 // ticket). The two polaroids stay unwrapped on purpose — they are the
 // section's still-life, not part of its staged reveal group.
 
 const LEDE_1 =
-  "NotePads Study Hub Cafe is your cozy corner for coffee, focus, and fresh ideas — tucked on the 2nd floor of the SDC Building along Guzman–Jesena Street in Mandurriao, Iloilo City.";
+  "Second floor of the SDC Building, along Guzman–Jesena Street in Mandurriao, Iloilo City — long tables, warm lights, and coffee that never rushes you.";
 const LEDE_2 =
-  "Whether it's a cram session before finals, a work-from-cafe day, a catch-up with friends over a board game, or a Saturday of creativity for the little ones — there's a seat, a cup, and a plug waiting for you.";
+  "Cramming for finals, working from the cafe, a board game with friends after class, or a Saturday of hands-on fun for the kids — there's a seat, a cup, and a plug waiting for you.";
 
 const STATS = [
   { value: "2 hrs", label: "free stay, Wi-Fi & charging" },
@@ -73,7 +74,7 @@ export default function About() {
         <Reveal>
           <header className="about-head">
             <h2 id="about-title" className="about-title">
-              A study hub that feels like home
+              A study hub that feels like <Accent>home</Accent>
             </h2>
             <div className="about-lede">
               <p>{LEDE_1}</p>

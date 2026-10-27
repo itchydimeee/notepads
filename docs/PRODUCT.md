@@ -22,7 +22,7 @@ A local cafe website that persuades visitors to visit (or reserve workshop spots
 
 ## Positioning
 
-"A study hub cafe" — the cafe whose entire identity is built around learning and studying (study-pun menu chapter names, no-gadget kids workshops, 2-hours-free study stay). Not just another coffee shop: it is organized around what students need.
+"A study hub cafe" — the cafe whose entire identity is built around learning and studying (study-pun menu chapter names, no-gadget kids workshops, 2-hours-free study stay). Not just another coffee shop: it is organized around what students need. Visually it should read as a warm, premium, modern cafe brand — a calm, airy, crafted page that feels like a warm corner of the cafe — never a generic template.
 
 ## Operating Context
 
@@ -42,8 +42,9 @@ A local cafe website that persuades visitors to visit (or reserve workshop spots
 ## Brand Commitments
 
 - Name: NotePads Study Hub Cafe (short: NotePads). Logo and photos: real assets in public/images/.
-- Voice: warm, playful scholar/notebook identity — study puns, handwritten accents, taped polaroids, ruled paper (user-pinned; keep in any visual rendition).
-- User-pinned palette direction (approved plan, 2026-10-26): warm-first family retained from production (parchment/kraft/terra/mustard/sage/forest), cobalt demoted to links/focus accents only; see docs/ui_design.md v2 design spec.
+- Voice: warm, playful scholar/notebook identity — study puns, handwritten accents, taped polaroids, ruled paper (user-pinned; keep in any visual rendition). **v4 copy tone (2026-10-27)**: cozy, short, human — headlines, ledes, CTAs and buttons rewritten to sound inviting, never generic ("Your cozy corner for focus", "Grab a seat — we saved you a plug", "Two free hours, on us"). Facts (prices, hours, phones, addresses, dates, reviews) stay verbatim from docs/details.md — tone lives in how they're framed, never in invented claims.
+- User-pinned palette direction (v4 "Golden Corner", 2026-10-27): warm cream/ivory grounds (never pure white/gray) + deep warm navy ink + brand ultramarine blue `#1c3aae` (slight purple lean) for buttons/links/icons + first-class honey/gold highlight family for swashes, checkmarks and tape (always decoration on light ground) + peach/butter/caramel soft supports; icy blues, teal, cold grays and harsh contrast banned; see docs/ui_design.md v4 spec.
+- Typography: Fredoka headings (600–700, one oblique + gold-switched accent word per main heading — swash underline on light ground, gold text only on dark navy) + Gaegu handwritten body.
 
 ## Evidence on Hand
 

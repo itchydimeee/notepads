@@ -24,7 +24,7 @@
   font-style: normal;
   font-size: clamp(2rem, 4.6vw, 4rem);
   line-height: 1.12;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
@@ -95,7 +95,7 @@
 
 .place-card:hover .place-shot,
 .place-card:focus-visible .place-shot {
-  transform: rotate(0deg) translateY(-2px);
+  transform: rotate(0deg) translateY(-4px);
   box-shadow: var(--shadow-lift);
 }
 

@@ -6,10 +6,14 @@
 // constants OUTSIDE JSX so apostrophes, —, ·, é and the trailing ☕✨ survive
 // prerender untouched.
 import { Quote, Star } from "lucide-react";
+import Accent from "./accent";
 import Reveal from "./reveal";
 import "../reviews.css";
 
-const H2 = "Hear from our customers";
+// v4: headline rewritten warm; review quotes + roles stay VERBATIM (real
+// testimonials — never rewritten). Summary remainder stays the details.md
+// source wording. Card tones cycled paper/butter/paper/dusty/peach (v4 gold
+// + peach supports).
 
 // Source string: `★★★★★ 5.0 from 5 five-star reviews · drag to browse`.
 // Composition decision (documented in the T9 report): the five ★ glyphs are
@@ -23,7 +27,7 @@ type Review = {
   name: string;
   role: string | null; // parenthetical exactly as printed in details.md
   quote: string;
-  tone: "paper" | "mustard" | "dusty";
+  tone: "paper" | "butter" | "peach" | "dusty";
 };
 
 const REVIEWS: [Review, Review, Review, Review, Review] = [
@@ -37,7 +41,7 @@ const REVIEWS: [Review, Review, Review, Review, Review] = [
   {
     name: "Belle N.",
     role: null,
-    tone: "mustard",
+    tone: "butter",
     quote:
       "All the staff are incredibly pleasant and welcoming. The food is delicious and very affordable, and the coffee tastes authentic, not commercial at all.",
   },
@@ -58,7 +62,7 @@ const REVIEWS: [Review, Review, Review, Review, Review] = [
   {
     name: "Cj R.",
     role: "(Photographer)",
-    tone: "mustard",
+    tone: "peach",
     quote:
       "NotePads Studyhub & Café is totally best for both work and unwinding! Their salted caramel coffee is seriously amazing — perfectly balanced, not too sweet, and just so comforting. The service is always warm and friendly, and you feel right at home the moment you step inside. Plus, the complimentary snacks are a lovely touch. A fantastic place to study, relax, or just enjoy a good cup of coffee. I definitely plan to come back again! ☕✨",
   },
@@ -70,7 +74,7 @@ export default function Reviews() {
       <Reveal>
         <div className="rev-inner">
           <h2 id="reviews-title" className="rev-title">
-            {H2}
+            What our <Accent>guests</Accent> are saying
           </h2>
 
           {/* Summary: drawn filled stars (icon system, not unicode glyphs) +

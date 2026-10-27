@@ -88,7 +88,7 @@ export default function Nav() {
         </nav>
 
         <a href="#menu" className="btn btn-blue nav-cta">
-          See the menu
+          Flip the menu
         </a>
 
         <button

@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { ChevronDown, MapPin } from "lucide-react";
+import { ArrowRight, ChevronDown, MapPin, Sparkle } from "lucide-react";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import Accent from "./accent";
 import "../hero.css";
 
 // Placeholder photos (branded PNG stubs; real photos to be swapped in — alt text from docs/details.md).
@@ -86,29 +87,35 @@ export default function Hero() {
 
   return (
     <section id="top" className="hero" aria-label="NotePads Study Hub Cafe — welcome">
-      <svg viewBox="0 0 24 24" className="hero-spark a" width="26" height="26" fill="currentColor" aria-hidden="true">
-        <path d="M12 2l2.6 7.4L22 12l-7.4 2.6L12 22l-2.6-7.4L2 12l7.4-2.6Z" />
-      </svg>
+      {/* Tiny sparkle stays a section-level garnish; the diamond star lives
+          INSIDE the collage so it tracks the polaroid, not the navbar. */}
       <svg viewBox="0 0 24 24" className="hero-spark b" width="16" height="16" fill="currentColor" aria-hidden="true">
         <path d="M12 2l2.6 7.4L22 12l-7.4 2.6L12 22l-2.6-7.4L2 12l7.4-2.6Z" />
       </svg>
 
       <div className="hero-inner">
         <div className="hero-copy">
+          {/* v4 rework per user reference (ui_structure_reference.png): small
+              location badge above the title, gold accent word, layered
+              polaroid collage + gold sticky note on the photo side. */}
+          <p className="hero-eyebrow">
+            <Sparkle size={14} aria-hidden="true" />
+            Study Hub Cafe · Mandurriao, Iloilo
+          </p>
           <h1 className="hero-title">
-            Where learning meets comfort
+            Your <Accent>cozy</Accent> corner for coffee, focus, and fresh ideas
           </h1>
           <p className="hero-lede">
-            Your cozy corner for coffee, focus, and fresh ideas — <strong>free Wi-Fi, charging,
-            and 2 hours of study time on the house</strong>. Tucked on the 2nd floor of the SDC
-            Building, Mandurriao, Iloilo City.
+            With <strong>free Wi-Fi, free charging, and 2 study hours on the house</strong> —
+            on the 2nd floor of the SDC Building, Mandurriao, Iloilo City.
           </p>
           <div className="hero-ctas">
             <a href="#menu" className="btn btn-blue">
-              See the menu
+              Flip the menu book
+              <ArrowRight size={18} aria-hidden="true" />
             </a>
             <a href="#visit" className="btn btn-ghost">
-              Find us
+              Find your seat
             </a>
           </div>
           <div className="hero-chips">
@@ -131,6 +138,12 @@ export default function Hero() {
         </div>
 
         <div className="hero-shots">
+          {/* Curved 4-point diamond star (user-liked reference motif, drawn to
+              flow with our rounded Fredoka curves) — rides the collage's
+              top-right corner. */}
+          <svg viewBox="0 0 24 24" className="hero-spark a" width="34" height="34" fill="currentColor" aria-hidden="true">
+            <path d="M12 0c.9 5.4 3.6 8.6 8.6 10.2 1.4.45 1.4 2.15 0 2.6C15.6 14.4 12.9 17.6 12 24c-.9-6.4-3.6-9.6-8.6-11.2-1.4-.45-1.4-2.15 0-2.6C8.4 8.6 11.1 5.4 12 0Z" />
+          </svg>
           <figure className="shot is-back">
             <span className="u-tape" aria-hidden="true" />
             <div className="shot-frame">
@@ -139,7 +152,7 @@ export default function Hero() {
                   src={BACK_SHOT.src}
                   alt={BACK_SHOT.alt}
                   fill
-                  sizes="(max-width: 980px) 88vw, 370px"
+                  sizes="(max-width: 980px) 88vw, 290px"
                   style={{ objectFit: "cover" }}
                 />
               </div>
@@ -158,7 +171,7 @@ export default function Hero() {
                     alt={i === slide ? s.alt : ""}
                     fill
                     priority={i === 0}
-                    sizes="(max-width: 980px) 92vw, 420px"
+                    sizes="(max-width: 980px) 92vw, 470px"
                     style={{
                       objectFit: "cover",
                       opacity: i === slide ? 1 : 0,
@@ -171,6 +184,15 @@ export default function Hero() {
               </figcaption>
             </div>
           </figure>
+
+          {/* Gold sticky note riding the collage's bottom-left corner — a real
+              note ("2 free hours, on us"), not pure décor: it states the study
+              stay fact. Its shadow + tilt mirror the taped-polaroid world. */}
+          <p className="hero-note">
+            2 free hours
+            <br />
+            on the house!
+          </p>
         </div>
       </div>
 

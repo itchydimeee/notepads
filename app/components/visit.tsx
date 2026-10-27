@@ -5,10 +5,12 @@
 // system, motion comes only from those buttons' global transitions.
 // All copy + URLs verbatim from docs/details.md §9 + §Site Identity.
 import ContactStrip from "./contact-strip";
+import Accent from "./accent";
 import Reveal from "./reveal";
 import "../visit.css";
 
-const H2 = "Find your seat";
+// v4: H2 carries the accent word; everything else (URLs, address, note)
+// stays verbatim from docs/details.md.
 const LEDE =
   "2nd floor of the SDC Building, Guzman–Jesena Street, Mandurriao — look for the glowing NotePads sign.";
 
@@ -37,7 +39,7 @@ export default function Visit() {
       <div className="visit-inner">
         <Reveal>
           <h2 id="visit-title" className="visit-title">
-            {H2}
+            Find your <Accent>seat</Accent>
           </h2>
           <p className="visit-lede">{LEDE}</p>
         </Reveal>

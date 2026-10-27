@@ -1,6 +1,11 @@
-/* Preloader — an ink & indigo notebook sheet that paints with the first byte.
-   Markup lives in components/preloader.tsx; the sheet exits via a small
-   inline script there. Removed from the DOM after the exit transition. */
+/* Preloader — "morning brew" memo card (v4 redesign).
+   Warm cream ground with a soft butter glow and dot grid; a taped memo card
+   tilts like it was pinned fresh; the name writes itself in with a honey
+   nib; a warm underline fills as the brew progress; cozy notes rotate.
+   Exit: the card lifts and settles back FIRST, then the whole warm ground
+   fades gently — like the cafe doors easing open, not a sheet ripping away.
+   Markup lives in components/preloader.tsx; removed from the DOM after
+   the exit transition. */
 
 html.is-preloading,
 html.is-preloading body {
@@ -16,25 +21,373 @@ html.is-preloading body {
   color: var(--ink);
   background-color: var(--parchment);
   background-image:
-    repeating-linear-gradient(
-      transparent 0 37px,
-      #1e254014 37px 38px
-    ),
-    radial-gradient(#1e25400f 1.2px, transparent 1.2px);
+    radial-gradient(1100px 640px at 50% 40%, #fbeecd 0%, rgba(251, 238, 205, 0) 70%),
+    radial-gradient(#1e254010 1.2px, transparent 1.2px);
   background-size:
-    100% 38px,
-    24px 24px;
+    100% 100%,
+    22px 22px;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
-  transition:
-    transform 0.85s cubic-bezier(0.76, 0, 0.24, 1),
-    opacity 0.85s cubic-bezier(0.76, 0, 0.24, 1);
-  transform: translateY(0) rotate(0deg);
-  /* JS-blocked safety net: the sheet fades itself away even without a script. */
+  /* JS-blocked safety net: the overlay fades itself away even without script */
   animation: pre-autofade 0.4s ease 5s forwards;
 }
 
+.pre-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(760px 460px at 50% 46%, #fff8e2 0%, rgba(255, 248, 226, 0) 72%);
+  pointer-events: none;
+  animation: pre-breathe 5.5s ease-in-out infinite;
+}
+
+/* one slow diamond star, top-left of the viewport — quiet company */
+.pre-spark {
+  position: absolute;
+  top: clamp(64px, 12vh, 130px);
+  left: clamp(28px, 8vw, 96px);
+  color: var(--mustard);
+  opacity: 0.55;
+  pointer-events: none;
+  animation: pre-drift 7s ease-in-out infinite;
+}
+
+@keyframes pre-drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(6deg);
+  }
+}
+
+/* --- the memo card (everything cozy lives here) --- */
+
+/* stage centers the card AND owns the tear-off sliver pseudo so the sliver
+   survives the card's own exit clip-path */
+.pre-stage {
+  position: relative;
+}
+
+.pre-card {
+  position: relative;
+  width: min(84vw, 470px);
+  padding: clamp(30px, 5.6vw, 46px) clamp(28px, 5.8vw, 48px) clamp(26px, 5vw, 40px);
+  background: var(--paper);
+  border-radius: 9px;
+  box-shadow: var(--shadow-lift);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  text-align: center;
+  /* full polygon so the exit can tear along an interpolated jagged edge */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* tear-away perf line scored across the card's TOP band (the pad glue line,
+   right under the tape) — the page tears from the top */
+.pre-card::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 20px;
+  border-top: 2px dashed #1e254026;
+}
+
+/* the sliver torn from the card's top edge — it flutters down after the tear */
+.pre-stage::after {
+  content: "";
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  top: -6px;
+  height: 22px;
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: var(--shadow-soft);
+  /* zig-zag torn bottom edge (the tear line is at the TOP of the page) */
+  clip-path: polygon(
+    0 0, 100% 0, 100% calc(100% - 6px), 6% calc(100% - 0px), 13% calc(100% - 7px),
+    21% calc(100% - 1px), 29% calc(100% - 8px), 37% calc(100% - 2px),
+    45% calc(100% - 7px), 53% 100%, 61% calc(100% - 8px), 69% calc(100% - 2px),
+    77% calc(100% - 7px), 85% calc(100% - 1px), 92% calc(100% - 7px),
+    100% calc(100% - 3px), 100% 0
+  );
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pre-card-tape {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  translate: -50% 0;
+  rotate: -2.5deg;
+  z-index: 2;
+}
+
+/* --- cup with steam --- */
+
+.pre-cup {
+  width: clamp(66px, 10vw, 88px);
+  animation: pre-settle 1.2s var(--ease) both;
+}
+
+.pre-steam path {
+  opacity: 0.5;
+  animation: pre-steam 2.8s ease-in-out infinite;
+}
+
+.pre-steam path:nth-child(2) {
+  animation-delay: 0.45s;
+}
+
+.pre-steam path:nth-child(3) {
+  animation-delay: 0.9s;
+}
+
+@keyframes pre-steam {
+  0%,
+  100% {
+    opacity: 0.18;
+    transform: translateY(2px);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes pre-settle {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- name writing itself in (ink write + honey nib) --- */
+
+.pre-name {
+  position: relative;
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(2.6rem, 8vw, 4.6rem);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pre-name-ghost {
+  color: #1e254021;
+}
+
+.pre-name-ink {
+  position: absolute;
+  inset: 0;
+  color: var(--ink);
+  clip-path: inset(0 100% 0 0);
+}
+
+/* honey nib with a warm glow — writes, then lifts away */
+.pre-nib {
+  position: absolute;
+  top: 6%;
+  bottom: 16%;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--honey);
+  box-shadow: 0 0 10px #d9a44180;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.pre-nib::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  translate: -50% 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--honey);
+  box-shadow: 0 0 8px #d9a441a0;
+}
+
+/* --- brew underline = the progress bar --- */
+
+.pre-rule {
+  display: block;
+  width: min(280px, 60vw);
+  height: 6px;
+  margin-top: 10px;
+  border-radius: 99px;
+  background: #1e25401a;
+  overflow: hidden;
+}
+
+.pre-rule i {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--honey), var(--mustard));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+/* --- rotating cozy note --- */
+
+.pre-note {
+  margin: 10px 0 0;
+  min-height: 1.5em;
+  color: var(--ink-soft);
+  font-size: clamp(1.05rem, 2.2vw, 1.22rem);
+  animation: pre-note-in 0.45s var(--ease);
+}
+
+@keyframes pre-note-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* tabular counter rides the card's bottom-right corner */
+.pre-count {
+  position: absolute;
+  bottom: clamp(14px, 3vh, 30px);
+  right: clamp(20px, 4vw, 46px);
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  color: #1e254066;
+}
+
+.pre-count::after {
+  content: "%";
+  font-size: 0.62em;
+  margin-left: 2px;
+  color: #1e25404d;
+}
+
+/* --- ambient warm breathing on the glow --- */
+
+@keyframes pre-breathe {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* --- exit: TEAR the page from the top, then the WIND takes it -----------
+   The card is pinned at its TOP edge (transform-origin there). It snags,
+   tears — the jagged line runs across the page's TOP — lifts free, and
+   then a breeze carries it off screen (drift up-right + tumble + shrink).
+   The torn sliver flutter-drops on its own; the warm ground fades last —
+   doors easing open onto the cafe. */
+
+.pre-stage {
+  perspective: 900px;
+}
+
+.pre-card {
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+.pre-card,
+.pre-spark {
+  transition:
+    transform 0.45s var(--ease),
+    opacity 0.4s var(--ease);
+}
+
+.pre.is-out .pre-card {
+  animation: pre-tear 0.95s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+/* a tiny snag before the tear pulls free — paper resists for a beat */
+@keyframes pre-tear {
+  0% {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transform: rotate(0deg);
+  }
+  14% {
+    clip-path: polygon(
+      0 8px, 9% 2px, 20% 9px, 33% 3px, 47% 10px, 62% 2px, 76% 9px,
+      88% 3px, 100% 7px, 100% 100%, 0 100%
+    );
+    transform: rotate(-1.8deg) translateY(3px) scale(1.012);
+  }
+  /* release: the torn page lifts free of the pad */
+  34% {
+    transform: rotate(2deg) translateY(-6%);
+    opacity: 1;
+  }
+  /* caught by the breeze: drift + tumble, up-right */
+  56% {
+    transform: translate(5%, -17%) rotate(-6deg) scale(0.96);
+    opacity: 0.95;
+  }
+  78% {
+    transform: translate(14%, -36%) rotate(-14deg) scale(0.88);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(27%, -60%) rotate(-24deg) scale(0.78);
+    opacity: 0;
+  }
+}
+
+/* the torn sliver flutters down from the tear line */
+.pre.is-out .pre-stage::after {
+  opacity: 1;
+  animation: pre-drop 0.66s cubic-bezier(0.5, 0.05, 0.7, 1) 0.22s forwards;
+}
+
+@keyframes pre-drop {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotate(1deg);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(76px) rotate(-4deg);
+  }
+}
+
+.pre.is-out .pre-spark {
+  opacity: 0;
+  transform: translateY(-12px) rotate(10deg);
+}
+
+.pre.is-out .pre-glow,
+.pre.is-out .pre-count {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
 .pre.is-out {
-  transform: translateY(-104%) rotate(-1.2deg);
+  animation: none;
+  transition: opacity 0.55s ease 0.62s;
+  opacity: 0;
 }
 
 @keyframes pre-autofade {
@@ -44,167 +397,42 @@ html.is-preloading body {
   }
 }
 
-/* --- notebook furniture --- */
-
-.pre .pre-margin {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: clamp(34px, 7vw, 92px);
-  width: 2px;
-  background: #3d4bb855;
-}
-
-.pre .pre-holes {
-  position: absolute;
-  top: clamp(16px, 3vw, 30px);
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  gap: clamp(60px, 16vw, 190px);
-}
-
-.pre .pre-holes i {
-  width: clamp(16px, 2.4vw, 24px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--parchment);
-  box-shadow: inset 0 2px 4px #1e25402e;
-}
-
-/* --- content --- */
-
-.pre .pre-body {
-  display: grid;
-  justify-items: center;
-  gap: clamp(8px, 1.6vh, 16px);
-  padding: 0 24px;
-  text-align: center;
-}
-
-.pre .pre-cup {
-  width: clamp(72px, 10vw, 96px);
-}
-
-.pre .pre-steam path {
-  opacity: 0.45;
-  animation: pre-steam 2.6s ease-in-out infinite;
-}
-
-.pre .pre-steam path:nth-child(2) {
-  animation-delay: 0.4s;
-}
-
-.pre .pre-steam path:nth-child(3) {
-  animation-delay: 0.8s;
-}
-
-@keyframes pre-steam {
-  0%,
-  100% {
-    opacity: 0.16;
-    transform: translateY(2px);
-  }
-  50% {
-    opacity: 0.55;
-    transform: translateY(-3px);
-  }
-}
-
-.pre .pre-name {
-  position: relative;
-  display: block;
-  margin-top: clamp(2px, 1vh, 8px);
-  font-size: clamp(2.4rem, 8vw, 4.4rem);
-  line-height: 1.06;
-  letter-spacing: 0;
-  font-family: var(--font-fredoka), system-ui, sans-serif;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.pre .pre-name-ghost {
-  color: #1e254021;
-}
-
-.pre .pre-name-ink {
-  position: absolute;
-  inset: 0;
-  color: var(--ink);
-  clip-path: inset(0 100% 0 0);
-}
-
-.pre .pre-nib {
-  position: absolute;
-  top: 8%;
-  bottom: 14%;
-  width: 2.5px;
-  border-radius: 2px;
-  background: var(--blue);
-  box-shadow: 0 0 10px #3d4bb880;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.pre .pre-nib::after {
-  content: "";
-  position: absolute;
-  bottom: -7px;
-  left: 50%;
-  translate: -50% 0;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--blue);
-  box-shadow: 0 0 8px #3d4bb880;
-}
-
-.pre .pre-rule {
-  display: block;
-  width: min(300px, 64vw);
-  height: 4px;
-  border-radius: 4px;
-  background: #1e254026;
-  overflow: hidden;
-}
-
-.pre .pre-rule i {
-  display: block;
-  height: 100%;
-  border-radius: 4px;
-  background: var(--blue);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-}
-
-.pre .pre-note {
-  margin: 0;
-  min-height: 1.5em;
-  color: var(--ink-soft);
-  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-}
-
-.pre .pre-count {
-  position: absolute;
-  bottom: clamp(16px, 3vw, 34px);
-  right: clamp(20px, 4vw, 46px);
-  font-family: var(--font-fredoka), system-ui, sans-serif;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  font-size: clamp(1.5rem, 3.2vw, 2.2rem);
-  color: #1e254066;
-}
-
-/* --- reduced motion: simple fade, no transforms --- */
+/* --- reduced motion: single quiet fade, no transforms, no tears --- */
 
 @media (prefers-reduced-motion: reduce) {
   .pre {
     transition: opacity 0.3s;
   }
 
+  .pre-glow,
+  .pre-spark,
+  .pre-steam path,
+  .pre-card,
+  .pre-note,
+  .pre-stage::after {
+    animation: none;
+  }
+
+  .pre-stage::after {
+    opacity: 0;
+  }
+
   .pre.is-out {
     transform: none;
+    transition: opacity 0.3s;
+  }
+
+  .pre.is-out .pre-card {
+    animation: none;
+    clip-path: none;
+    transform: none;
     opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .pre.is-out .pre-spark,
+  .pre.is-out .pre-glow {
+    transition: opacity 0.3s;
+    transform: none;
   }
 }

@@ -1,10 +1,11 @@
-/* About — parchment continuation of the hero: Fredoka H2 + dual lede,
-   3 stat cards, ≤ 2 taped polaroids, 8-amenity grid, ₱350 package ticket.
-   All colors/fonts via globals.css tokens. */
+/* About — layered ivory SHEET on the cream ground (reference style):
+   rounded floating panel, clearly separated from the blush hero seam. */
 
 .about {
   padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
-  background: var(--parchment);
+  background: var(--paper);
+  border-radius: clamp(24px, 4vw, 40px);
+  margin-inline: clamp(10px, 2vw, 22px);
 }
 
 .about-inner {
@@ -23,8 +24,8 @@
   font-weight: 700;
   font-style: normal;
   font-size: clamp(2rem, 4.6vw, 4rem);
-  line-height: 1.12;
-  letter-spacing: 0;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
   color: var(--ink);
   max-width: 22ch;
 }
@@ -70,7 +71,7 @@
 }
 
 .about-stat:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lift);
 }
 
@@ -79,7 +80,7 @@
   font-weight: 700;
   font-size: clamp(2rem, 3.4vw, 2.75rem);
   line-height: 1.08;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
@@ -96,6 +97,16 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 40px;
+}
+
+/* layered still-life: the second polaroid tucks into the first (≥ 900px
+   only — stacked and airy on mobile) */
+
+@media (min-width: 900px) {
+  .about-shot:nth-child(even) {
+    margin-left: -44px;
+    z-index: 1;
+  }
 }
 
 .about-shot {
@@ -168,7 +179,7 @@
 }
 
 .about-amenity:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-lift);
 }
 
@@ -187,7 +198,7 @@
   font-weight: 600;
   font-size: 1.12rem;
   line-height: 1.25;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--ink);
   margin: 0;
 }
@@ -234,7 +245,7 @@
   font-weight: 700;
   font-size: clamp(2.2rem, 4vw, 3rem);
   line-height: 1.08;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   color: var(--ink);
 }
 
@@ -261,7 +272,7 @@
   height: 28px;
   border-radius: 50%;
   background:
-    radial-gradient(circle, transparent 0 60%, #3d4bb833 61% 82%, transparent 83%),
+    radial-gradient(circle, transparent 0 60%, #1c3aae33 61% 82%, transparent 83%),
     radial-gradient(circle, var(--parchment) 0 72%, transparent 73%);
 }
 
@@ -291,7 +302,7 @@
 }
 
 .about-ticket-check {
-  color: var(--mustard);
+  color: var(--honey);
   flex: none;
   margin-top: 4px;
 }

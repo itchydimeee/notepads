@@ -1,16 +1,39 @@
-# NotePads — UI Design Spec (v3 "Ink & Indigo" Redesign)
+# NotePads — UI Design Spec (v4 "Golden Corner" Elevate)
 
 > **Status: CURRENT spec for the local rebuild.** This document defines the redesigned UI to be built in `notepads/`.
-> v3 supersedes the v2 "Warm Scholar" spec — a logo-matched revision (2026-10-26). v2 fixed v1's cramped, cold production UI; v3 keeps those fixes and swaps the identity from walnut/terracotta to the brand logo's own palette (deep navy + cream + indigo), warms every blue into the blue family, swaps the display font to **Fredoka**, and raises the aesthetic bar: cleaner, airier, never a 1:1 copy of the original production site.
-> Why v3: the v2 palette was warm but brown-forward and its display font (Fraunces brushed serif) did not match the logo. The v3 palette is derived from the brand logo (`public/images/Screenshot 2026-10-26 220726.png`): near-black navy ground, cream circle, indigo-blue handwritten lettering. Blues are warmed (red/purple undertone) so the site feels like the logo, not like a corporate cobalt theme.
-> The v1 spec (design system extracted from the live production site `notepad-opal-three.vercel.app`) is preserved verbatim as the **Appendix** at the bottom — incumbent evidence, explicitly **not** the target look.
-> Implementation checklist: `docs/task.md` (T0–T14 + T4.5/T4.6 re-theme records). Content source of truth: `docs/details.md`.
+> v4 supersedes the v3 "Ink & Indigo" spec (2026-10-26), which itself superseded v2 "Warm Scholar" — a logo-matched revision. v2 fixed v1's cramped, cold production UI; v3 matched the identity to the brand logo (deep navy + cream + indigo) and swapped the display font to **Fredoka**; v4 *elevates* all of it — premium, warm, modern cafe brand, cozy study-hub personality kept. Direction source: user-crafted "impeccable" craft brief (2026-10-27).
+> Why v4: v3's `#3d4bb8` drifted cool; the brief re-pins the brand blue to warm ultramarine **`#1c3aae`** with a slight purple lean (the logo's lettering ink), promotes honey/gold to a first-class highlight family (never readable-text on light ground), and adds the **accent-word rule** — one oblique gold-marked word per heading for a hand-crafted, premium feel. Copywriting moves from "least-invention verbatim" to **warm human tone**: headlines, ledes, CTAs, and buttons rewritten cozy/short; all *facts* (prices, hours, phones, addresses, dates, review quotes) stay verbatim from `docs/details.md`.
+> History kept: v1 production extraction preserved verbatim as the **Appendix**; the v3 deltas are summarized in §0.3.
+> Implementation checklist: `docs/task.md` (T0–T14 + T4.5/T4.6 re-theme records + E1–E13 v4 elevation section). Content source of truth: `docs/details.md`.
 
-## 0. Design Concept — "Ink & Indigo"
+## §0.1 Design Concept (v4) — "Golden Corner"
 
-Keep the scholar/notebook world (taped polaroids, ruled paper, blue margin line, punched holes, doodles, study-pun microcopy) but ground it in the logo's identity: **cream ground, warm navy ink, indigo accents**, with mustard and terracotta as seasoning only. Fredoka provides a clean, strong, warm display voice that contrasts deliberately with Gaegu's handwriting (which already matches the logo's lettering). Warm blue tones only — never cold cobalt.
+A calm, airy page that feels like a warm corner of a cafe — cream and soft ivory grounds, warm navy handwriting ink, ultramarine accents, honey-gold highlights. The scholar/notebook world stays (taped polaroids, ruled paper, margin line, punched holes, doodles, study puns) but reads *premium*: generous whitespace, layered/asymmetric layouts (overlapping polaroids, offset cards), soft warm gradients, a light paper-grain, and one crafted touch per heading.
 
-| Principle | v1 (live site) | v2 (warm scholar) | v3 (ink & indigo, this spec) |
+| Principle | Rule in v4 |
+|---|---|
+| Ground | warm cream `--parchment` + soft ivory `--paper`/`--ivory`; **never pure white, never gray** |
+| Ink/text | deep warm navy `--ink` (+ `--ink-soft` secondary) — never pure black |
+| Accent blue | warm ultramarine `--blue: #1c3aae` (slight purple lean) — buttons, links, icons, key text; hover `--blue-deep: #142c80` |
+| Accent gold | **honey family** `--honey: #d9a441` / `--mustard: #e2b064` — highlights, checkmarks, tape, swash underlines, doodles; **never as readable text on light ground** |
+| Supports | optional peach `#f4c8a4`, butter `#f6e3b4`, light caramel `#d8a869` in soft tints only |
+| Banned | icy blues, teal, cold grays, harsh contrast; hard black offsets |
+| Shadows | ink-tinted soft warm shadows (§1) |
+| Whitespace | generous: big section padding, ≥32px gaps, ≤38em prose, airy cards (§3) |
+| Layering | asymmetry + gentle overlap allowed for interest, but always easy to scan |
+
+### §0.3 v3 → v4 delta summary (convenience)
+
+- `--blue` `#3d4bb8` → `#1c3aae`; `--blue-deep` `#2a3482` → `#142c80`; blue sticker shadow re-pinned.
+- New `--honey #d9a441` token next to `--mustard`; gold promoted from seasoning to the highlight family (still not light-bg text).
+- Titles keep Fredoka 700 but gain the **accent-word rule** (§2.1) — supersedes the 2026-10-26 "plain titles, no embellishment" decision.
+- Copy tone change: headlines/ledes/CTAs rewritten warm; new canonical lines: "Your cozy corner for focus", "Grab a seat — we saved you a plug", "Two free hours, on us".
+- Backgrounds may blend cream→ivory soft gradients and light paper-grain; layout allows layered/offset compositions.
+- Everything else in v3 stands: entrance rules, cleanliness bar, tabbed menu, scroll-snap reviews, live chips, self-hosted fonts.
+
+### §0.4 Historical comparison (v1 → v3; evidence, not target)
+
+| Principle | v1 (live site) | v2 (warm scholar) | v3 (ink & indigo) |
 |---|---|---|---|
 | Ground | cold cream `#f8f7f0` | warm parchment `#f7f0e3` | warm parchment `#f7f0e3` (matches logo cream circle) |
 | Dominant text color | deep navy `#131c57` | warm walnut `#34281b` | warm deep navy ink `#1e2540` (logo-derived) |
@@ -25,24 +48,28 @@ Keep the scholar/notebook world (taped polaroids, ruled paper, blue margin line,
 | Section padding-y | varies, tight | `clamp(4rem, 10vw, 7.5rem)` minimum | unchanged floor, plus the **cleanliness bar** (§3) |
 | **Cleanliness** | dense, cramped walls | fixed density offenders | décor ≤ 2 motifs/section @ opacity ≤ .25; one elevated moment per screen; whitespace-first (never the cramped production look) |
 
-## 1. Color Palette (v3 tokens — canonical)
+## 1. Color Palette (v4 tokens — canonical)
 
 ### Core tokens (`:root`)
 
 | Token | Value | Usage |
 |---|---|---|
-| `--parchment` | `#f7f0e3` | Body background (global ground) |
-| `--paper` | `#fcf9ef` | Cards, nav sheet, chat panel, light surfaces |
+| `--parchment` | `#f7f0e3` | Body background (warm cream ground — never pure white, never gray) |
+| `--paper` | `#fdfaf2` | Cards, nav sheet, chat panel, light surfaces (soft ivory) |
 | `--kraft` | `#ead9bd` | Alternating section backgrounds (menu, workshops) |
-| `--ink` | `#1e2540` | Primary text; soft-shadow tint base (renamed from `--walnut`) |
+| `--ink` | `#1e2540` | Primary text — deep warm navy, never pure black; soft-shadow tint base |
 | `--ink-soft` | `#4d5878` | Secondary text, descriptions, captions (audit ≥ 4.5:1 on `--parchment`; darken to `#454e6e` if it fails) |
-| `--blue` | `#3d4bb8` | **Primary accent** — CTAs, link underlines, margin line, pen nib, motto, chatbot FAB, amenity icon circles, ticket punch detail |
-| `--blue-deep` | `#2a3482` | Hover/active states + focus outlines (replaces `--cobalt` everywhere; the cobalt token is REMOVED) |
+| `--blue` | `#1c3aae` | **Primary accent — warm ultramarine, slight purple lean** — CTAs, link underlines, margin line, pen nib, motto, chatbot FAB, amenity icon circles, ticket punch detail |
+| `--blue-deep` | `#142c80` | Hover/active states + focus outlines |
+| `--honey` | `#d9a441` | **Deeper honey-gold** — swash/marker underlines, checkmarks, key-word marks; decoration only on light ground (never readable text) |
 | `--terra` | `#b85433` | **Seasoning only** — in the shipped UI it survives only within the status-dot family; never a primary fill |
-| `--mustard` | `#e2b064` | Tape, scribble highlights, check bullets, warm chip fill (seasoning kept) |
+| `--mustard` | `#e2b064` | Tape, scribble highlights, check bullets, warm chip fill; gold-text permitted only on dark navy ground |
 | `--sage` | `#a7b087` | Positive accents, session card tone |
-| `--forest` | `#202a52` | **Deep navy** — footer background, menu chapter headers (logo-ground match; was olive `#3a4a2f`) |
+| `--forest` | `#202a52` | **Deep warm navy** — footer background, menu chapter headers |
 | `--dusty` | `#97a5b8` | Neutral card tone (3rd workshop card) |
+| `--peach` | `#f4c8a4` | Optional soft support tint (cards/highlights only) |
+| `--butter` | `#f6e3b4` | Optional soft support tint (cards/highlights only) |
+| `--caramel` | `#d8a869` | Optional light-caramel support (borders/washes only) |
 | `--overlay-deep` | `#1d2a56` | Photo overlay shade on hero/lightbox ONLY (nearly invisible as a "color") |
 | `--nav-h` | `72px` | Fixed header height |
 | `--maxw` | `1200px` | Content max width |
@@ -53,35 +80,38 @@ Keep the scholar/notebook world (taped polaroids, ruled paper, blue margin line,
 
 - Ruled paper lines: `#1e254014` (graph/ruled grids; ink tint)
 - Dotted grid: `#1e254012` / `#1e25400c`
-- Margin line: `#3d4bb855` (warm indigo at half alpha)
+- Margin line: `#1c3aae55` (ultramarine at half alpha)
 - Dotted price leader: `#1e254026`
 - Lightbox scrim: `rgba(30,37,64,.88)`
 - Status dots: open `#4e8a5f` (warm green), closed `#c06a5a` (unchanged)
 - Tape: `#e2b064b8`, shadow `0 1px 2px rgba(30,37,64,.12)`
-- Scribble highlight stroke: `#e9c98a` (mustard, decoration only)
-- Tinted card tones: sage-soft `#c9d0b4`, mustard-soft `#f0d8a8`, dusty-soft `#c2ccd8`
-- Dark section (footer): `--forest #202a52` navy only — never blue-black, never olive
+- Scribble/swash highlight stroke: `--honey #d9a441` (marker stroke, decoration only; was `#e9c98a` in v3)
+- Soft warm gradient: `linear-gradient(180deg, #fdfaf2, #f7f0e3)` allowed on section boundaries; light paper-grain ≤ .18 decorative layer where it adds depth
+- **Blush ground `--blush #faf0dd` (2026-10-27)**: warm apricot-cream BLOCK ground for the hero page-top — deliberately warmer than `--parchment` so the top never blends into the nav/ivory; the hero wears a blush→cream gradient, faint dot grid, and a rounded bottom seam; **About + Visit become ivory "sheets"** (`--paper`, radius clamp(24–40px), small inline margins) floating on the cream ground, mirroring the reference's layered rounded panels
+- Tinted card tones: sage-soft `#c9d0b4`, mustard-soft `#f0d8a8`, dusty-soft `#c2ccd8`, butter-soft `#f6e3b4` (new), peach-soft `#f8e3d2` (new)
+- Dark section (footer): `--forest #202a52` deep warm navy only — never blue-black, never olive
 
 ### Shadows
 
 ```css
 --shadow-soft:  0 6px 16px rgba(30,37,64,.12);   /* default card */
 --shadow-lift:  0 10px 24px rgba(30,37,64,.16);  /* hover lift */
---shadow-stick: 6px 6px 0 #3d4bb833;             /* CTA "sticker" moment only */
+--shadow-stick: 6px 6px 0 #1c3aae33;             /* CTA "sticker" moment only */
 ```
 
-Selection: `background: #3d4bb8; color: #fcf9ef`. Focus: `outline: 3px solid #2a3482; outline-offset: 3px; border-radius: 6px`.
+Selection: `background: #1c3aae; color: #fdfaf2`. Focus: `outline: 3px solid #142c80; outline-offset: 3px; border-radius: 6px`.
 
 ## 2. Typography
 
-| Role | Font | v3 rules |
+| Role | Font | v4 rules |
 |---|---|---|
-| Display / titles | **Fredoka** (rounded, warm), loaded via `next/font/google` | Headings **non-italic**, weight **700** (bold, poster-like — no handwriting/underline embellishments on titles); `line-height: 1.06–1.14`; `letter-spacing: 0` (rounded forms don't need tightening); **no `font-variation-settings`**; never uppercase-forced. Replaces Fraunces everywhere. |
-| Brand wordmark | Fredoka **700**, title case | Nav brand + preloader name; clean lockup, no italic, no brushed-serif look |
-| Body / hand | **Gaegu** 400/700 (kept — already matches the logo's handwriting) | `1.35rem`, `line-height: 1.55–1.65`, max-width `38em` |
-| Stacks | `--font-display: "Fredoka", system-ui, sans-serif` · `--font-hand: "Gaegu", "Comic Sans MS", cursive` | loaded via `next/font/google`, CSS vars (`--font-fredoka` mapped to `--font-display`) |
+| Display / titles | **Fredoka** (rounded, warm), self-hosted via `next/font/local` | Headings weight **600–700**; `line-height: 1.1` (1.06–1.14); `letter-spacing: -0.01em` (slightly tight); **no `font-variation-settings`**; never uppercase-forced. |
+| Accent word (new §2.1) | Fredoka 700, `font-style: oblique 8deg` (fallback: `inline-block; transform: skewX(-8deg)`) | See §2.1 — ONE key word per main heading |
+| Brand wordmark | Fredoka **700**, title case | Nav brand + preloader name; clean lockup, no italic |
+| Body / hand | **Gaegu** 400/700 (`next/font/local`) | `1.35rem`, `line-height: 1.55–1.65`, max-width `38em`; friendly handwritten body kept, narrow readable width |
+| Stacks | `--font-display: "Fredoka", system-ui, sans-serif` · `--font-hand: "Gaegu", "Comic Sans MS", cursive` | self-hosted woff2, CSS vars (`--font-fredoka` → `--font-display`, `--font-gaegu` → `--font-hand`) |
 
-Fluid scale (calmer ceilings than v2 — big text never fights dense text):
+Fluid scale (calmer ceilings — big text never fights dense text):
 
 - Site H2: `clamp(2rem, 4.6vw, 4rem)`
 - Hero title: `clamp(2.4rem, 5.8vw, 4.4rem)`
@@ -90,7 +120,21 @@ Fluid scale (calmer ceilings than v2 — big text never fights dense text):
 - **Eyebrow device BANNED** (carried-over v2 spec amendment; see task.md T1)
 - **Menu text: fixed rem only** — dish names `1.05–1.15rem/800`, prices `1rem–1.1rem/700 tabular-nums`, no `cqw` anywhere, no opacity-below-.6 on text
 
-## 3. Spacing & Density Rules (v3)
+### §2.1 Accent-word rule (v4 — revised 2026-10-27 by user review)
+
+Every main heading (H1/H2) gets exactly ONE accent word:
+
+1. **Pick one key word** with mood — e.g. "cozy", "home", "book". Never more than one per heading; the rest of the heading stays upright.
+2. **Slant it lightly**: `display: inline-block; transform: skewX(-8deg)`. Never slant the whole heading.
+3. **Color it deep gold**: the accent word itself is `--gold-text #b07f19` (deep honey, ≈3.5:1 on cream — reserved for LARGE heading text ≥ the WCAG large-text threshold; never body/small text). Plus a hand-drawn **honey swash underline that hugs the baseline** (≈100% of the word's width, `bottom: -0.12em`, stroke `--honey #d9a441`) — tight to the word, never a detached low line. Draws in on scroll (reduced-motion: instant/always drawn).
+4. **On dark ground** (footer navy): brighter `--mustard` text on `--forest` (7.0:1), no swash.
+5. Implementation: shared `<Accent>` component (word + swash SVG) everywhere; ≤ 1 swash per section; never adjacent to body copy.
+
+> Divergence note (2026-10-27): the rule previously kept the word in `--ink` with a detached swash "never gold text on light ground". The user rejected the near-black word + floating line (position mismatch, color mismatch) and pinned the `ui_structure_reference.png` treatment — the accent word IS gold, with the swash hugging it. A dedicated `--gold-text` token was added (deep enough for large text; `--mustard`/`--honey` remain decoration-only for smaller text).
+
+Copy note: headings rewritten for warmth first, accent word chosen to fit naturally (not every old heading survives slotted verbatim).
+
+## 3. Spacing & Density Rules (v3 rules, v4 keeps them)
 
 - Spacing scale: `4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 96` (px). No in-between odd values except clamp() fluid formulas.
 - Section padding-y: `clamp(4rem, 10vw, 7.5rem)` — non-negotiable floor of 4rem on mobile.
@@ -106,32 +150,36 @@ Fluid scale (calmer ceilings than v2 — big text never fights dense text):
 - Grids gap ≥ 32px; no text walls (split ≥ 980px); white space is a feature, not a defect.
 - Motifs are seasoning: lower opacity, warm-blue or mustard only, more margin around them.
 
-## 4. Section-by-Section v3 Anatomy
+## 4. Section-by-Section v4 Anatomy (structure from v3, retinted + warm copy + accent words)
 
-1. **Preloader** — ruled-parchment sheet, 3 punched holes, **blue margin line `#3d4bb855`**, steam cup (slower keyframes), **Fredoka 700 non-italic** name reveal with **blue** nib + glow, rotating notes (4 strings), progress counter. Exit `.85s cubic-bezier(.76,0,.24,1)` translateY(-104%) rotate(-1.2deg). Min-hold 800ms, cap 2.5s; reduced-motion = simple fade.
-2. **Nav** — fixed 72px; transparent → frosted `#fcf9efe0` blur(12px) on scroll; circular logo; brand lockup **Fredoka 700**; scaleX underline links in **`--blue`**; CTA "See the menu" as **`.btn-blue`** sticker button; mobile burger → clip-path circle sheet on parchment with Fredoka sheet links (ink-tinted shadows).
-3. **Hero** — 100svh `--parchment`; 4 rotating photos crossfade 6s under an **ink-navy** gradient overlay ≥ 45% at text side; title **Fredoka 700 non-italic** `clamp(2.4rem,5.8vw,4.4rem)` lh 1.06, plain — NO scribble/handwriting embellishment on titles (user decision 2026-10-26); lede folds the location line (chip with **blue** MapPin icon); 2 CTAs (`.btn-blue` + `.btn-ghost`); live Open/Closed chip (sage-green dot, hydration-safe Asia/Manila clock); ≤ 2 sparkles (mustard); bobbing scroll cue.
-4. **About** — Fredoka H2 + 2 short lede paragraphs (38em), stat cards (`2 hrs`/`₱40`/`7–10`) padded ≥ 24px, ≤ 2 taped polaroids, 8-amenity grid with **blue** icon circles, ₱350 Study Space Package ticket card (punch holes + dashed perforation, mustard checks).
-5. **Menu (tabbed)** — `--kraft` bg + **ink-tinted** soft dot grid; category chip tabs; per-tab airy price rows (name + dotted leader **`#1e254026`** + tabular price), **blue** `*` markers for "printed menu" items; ₱350 welcome ticket on top; mobile = scrollable chip row; ARIA tablist + arrow keys.
-6. **The Place** — 8 polaroid photos, CSS masonry 3/2/1, tilt ≤ 1.5°, lightbox scrim **`rgba(30,37,64,.88)`**, keyboard + swipe.
-7. **Saturdays** — kraft memo board; `No Gadget Kids Workshops` in **Fredoka 700** + `Learn · Create · Imagine`; 3 session cards (sage/mustard-soft/dusty-soft) w/ 2026 dates (past dimmed + ✓); inclusions chips; pricing rows; reserve panel with **blue** ghost buttons; motto in **`--blue`** — `Because the best things happen offline.`
-8. **Reviews** — ★5.0 summary (Fredoka); 5 index cards in a native scroll-snap row; paper/mustard-soft/sky-warm tints; quote watermark ≤ .12.
-9. **Visit** — Fredoka H2 `Find your seat`; **shared `ContactStrip`** (address lines, hours, phone/WhatsApp, email, socials, **blue** accent icons) reused by footer; Google Maps **iframe embed** (lazy) in warm-framed card; `Get directions`; approximate-pin note.
-10. **Footer** — **deep navy `--forest #202a52`** background with parchment wave divider; Fredoka headings; Explore links; ContactStrip reprise; `brewed with care` doodles (mustard accents kept); **link contrast ≥ 4.5:1 on `#202a52`**.
-11. **Notey chatbot** — 56px **`.btn-blue`** FAB (`--shadow-stick`), dismissible nudge; 380×600 `--paper` panel with **ink-tinted** dotted-grid scroll area, dashed separators, Gaegu bubbles (bot paper / user **blue**), typing dots, quick-reply chips, pill input.
+> Per-section copy lives in the E-task entries of `docs/task.md` (written against `docs/details.md` facts). Anatomy below records the v4 visual contract per section — all apply the §2.1 accent-word rule and retint `--blue #1c3aae` / `--honey` / `--paper #fdfaf2`.
+
+1. **Preloader** — ruled-parchment sheet, 3 punched holes, **ultramarine margin line `#1c3aae55`**, steam cup (slower keyframes), **Fredoka 700 non-italic** name reveal with **blue** nib + glow, rotating notes (4 strings), progress counter. Exit `.85s cubic-bezier(.76,0,.24,1)` translateY(-104%) rotate(-1.2deg). Min-hold 800ms, cap 2.5s; reduced-motion = simple fade. Warm, subtle — a quiet first breath, never a performance.
+2. **Nav** — fixed 72px; transparent → frosted `#fdfaf2e0` blur(12px) on scroll; circular logo; brand lockup **Fredoka 700**; scaleX underline links in **`--blue`**; CTA as **`.btn-blue`** sticker button with warm label; mobile burger → clip-path circle sheet on parchment with Fredoka sheet links (ink-tinted shadows).
+3. **Hero** — 100svh warm cream with a soft cream→ivory gradient; 4 rotating photos crossfade 6s in taped polaroid frames (warm shadows, slight tilt); title **Fredoka 700** `clamp(2.4rem,5.8vw,4.4rem)` lh ~1.1 with **one accent word** (oblique + gold swash — e.g. "Your cozy corner for *focus*"); short warm lede ≤ 2 lines folding the location (chip with **blue** MapPin icon); 2 CTAs (`.btn-blue` + `.btn-ghost`) with warm labels; live Open/Closed chip (sage-green dot, hydration-safe Asia/Manila clock); ≤ 2 sparkles (mustard); bobbing scroll cue.
+4. **About** — Fredoka H2 with accent word (e.g. "A study hub that feels like *home*") + 2 short warm lede paragraphs (38em), stat cards (`2 hrs` free / `₱40` after / `7–10` Mon–Sat) padded ≥ 24px with hover lift, ≤ 2 taped polaroids layered with slight overlap, 8-amenity grid with **blue** icon circles, ₱350 Study Space Package ticket card (punch holes + dashed perforation, **honey** checks).
+5. **Menu (tabbed)** — `--kraft` bg + **ink-tinted** soft dot grid; warm H2 with accent word ("Open the menu *book*" heritage kept); category chip tabs; per-tab airy price rows (name + dotted leader **`#1e254026`** + tabular price), **blue** `*` markers for "printed menu" items; ₱350 welcome ticket on top ("Two free hours, on us" warmth in the lede, price never invented); mobile = scrollable chip row; ARIA tablist + arrow keys.
+6. **The Place** — warm H2 ("Come on *in*" or warmer) + lede; 8 polaroid photos, CSS masonry 3/2/1 with gentle offsets/overlaps, tilt ≤ 1.5°, hover settle-to-0 + lift; lightbox scrim **`rgba(30,37,64,.88)`**, keyboard + swipe.
+7. **Saturdays** — kraft memo board; `No Gadget Kids Workshops` in **Fredoka 700** + `Learn · Create · Imagine`; 3 session cards (sage/mustard-soft/dusty-soft) w/ 2026 dates verbatim (past dimmed + drawn ✓); inclusions chips; pricing rows with honey save-accents; reserve panel with **blue** ghost buttons; motto in **`--blue`** — warm short invitation copy.
+8. **Reviews** — ★5.0 summary (drawn stars, Fredoka); 5 index cards in a native scroll-snap row; paper/mustard-soft/sky-warm tints; quote watermark ≤ .12; review quotes stay verbatim (real testimonials).
+9. **Visit** — H2 "Find your *seat*"; **shared `ContactStrip`** (address lines, hours, phone/WhatsApp, email, socials, **blue** accent icons) reused by footer; Google Maps **iframe embed** (lazy) in warm-framed card; `Get directions`; approximate-pin note; hours/price/location easy to find at a glance.
+10. **Footer** — **deep warm navy `--forest #202a52`** background with parchment wave divider; Fredoka headings; Explore links; ContactStrip reprise; `brewed with care` doodles; **gold text accent allowed here** (mustard on navy 7.0:1); **link contrast ≥ 4.5:1 on `#202a52`**.
+11. **Notey chatbot** — 56px **`.btn-blue`** FAB (`--shadow-stick`), dismissible nudge (`Questions? Ask Notey!`); 380×600 `--paper` panel with **ink-tinted** dotted-grid scroll area, dashed separators, Gaegu bubbles (bot paper / user **blue**), typing dots, quick-reply chips, pill input; chatbot's factual answers stay verbatim.
 
 ## 5. Motion
 
 - **One shared easing** `--ease: cubic-bezier(.22,1,.36,1)` for all transitions; reveal = rise 28px + fade, duration .8s, stagger `i × 60ms` max, once, viewport −72px.
 - Ambient loops (steam, twinkle ≤2 items, bob, typing dots) remain pure CSS, slower and softer than v1.
 - Hero: crossfade 6s (no Ken Burns zoom — calmer); lightbox scale .96→1 `.4s`; buttons lift `--shadow-soft → --shadow-lift` + translateY(-2px) `.25s`.
+- Cards: gentle hover = tiny tilt (≤ 2°, settling toward level) + lift (`--shadow-soft → --shadow-lift`); polaroids straighten on hover.
+- Accent swash: hand-drawn gold underline draws in (stroke-dashoffset → 0, `.5s`) when scrolled into view, once; instant under reduced motion.
 - Smooth scroll: native `scroll-behavior: smooth` only — no library.
-- Reduced motion: global kill-switch, preloader fade, hero static photo, scroll-snap rows still work.
+- Reduced motion: global kill-switch (animations → 1ms), preloader fade, hero static photo, no swash draw-in, reveal wrappers render static — scroll-snap rows still work.
 
 ## 6. Accessibility
 
-- Contrast: `--ink-soft #4d5878` on `--parchment` ≥ 4.5:1 (darken to `#454e6e` if it fails); white/parchment text on navy `--forest #202a52` ≥ 4.5:1; `--blue #3d4bb8` usable as accent/link text on parchment (≈ 7:1 — fine for accents and links); `--mustard` never as text color on light ground (decoration only).
-- Focus-visible: 3px `#2a3482` outline offset 3px, radius 6px, everywhere.
+- Contrast: `--ink-soft #4d5878` on `--parchment` ≥ 4.5:1 (darken to `#454e6e` if it fails); white/parchment text on navy `--forest #202a52` ≥ 4.5:1; `--blue #1c3aae` usable as accent/link text on parchment (darker than v3's — comfortably ≥ 7:1); `--mustard`/`--honey` never as text color on light ground (decoration only; gold text permitted only on `--forest` navy); scrims/swashes are decoration and never the only carrier of meaning.
+- Focus-visible: 3px `#142c80` outline offset 3px, radius 6px, everywhere. Alt text meaningful (photo subject from details.md); buttons/links descriptive.
 - Tap targets ≥ 44px; menu tabs keyboard-switchable; lightbox Escape/arrows; chatbot Escape closes; skip-to-content link.
 - Bike-shed rule: any icon-only control gets an aria-label from details.md vocabulary.
 

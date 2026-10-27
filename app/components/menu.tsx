@@ -5,11 +5,14 @@
 // lines 105–107 (₱350 Study Space Package). Strings kept as constants
 // outside JSX so ₱ / — / apostrophes survive untouched.
 import { useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import Accent from "./accent";
 import Reveal from "./reveal";
 import "../menu.css";
 
+// v4 copy: headline/lede rewritten warm (ui_design.md §0.1); every dish name,
+// price, note and dataset name stays verbatim from docs/details.md §5.
 const LEDE =
-  "Rice bowls, crunchy bites, pasta, sandwiches, coffee, sodas and bakes — every page, just like on our counter.";
+  "Rice bowls and crunchy bites, pasta, coffee, sodas and bakes — every chapter, just like the printed book on our counter.";
 const TICKET_NAME = "Study space package";
 const TICKET_SUB = "Single space · 2 hours of uninterrupted study time";
 const TICKET_HINT = "full details up in the About section →";
@@ -421,7 +424,7 @@ export default function Menu() {
         <Reveal>
           <header className="menu-head">
             <h2 id="menu-title" className="menu-title">
-              Open the menu book
+              Open the menu <Accent>book</Accent>
             </h2>
             <p className="menu-lede">{LEDE}</p>
           </header>
