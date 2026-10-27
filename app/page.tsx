@@ -6,6 +6,7 @@ import Saturdays from "./components/saturdays";
 import Reviews from "./components/reviews";
 import Visit from "./components/visit";
 import Footer from "./components/footer";
+import Chatbot from "./components/chatbot";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <Reviews />
       <Visit />
       <Footer />
+      <Chatbot />
     </>
   );
 }

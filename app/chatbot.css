@@ -1,0 +1,426 @@
+/* Notey chatbot (T12) — floating FAB + dismissible nudge + 380×600 paper
+   panel with dotted-grid log, dashed separators, Gaegu bubbles (bot paper /
+   user blue). All colors/fonts/shadows via globals.css tokens (Ink & Indigo).
+   Copy + labels verbatim from docs/details.md §11.
+   Reduced-motion: the globals kill-switch (#78) already flattens every
+   animation/transition below to ~1ms ✓ — typing dots freeze visible, no
+   bounce; nothing further needed here. */
+
+/* --- root (fixed overlay stack, above every section) ---------------------- */
+
+.nt-root {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 70;
+  min-width: 0;
+}
+
+/* ---------- nudge bubble: desktop only, once, dismissible ----------------- */
+
+.nt-nudge {
+  position: fixed;
+  right: 20px;
+  bottom: 88px;
+  display: inline-flex;
+  align-items: stretch;
+  gap: 2px;
+  background: var(--paper);
+  border: 1.5px solid #1e254022;
+  border-radius: 14px 4px 14px 14px;
+  box-shadow: var(--shadow-soft);
+  z-index: 71;
+}
+
+.nt-nudge[hidden],
+.nt-panel[hidden],
+.nt-quick[hidden] {
+  display: none; /* [hidden] must beat these flex/display grids */
+}
+
+.nt-nudge-q {
+  border: 0;
+  background: none;
+  padding: 10px 6px 10px 16px;
+  min-height: 44px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--ink);
+  cursor: pointer;
+  transition: color 0.25s var(--ease);
+}
+
+.nt-nudge-q:hover {
+  color: var(--blue);
+}
+
+.nt-nudge-x {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  align-self: center;
+  border: 0;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  min-height: 44px;
+  padding: 0 6px 0 0;
+}
+
+.nt-nudge-x:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 559px) {
+  /* nudge = desktop-only */
+  .nt-nudge {
+    display: none;
+  }
+}
+
+/* ---------- the panel (380×600 paper sheet) -------------------------------- */
+
+.nt-panel {
+  position: fixed;
+  right: 20px;
+  bottom: 88px;
+  z-index: 72;
+  display: flex;
+  flex-direction: column;
+  width: min(380px, calc(100vw - 24px));
+  height: min(600px, calc(100svh - 160px));
+  background: var(--paper);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(30, 37, 64, 0.16);
+  overflow: hidden;
+  animation: nt-in 0.3s var(--ease) both;
+}
+
+@keyframes nt-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+}
+
+/* dashed separators: header rule + composer rule */
+.nt-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 2px dashed #1e254026;
+}
+
+.nt-head-ava {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--paper);
+  flex: 0 0 auto;
+}
+
+.nt-head-copy {
+  min-width: 0;
+}
+
+.nt-name {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.25rem;
+  line-height: 1.15;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.nt-sub {
+  margin: 1px 0 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.02rem;
+  line-height: 1.2;
+  color: var(--ink-soft);
+}
+
+/* ---------- the log: ink-tinted dotted grid scroll area --------------------- */
+
+.nt-log {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 14px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #1e254033 transparent;
+}
+
+.nt-log::-webkit-scrollbar {
+  width: 8px;
+}
+
+.nt-log::-webkit-scrollbar-thumb {
+  background: #1e254026;
+  border-radius: 999px;
+}
+
+.nt-log::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- messages + bubbles --------------------------------------------- */
+
+.nt-msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.nt-msg.is-user {
+  justify-content: flex-end;
+}
+
+.nt-ava {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--paper);
+  flex: 0 0 auto;
+}
+
+.nt-msg.is-bot .nt-bubble {
+  background: var(--paper);
+  border: 1.5px solid #1e254022;
+  box-shadow: 0 2px 8px rgba(30, 37, 64, 0.1);
+}
+
+.nt-bubble {
+  max-width: min(100%, 86%);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 14px;
+  border-radius: 14px 14px 14px 4px; /* bot: speech-corner bottom-left */
+}
+
+.nt-msg.is-user .nt-bubble {
+  border-radius: 14px 14px 4px 14px; /* user: speech-corner bottom-right */
+  background: var(--blue); /* #3d4bb8 + paper ≈ 6.9:1 ≥ 4.5 ✓ */
+  color: var(--paper);
+  border: 0;
+}
+
+.nt-bubble-text {
+  white-space: pre-line; /* replies carry verified \n layouts */
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.2rem;
+  line-height: 1.5;
+}
+
+.nt-msg.is-bot .nt-bubble-text {
+  color: var(--ink);
+}
+
+/* action chips inside a bot reply */
+.nt-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.nt-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 16px;
+  border: 1.5px solid #1e254033;
+  border-radius: 999px;
+  background: var(--paper);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--blue);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+.nt-chip:hover {
+  background: var(--blue);
+  color: var(--paper);
+}
+
+/* ---------- typing dots (ambient, softened; kill-switch on reduce) --------- */
+
+.nt-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 16px;
+  border-radius: 14px 14px 14px 4px;
+  background: var(--paper);
+  border: 1.5px solid #1e254022;
+  box-shadow: 0 2px 8px rgba(30, 37, 64, 0.1);
+}
+
+.nt-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-soft);
+  animation: nt-dot-bob 1.2s ease-in-out infinite;
+}
+
+.nt-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.nt-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes nt-dot-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* ---------- composer: quick chips + pill input ------------------------------ */
+
+.nt-composer {
+  padding: 12px 14px 14px;
+  border-top: 2px dashed #1e254026;
+  background: var(--paper);
+}
+
+.nt-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.nt-quick .nt-chip {
+  color: var(--ink);
+  border-color: #1e254033;
+}
+
+.nt-quick .nt-chip:hover {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: var(--paper);
+}
+
+.nt-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.nt-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1.5px solid #1e254033;
+  border-radius: 999px;
+  background: var(--parchment);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.nt-input::placeholder {
+  color: var(--ink-soft);
+  opacity: 1;
+}
+
+.nt-send {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--paper);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+}
+
+.nt-send:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+
+.nt-send:disabled {
+  background: #1e254014;
+  color: var(--ink-soft);
+  box-shadow: none;
+  cursor: default;
+  transform: none;
+}
+
+/* ---------- the FAB (56px sticker button; morphs to Close chat) ------------ */
+
+.nt-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 73;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 50% !important;
+  box-shadow: var(--shadow-stick);
+}
+
+.nt-fab:hover {
+  box-shadow: var(--shadow-stick);
+}
+
+/* ---------- small screens: edge-to-edge-narrow panel ----------------------- */
+
+@media (max-width: 420px) {
+  .nt-root {
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .nt-panel {
+    right: 12px;
+    bottom: 80px;
+    width: calc(100vw - 24px);
+    height: calc(100svh - 160px);
+  }
+
+  .nt-fab {
+    right: 12px;
+    bottom: 12px;
+  }
+}

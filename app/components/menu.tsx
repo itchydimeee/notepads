@@ -14,7 +14,9 @@ const TICKET_SUB = "Single space · 2 hours of uninterrupted study time";
 const TICKET_HINT = "full details up in the About section →";
 const FOOTNOTE = "from our printed menu — please confirm the price with us.";
 
-type Row = {
+// Row/Group/Tab + TABS are exported (T12) so the Notey chatbot can compose
+// category/price answers from this single source — no menu data duplicated.
+export type Row = {
   name: string;
   // single-price rows
   price?: string;
@@ -25,19 +27,19 @@ type Row = {
   star?: boolean;
 };
 
-type Group = {
+export type Group = {
   label: string; // dataset pun name, kept visible
   cols?: 3; // hot / 12oz / 16oz price columns
   rows: Row[];
 };
 
-type Tab = {
+export type Tab = {
   id: string;
   label: string;
   groups: Group[];
 };
 
-const TABS: Tab[] = [
+export const TABS: Tab[] = [
   {
     id: "rice",
     label: "Rice Meals",

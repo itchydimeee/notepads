@@ -1,7 +1,5 @@
 # NotePads Study Hub Cafe — Website Content Documentation
 
-> Source: https://notepad-opal-three.vercel.app/ (NotePads Study Hub Cafe, Iloilo City, Philippines)
-> Extracted from the production build (client-rendered React SPA). All strings quoted are literal source text unless marked otherwise.
 
 ## Site Identity
 
