@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 :root {
+  /* Gaegu ships as multi-slice @font-face (app/fonts/gaegu.css) — Google's
+     own sharding, so the missing-glyph fallback problems (Menu's "M")
+     disappear. Same stack as before. */
+  --font-gaegu: "Gaegu", "Comic Sans MS", cursive;
   --parchment: #f7f0e3;
   /* warm apricot-cream block ground (hero / page-top accents) — clearly
      warmer than parchment so the top region never blends with the nav */

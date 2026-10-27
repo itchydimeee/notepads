@@ -1,28 +1,24 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import "./fonts/gaegu.css";
 import Preloader from "./components/preloader";
 import Nav from "./components/nav";
 import "./preloader.css";
 import "./nav.css";
 
-// Fonts are SELF-HOSTED latin subsets (next/font/local) — the intermittent
-// "Failed to download Gaegu from Google Fonts" build/proxy warning made
-// every build depend on fonts.googleapis.com. Same files Google serves for
-// subsets: ["latin"] (OFL license), same --font-fredoka / --font-gaegu vars.
+// Fredoka is SELF-HOSTED (next/font/local, complete latin variable file).
+// Gaegu is self-hosted too but as **multi-slice @font-face** (app/fonts/gaegu.css):
+// Google shards Gaegu's Latin across several woff2 files per weight — the
+// "latin" slice alone is MISSING the glyphs H, I, M, N, 9 and ’ (they live in
+// slices 117/118/99). Referencing one slice left the nav "Menu" M falling back
+// to another font (different weight/size). gaegu.css ships the needed slices
+// with their unicode-ranges so the browser reassembles the face exactly like
+// Google's hosted CSS. --font-gaegu is defined in globals.css.
 const fredoka = localFont({
   src: "./fonts/fredoka-latin-var.woff2",
   variable: "--font-fredoka",
   weight: "300 700",
-  display: "swap",
-});
-
-const gaegu = localFont({
-  src: [
-    { path: "./fonts/gaegu-400-latin.woff2", weight: "400" },
-    { path: "./fonts/gaegu-700-latin.woff2", weight: "700" },
-  ],
-  variable: "--font-gaegu",
   display: "swap",
 });
 
@@ -39,7 +35,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${fredoka.variable} ${gaegu.variable}`}>
+      <body className={fredoka.variable}>
         <Preloader />
         <Nav />
         {children}

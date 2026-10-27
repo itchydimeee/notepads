@@ -4,8 +4,8 @@
 .hero {
   position: relative;
   /* the page TOP (the nav band) stays CREAM — the blush block begins BELOW
-     the header, as its own rounded panel, so hero and header never share a
-     background (reference structure) */
+     the header, as its own rounded panel (reverted the behind-nav blend
+     that briefly ran the panel to y=0; back to the reference structure) */
   margin-top: var(--nav-h);
   min-height: calc(100svh - var(--nav-h));
   display: grid;
@@ -14,12 +14,17 @@
      page, with dot grid + rounded edges (reference's layered sheets,
      in notepad-warm tones) */
   background-color: var(--blush);
+  /* Dots paint ABOVE the warm gradient (background layers: first = top).
+     The old order hid the dot grid under an opaque gradient entirely; the
+     first retune (1.2px @ 9% ink) still washed out at device-pixel scale —
+     bumped to 1.5px dots at 14% ink on a 20px pitch: firmly visible on
+     close look, quiet at a glance. */
   background-image:
-    linear-gradient(180deg, #fdf5e4 0%, var(--blush) 46%, #f8e8cc 100%),
-    radial-gradient(#1e25400f 1.2px, transparent 1.2px);
+    radial-gradient(#1e254024 1.5px, transparent 1.5px),
+    linear-gradient(180deg, #fdf5e4 0%, var(--blush) 46%, #f8e8cc 100%);
   background-size:
-    100% 100%,
-    22px 22px;
+    20px 20px,
+    100% 100%;
   border-radius: clamp(22px, 3.6vw, 38px);
   overflow: hidden;
   padding: 24px var(--gutter) 72px;
@@ -295,6 +300,62 @@
   z-index: 4;
 }
 
+/* star pair companion: sits left-below the big star, nudged to read as a
+   written constellation */
+.hero-spark.c {
+  top: 8%;
+  right: 15%;
+  opacity: 0.55;
+  z-index: 4;
+  animation: spark-twinkle 5.2s ease-in-out 0.6s infinite;
+}
+
+/* hand-drawn honey flourish: parked in the CLEAR upper-right band between
+   the big star and the small polaroid's top edge — never over a print */
+.hero-doodle {
+  position: absolute;
+  top: 15%;
+  right: 7.5%;
+  color: var(--honey);
+  opacity: 0.5;
+  transform: rotate(5deg);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* tiny plus scribbles: hand-margin marks, drifting down the same open
+   band (o1) and echoing in the bottom sliver (o2) */
+.hero-plus {
+  position: absolute;
+  color: var(--honey);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.hero-plus.o1 {
+  top: 27%;
+  right: 5%;
+  opacity: 0.45;
+  transform: rotate(9deg);
+}
+
+.hero-plus.o2 {
+  bottom: 11%;
+  left: 43%;
+  opacity: 0.38;
+  transform: rotate(-7deg);
+}
+
+/* tiny star in the gap between the sticky note and the small polaroid —
+   bottom edge gets its own quiet beat, with the plus above it */
+.hero-spark.d {
+  bottom: 2.5%;
+  left: 42.5%;
+  opacity: 0.4;
+  z-index: 4;
+  animation: spark-twinkle 6s ease-in-out 2.1s infinite;
+}
+
 .hero-spark.b {
   top: 46%;
   right: 22%;
@@ -388,6 +449,13 @@
 @media (max-width: 640px) {
   .hero-note {
     left: 0;
+  }
+  /* keep small screens airy: only the big star + note survive */
+  .hero-spark.c,
+  .hero-spark.d,
+  .hero-doodle,
+  .hero-plus {
+    display: none;
   }
 }
 

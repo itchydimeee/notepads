@@ -138,11 +138,30 @@ export default function Hero() {
         </div>
 
         <div className="hero-shots">
-          {/* Curved 4-point diamond star (user-liked reference motif, drawn to
-              flow with our rounded Fredoka curves) — rides the collage's
-              top-right corner. */}
+          {/* Collage garnish (drawn SVG, all in the mustard/honey decoration
+              family, placed only in genuinely open zones of the collage):
+              top-right open band above the small polaroid holds the big
+              diamond star + 16px companion star + hand-drawn honey flourish
+              + a tiny plus scribble, drifting down like written margin
+              marks; the narrow bottom gap between sticky note and small
+              polaroid holds a 12px star + a second plus. Repositioned per
+              user feedback — nothing sits on a polaroid anymore. */}
           <svg viewBox="0 0 24 24" className="hero-spark a" width="34" height="34" fill="currentColor" aria-hidden="true">
             <path d="M12 0c.9 5.4 3.6 8.6 8.6 10.2 1.4.45 1.4 2.15 0 2.6C15.6 14.4 12.9 17.6 12 24c-.9-6.4-3.6-9.6-8.6-11.2-1.4-.45-1.4-2.15 0-2.6C8.4 8.6 11.1 5.4 12 0Z" />
+          </svg>
+          <svg viewBox="0 0 24 24" className="hero-spark c" width="16" height="16" fill="currentColor" aria-hidden="true">
+            <path d="M12 0c.9 5.4 3.6 8.6 8.6 10.2 1.4.45 1.4 2.15 0 2.6C15.6 14.4 12.9 17.6 12 24c-.9-6.4-3.6-9.6-8.6-11.2-1.4-.45-1.4-2.15 0-2.6C8.4 8.6 11.1 5.4 12 0Z" />
+          </svg>
+          <svg viewBox="0 0 64 16" className="hero-doodle" width="58" height="15" fill="none" aria-hidden="true">
+            <path
+              d="M2 11c7-8 12 4 19-3 7-7 12 7 19 0 6-5.5 11 4 15 0 2.5-2.5 4-4 7-5.5"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+          </svg>
+          <svg viewBox="0 0 24 24" className="hero-plus o1" width="12" height="12" fill="none" aria-hidden="true">
+            <path d="M12 3.5v17M3.5 12h17" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
           </svg>
           <figure className="shot is-back">
             <span className="u-tape" aria-hidden="true" />
@@ -193,6 +212,15 @@ export default function Hero() {
             <br />
             on the house!
           </p>
+
+          {/* bottom-gap beat: tiny star + plus scribble in the open sliver
+              between the note and the small polaroid */}
+          <svg viewBox="0 0 24 24" className="hero-spark d" width="12" height="12" fill="currentColor" aria-hidden="true">
+            <path d="M12 0c.9 5.4 3.6 8.6 8.6 10.2 1.4.45 1.4 2.15 0 2.6C15.6 14.4 12.9 17.6 12 24c-.9-6.4-3.6-9.6-8.6-11.2-1.4-.45-1.4-2.15 0-2.6C8.4 8.6 11.1 5.4 12 0Z" />
+          </svg>
+          <svg viewBox="0 0 24 24" className="hero-plus o2" width="10" height="10" fill="none" aria-hidden="true">
+            <path d="M12 3.5v17M3.5 12h17" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+          </svg>
         </div>
       </div>
 

@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { Menu, MessageCircle, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import "../nav.css";
+
+// WhatsApp is a details.md fact (general channel +63 995 229 3755).
+const WHATSAPP = "https://wa.me/639952293755";
 
 const LINKS = [
   { href: "#about", label: "About" },
@@ -68,7 +71,15 @@ export default function Nav() {
     <header className={`nav ${scrolled ? "is-scrolled" : ""}`}>
       <div className="nav-inner">
         <a href="#top" className="nav-brand" aria-label="NotePads — back to top">
-          <Image src="/logo.png" alt="" width={40} height={40} className="nav-logo" />
+          <span className="nav-logo-coin">
+            <Image
+              src="/logo.jpg"
+              alt=""
+              width={1320}
+              height={1321}
+              className="nav-logo"
+            />
+          </span>
           <span className="nav-brand-text">
             <span className="nav-brand-name">NotePads</span>
             <span className="nav-brand-sub">study hub cafe</span>
@@ -87,8 +98,17 @@ export default function Nav() {
           ))}
         </nav>
 
-        <a href="#menu" className="btn btn-blue nav-cta">
-          Flip the menu
+        {/* CTA = an ACTION, not a scroll: WhatsApp keeps the nav free of a
+            duplicate #menu affordance (the Menu link tracks scroll position)
+            and matches the mobile-heavy WhatsApp-first scene (details.md). */}
+        <a
+          href={WHATSAPP}
+          target="_blank"
+          rel="noreferrer"
+          className="btn btn-blue nav-cta"
+        >
+          WhatsApp us
+          <MessageCircle size={18} aria-hidden="true" />
         </a>
 
         <button
@@ -116,6 +136,16 @@ export default function Nav() {
               </a>
             ))}
           </nav>
+          <a
+            href={WHATSAPP}
+            target="_blank"
+            rel="noreferrer"
+            className={`btn btn-blue nav-sheet-cta ${open ? "is-open" : ""}`}
+            tabIndex={open ? 0 : -1}
+          >
+            WhatsApp us
+            <MessageCircle size={18} aria-hidden="true" />
+          </a>
           <p className="nav-sheet-contact">
             Open Mon–Sat 7am–10pm · Sun 10am–8pm <br />
             <a href="tel:+639565543184">0956 554 3184</a> ·{" "}
