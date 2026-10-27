@@ -1,21 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Fredoka, Gaegu } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Preloader from "./components/preloader";
 import Nav from "./components/nav";
 import "./preloader.css";
 import "./nav.css";
 
-const fredoka = Fredoka({
+// Fonts are SELF-HOSTED latin subsets (next/font/local) — the intermittent
+// "Failed to download Gaegu from Google Fonts" build/proxy warning made
+// every build depend on fonts.googleapis.com. Same files Google serves for
+// subsets: ["latin"] (OFL license), same --font-fredoka / --font-gaegu vars.
+const fredoka = localFont({
+  src: "./fonts/fredoka-latin-var.woff2",
   variable: "--font-fredoka",
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
+  weight: "300 700",
+  display: "swap",
 });
 
-const gaegu = Gaegu({
+const gaegu = localFont({
+  src: [
+    { path: "./fonts/gaegu-400-latin.woff2", weight: "400" },
+    { path: "./fonts/gaegu-700-latin.woff2", weight: "700" },
+  ],
   variable: "--font-gaegu",
-  weight: ["400", "700"],
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

@@ -181,3 +181,40 @@ html {
   color: var(--ink);
   box-shadow: var(--shadow-soft);
 }
+
+/* --- T13: skip-to-content link (the ONLY T13 addition here) ---------------
+   Visually hidden until it receives keyboard focus. Sits above every
+   fixed stage surface (nav z-300, chatbot z-70s, preloader z-400 is
+   transient and only covers the first moments). Label kept in the doc
+   vocabulary: "Skip to content". Focus ring = globals :focus-visible
+   (3px --blue-deep, offset 3px). Reduced motion: the globals 1ms
+   kill-switch already covers the entrance transition. */
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 420;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  box-shadow: var(--shadow-soft);
+  transform: translateY(calc(-100% - 16px));
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.25s var(--ease),
+    opacity 0.25s;
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+}

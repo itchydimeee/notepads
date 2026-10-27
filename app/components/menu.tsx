@@ -5,6 +5,7 @@
 // lines 105–107 (₱350 Study Space Package). Strings kept as constants
 // outside JSX so ₱ / — / apostrophes survive untouched.
 import { useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import Reveal from "./reveal";
 import "../menu.css";
 
 const LEDE =
@@ -417,14 +418,21 @@ export default function Menu() {
   return (
     <section id="menu" className="menu" aria-labelledby="menu-title">
       <div className="menu-inner">
-        <header className="menu-head">
-          <h2 id="menu-title" className="menu-title">
-            Open the menu book
-          </h2>
-          <p className="menu-lede">{LEDE}</p>
-        </header>
+        <Reveal>
+          <header className="menu-head">
+            <h2 id="menu-title" className="menu-title">
+              Open the menu book
+            </h2>
+            <p className="menu-lede">{LEDE}</p>
+          </header>
+        </Reveal>
 
-        <div className="menu-main">
+        {/* T13 — ONE Reveal over the whole menu-main stack (ticket + tabs +
+            panels + footnote come in together). Wrapping ticket/tabs
+            individually would turn them into plain children of a block div
+            and lose .menu-ticket's justify-self: center grid placement. */}
+        <Reveal delay={0.06}>
+          <div className="menu-main">
           <aside className="menu-ticket" aria-label="Study space package — ₱350">
             <span className="u-tape menu-ticket-tape" aria-hidden="true" />
             <div className="menu-ticket-stub">
@@ -494,7 +502,8 @@ export default function Menu() {
             </abbr>{" "}
             {FOOTNOTE}
           </p>
-        </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

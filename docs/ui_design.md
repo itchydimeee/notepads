@@ -140,7 +140,7 @@ Fluid scale (calmer ceilings than v2 — big text never fights dense text):
 - Tailwind v4 (`@import "tailwindcss"`) + `@theme inline` mapping the token names and font vars.
 - Custom component layer with BEM-ish names (`.nav`, `.hero`, `.menu-tabs`, `.tab-row`, `.card-polaroid`, `.tape`, `.chip`, **`.btn-blue`** — renamed from `.btn-terra`, `.btn-ghost`, `.btn-light`, `.chat-*`).
 - Utilities: `.tape` (mustard zigzag), `.ruled` (38px lines, `#1e254014`), `.dotted-grid`, `.polaroid`, `.sticker` (blue sticker shadow), `Reveal` (shared wrapper targeting `opacity 0→1, y 28→0`).
-- Fonts: Fredoka via `next/font/google` with `weight: ["300","400","500","600","700"]` (variable font — do NOT pass `axes` together with `weight`, the known Next 16.4.3 failure); Gaegu via `next/font/google`; CSS vars `--font-fredoka`/`--font-gaegu` mapped to `--font-display`/`--font-hand` in `@theme inline`. All `font-variation-settings` and italic display rules removed app-wide.
+- Fonts: **shipped mechanism = `next/font/local`** (`app/fonts/` latin-subset woff2 files, self-hosted 2026-10-27 to kill the intermittent "Failed to download … from Google Fonts" build/proxy warning that left body text on the fallback stack; same files Google serves for `subsets: ["latin"]`, OFL). Fredoka variable 300–700 (`fredoka-latin-var.woff2`); Gaegu 400 + 700 (`gaegu-{400,700}-latin.woff2`); CSS vars `--font-fredoka`/`--font-gaegu` mapped to `--font-display`/`--font-hand` in `@theme inline`. All `font-variation-settings` and italic display rules removed app-wide. (Original spec said `next/font/google` — build-time network dependence replaced; visual result identical.)
 - Framer Motion for enter/reveal/springs only; ambient loops in CSS; no physics carousels.
 
 ---

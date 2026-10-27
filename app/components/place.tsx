@@ -9,6 +9,7 @@
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Reveal from "./reveal";
 import "../place.css";
 
 type RatioHint = "wide" | "tall" | "square";
@@ -159,48 +160,52 @@ export default function Place() {
   return (
     <section id="place" className="place" aria-labelledby="place-title">
       <div className="place-inner">
-        <header className="place-head">
-          <h2 id="place-title" className="place-title">
-            Come on in
-          </h2>
-          <p className="place-lede">{LEDE}</p>
-        </header>
+        <Reveal>
+          <header className="place-head">
+            <h2 id="place-title" className="place-title">
+              Come on in
+            </h2>
+            <p className="place-lede">{LEDE}</p>
+          </header>
+        </Reveal>
 
         {/* CSS multi-column masonry — reading order runs column-first
             (top of column 1 → down, then column 2), accepted by the spec
             for a photo wall. Flex/Grid deliberately NOT used on this
             container so `break-inside: avoid` can't fall back to
             fragmenting; flex only lives inside each card (figure). */}
-        <ul className="place-wall">
-        {SHOTS.map((shot, i) => (
-            <li key={shot.alt} className="place-item">
-              <button
-                type="button"
-                className={`place-card place-tilt-${i % 2 === 0 ? "l" : "r"}`}
-                aria-label={shot.caption}
-                aria-haspopup="dialog"
-                onClick={(e) => {
-                  triggerRef.current = e.currentTarget;
-                  setOpen(i);
-                }}
-              >
-                <figure className="place-shot">
-                  {shot.tape && <span className="u-tape place-tape" aria-hidden="true" />}
-                  <div className={`place-shot-photo place-ar-${shot.ratio}`}>
-                    <Image
-                      src={shot.src}
-                      alt={shot.alt}
-                      fill
-                      sizes={CARD_SIZES}
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
-                  <figcaption className="place-shot-cap">{shot.caption}</figcaption>
-                </figure>
-              </button>
-            </li>
-          ))}
-        </ul>
+        <Reveal delay={0.06}>
+          <ul className="place-wall">
+          {SHOTS.map((shot, i) => (
+              <li key={shot.alt} className="place-item">
+                <button
+                  type="button"
+                  className={`place-card place-tilt-${i % 2 === 0 ? "l" : "r"}`}
+                  aria-label={shot.caption}
+                  aria-haspopup="dialog"
+                  onClick={(e) => {
+                    triggerRef.current = e.currentTarget;
+                    setOpen(i);
+                  }}
+                >
+                  <figure className="place-shot">
+                    {shot.tape && <span className="u-tape place-tape" aria-hidden="true" />}
+                    <div className={`place-shot-photo place-ar-${shot.ratio}`}>
+                      <Image
+                        src={shot.src}
+                        alt={shot.alt}
+                        fill
+                        sizes={CARD_SIZES}
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
+                    <figcaption className="place-shot-cap">{shot.caption}</figcaption>
+                  </figure>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
 
       {open !== null && (

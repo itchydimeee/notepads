@@ -59,14 +59,15 @@
 .nt-nudge-x {
   display: grid;
   place-items: center;
-  width: 30px;
+  min-width: 44px; /* tap target floor: ≥ 44px both axes */
+  width: 44px;
   align-self: center;
   border: 0;
   background: none;
   color: var(--ink-soft);
   cursor: pointer;
   min-height: 44px;
-  padding: 0 6px 0 0;
+  padding: 0;
 }
 
 .nt-nudge-x:hover {

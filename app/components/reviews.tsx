@@ -6,6 +6,7 @@
 // constants OUTSIDE JSX so apostrophes, —, ·, é and the trailing ☕✨ survive
 // prerender untouched.
 import { Quote, Star } from "lucide-react";
+import Reveal from "./reveal";
 import "../reviews.css";
 
 const H2 = "Hear from our customers";
@@ -66,59 +67,65 @@ const REVIEWS: [Review, Review, Review, Review, Review] = [
 export default function Reviews() {
   return (
     <section id="reviews" className="rev" aria-labelledby="reviews-title">
-      <div className="rev-inner">
-        <h2 id="reviews-title" className="rev-title">
-          {H2}
-        </h2>
+      <Reveal>
+        <div className="rev-inner">
+          <h2 id="reviews-title" className="rev-title">
+            {H2}
+          </h2>
 
-        {/* Summary: drawn filled stars (icon system, not unicode glyphs) +
-            the verbatim remainder text — equivalent to the source string. */}
-        <p className="rev-summary">
-          <span className="rev-summary-stars" aria-hidden="true">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <Star key={i} size={21} strokeWidth={1.6} fill="currentColor" />
-            ))}
-          </span>
-          <span className="rev-summary-text">{SUMMARY_REMAINDER}</span>
-        </p>
-      </div>
+          {/* Summary: drawn filled stars (icon system, not unicode glyphs) +
+              the verbatim remainder text — equivalent to the source string. */}
+          <p className="rev-summary">
+            <span className="rev-summary-stars" aria-hidden="true">
+              {[0, 1, 2, 3, 4].map((i) => (
+                <Star key={i} size={21} strokeWidth={1.6} fill="currentColor" />
+              ))}
+            </span>
+            <span className="rev-summary-text">{SUMMARY_REMAINDER}</span>
+          </p>
+        </div>
+      </Reveal>
 
       {/* Native scroll-snap row. tabindex=0 + label so keyboard users can
           focus it and scroll with arrow keys (the cards contain no focusable
           elements); the global :focus-visible outline marks the focus. No JS
-          carousel anywhere — the browser does the scrolling. */}
-      <ul
-        className="rev-row"
-        tabIndex={0}
-        aria-label="Customer reviews — five five-star testimonials, scroll sideways to browse"
-      >
-        {REVIEWS.map((r) => (
-          <li key={r.name} className={`rev-card rev-card-${r.tone}`}>
-            {/* Quote watermark — contextual card furniture (not a floating
-                motif), one per card at opacity .1 ≤ the .12 cap. */}
-            <span className="rev-quote-mark" aria-hidden="true">
-              <Quote size={72} strokeWidth={1.4} aria-hidden="true" />
-            </span>
-
-            <div className="rev-card-head">
-              {/* Drawn filled stars; rating also spoken for screen readers. */}
-              <span className="rev-card-stars" aria-hidden="true">
-                {[0, 1, 2, 3, 4].map((j) => (
-                  <Star key={j} size={15} strokeWidth={1.6} fill="currentColor" />
-                ))}
+          carousel anywhere — the browser does the scrolling. The Reveal div
+          wrapper is semantically transparent (plain block) and does not
+          affect the row's own overflow/snap machinery. */}
+      <Reveal delay={0.06}>
+        <ul
+          className="rev-row"
+          tabIndex={0}
+          aria-label="Customer reviews — five five-star testimonials, scroll sideways to browse"
+        >
+          {REVIEWS.map((r) => (
+            <li key={r.name} className={`rev-card rev-card-${r.tone}`}>
+              {/* Quote watermark — contextual card furniture (not a floating
+                  motif), one per card at opacity .1 ≤ the .12 cap. */}
+              <span className="rev-quote-mark" aria-hidden="true">
+                <Quote size={72} strokeWidth={1.4} aria-hidden="true" />
               </span>
-              <span className="sr-only-note">Rated 5 out of 5</span>
-            </div>
 
-            <h3 className="rev-name">{r.name}</h3>
-            {r.role ? <p className="rev-role">{r.role}</p> : null}
+              <div className="rev-card-head">
+                {/* Drawn filled stars; rating also spoken for screen readers. */}
+                <span className="rev-card-stars" aria-hidden="true">
+                  {[0, 1, 2, 3, 4].map((j) => (
+                    <Star key={j} size={15} strokeWidth={1.6} fill="currentColor" />
+                  ))}
+                </span>
+                <span className="sr-only-note">Rated 5 out of 5</span>
+              </div>
 
-            <blockquote className="rev-quote">
-              <p>{r.quote}</p>
-            </blockquote>
-          </li>
-        ))}
-      </ul>
+              <h3 className="rev-name">{r.name}</h3>
+              {r.role ? <p className="rev-role">{r.role}</p> : null}
+
+              <blockquote className="rev-quote">
+                <p>{r.quote}</p>
+              </blockquote>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
     </section>
   );
 }

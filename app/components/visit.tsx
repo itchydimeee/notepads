@@ -5,6 +5,7 @@
 // system, motion comes only from those buttons' global transitions.
 // All copy + URLs verbatim from docs/details.md §9 + §Site Identity.
 import ContactStrip from "./contact-strip";
+import Reveal from "./reveal";
 import "../visit.css";
 
 const H2 = "Find your seat";
@@ -34,19 +35,24 @@ export default function Visit() {
   return (
     <section id="visit" className="visit" aria-labelledby="visit-title">
       <div className="visit-inner">
-        <h2 id="visit-title" className="visit-title">
-          {H2}
-        </h2>
-        <p className="visit-lede">{LEDE}</p>
+        <Reveal>
+          <h2 id="visit-title" className="visit-title">
+            {H2}
+          </h2>
+          <p className="visit-lede">{LEDE}</p>
+        </Reveal>
 
         {/* Strip LEFT + map RIGHT on wide screens; stacked below ~980px with
             the strip first, matching the reading order on mobile. gap 32px+.
             Decor budget: 0 floating motifs — the framed map card is the
             section's one elevated moment and the strip is content. */}
         <div className="visit-grid">
-          <ContactStrip />
+          <Reveal delay={0.06}>
+            <ContactStrip />
+          </Reveal>
 
-          <div className="visit-mapcol">
+          <Reveal delay={0.12}>
+            <div className="visit-mapcol">
             {/* The one elevated moment: warm --paper frame + --shadow-soft
                 around the map. The inner wrapper reserves the aspect box so
                 the late-loading iframe never shifts layout (zero CLS). */}
@@ -85,7 +91,8 @@ export default function Visit() {
             </div>
 
             <p className="visit-mapnote">{MAP_NOTE}</p>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>

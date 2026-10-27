@@ -63,7 +63,13 @@ export default function Hero() {
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval>;
-    if (visible) {
+    // Reduced motion = the hero shows ONE static photo (the crossfade interval
+    // never runs; the CSS kill-switch would otherwise turn crossfades into
+    // hard cuts).
+    const reduce =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (visible && !reduce) {
       timer = setInterval(() => setSlide((s) => (s + 1) % slides.length), 6000);
     }
     return () => clearInterval(timer);

@@ -11,6 +11,7 @@
 // (payment / parking are not published and are not shown).
 import { Check, Coffee, Cookie, Palette } from "lucide-react";
 import { useEffect, useState } from "react";
+import Reveal from "./reveal";
 import "../saturdays.css";
 
 /* --- constants ----------------------------------------------------------------
@@ -149,26 +150,30 @@ export default function Saturdays() {
   return (
     <section id="saturdays" className="sat" aria-labelledby="saturdays-title">
       <div className="sat-inner">
-        <h2 id="saturdays-title" className="sat-title">
-          {H2}
-        </h2>
-        <p className="sat-lede">{LEDE}</p>
+        <Reveal>
+          <h2 id="saturdays-title" className="sat-title">
+            {H2}
+          </h2>
+          <p className="sat-lede">{LEDE}</p>
+        </Reveal>
 
         {/* The ONE elevated moment: taped paper memo card on the kraft board.
             Decor budget = its tape (motif 1) + ruled margin line (motif 2). */}
-        <aside className="sat-board" aria-label={BOARD_TITLE}>
-          <span className="u-tape sat-board-tape" aria-hidden="true" />
-          <span className="sat-board-line" aria-hidden="true" />
-          <h3 className="sat-board-title">{BOARD_TITLE}</h3>
-          <p className="sat-board-tag">{BOARD_TAGLINE}</p>
-          <div className="sat-facts">
-            {FACTS.map((f) => (
-              <span key={f} className="sat-fact">
-                {f}
-              </span>
-            ))}
-          </div>
-        </aside>
+        <Reveal delay={0.06}>
+          <aside className="sat-board" aria-label={BOARD_TITLE}>
+            <span className="u-tape sat-board-tape" aria-hidden="true" />
+            <span className="sat-board-line" aria-hidden="true" />
+            <h3 className="sat-board-title">{BOARD_TITLE}</h3>
+            <p className="sat-board-tag">{BOARD_TAGLINE}</p>
+            <div className="sat-facts">
+              {FACTS.map((f) => (
+                <span key={f} className="sat-fact">
+                  {f}
+                </span>
+              ))}
+            </div>
+          </aside>
+        </Reveal>
 
         {/* Inclusions: row of paper chips (labels verbatim, doc §7; the drawn
             check is one consistent lucide glyph, not a unicode stand-in) */}
@@ -187,7 +192,8 @@ export default function Saturdays() {
         {/* 3 session cards — differentiated by tone + drawn lucide icon AND
             by internal composition (three distinct scaffolds, not a row of
             identical icon+heading+text cards): */}
-        <ul className="sat-cards">
+        <Reveal delay={0.12}>
+          <ul className="sat-cards">
           {/* Art — vertical poster head: icon chip above the name */}
           <li className="sat-card sat-card-art">
             <span className="sat-ico" aria-hidden="true">
@@ -232,11 +238,13 @@ export default function Saturdays() {
               {SESSIONS[2].dates}
             </p>
           </li>
-        </ul>
+          </ul>
+        </Reveal>
 
         {/* Pricing rows (dotted leaders, menu idiom — NOT a card row) side
             by side with the reserve panel on wide screens */}
-        <div className="sat-lower">
+        <Reveal delay={0.18}>
+          <div className="sat-lower">
           <section className="sat-panel sat-panel-pricing" aria-labelledby="sat-pricing-h">
             <h4 id="sat-pricing-h" className="sat-panel-h">
               {PRICING_HEADING}
@@ -283,7 +291,8 @@ export default function Saturdays() {
             <p className="sat-small">{SMALL_LINE}</p>
             <p className="sat-motto">{MOTTO}</p>
           </section>
-        </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

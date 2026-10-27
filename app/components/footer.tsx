@@ -12,6 +12,7 @@
 import { Coffee, Mail, MessageCircle, Sparkles } from "lucide-react";
 import type { SVGProps } from "react";
 import ContactStrip from "./contact-strip";
+import Reveal from "./reveal";
 import "../footer.css";
 
 /* --- verbatim constants (prerender-safe, outside JSX) ---------------------- */
@@ -175,7 +176,10 @@ export default function Footer() {
       </svg>
 
       <div className="footer-inner">
-        <div className="footer-grid">
+        {/* T13 — the footer reveals ONCE as a whole (spec: "footer inner
+            wrapper (reveal once)"); its columns don't stagger. */}
+        <Reveal>
+          <div className="footer-grid">
           {/* --- Brand block (left) --------------------------------------- */}
           <div className="footer-brandcol">
             <p className="footer-brand">{BRAND_LINE}</p>
@@ -246,6 +250,7 @@ export default function Footer() {
             </span>
           </p>
         </div>
+        </Reveal>
       </div>
     </footer>
   );
