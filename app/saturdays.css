@@ -23,7 +23,8 @@
   gap: clamp(40px, 5vw, 64px);
 }
 
-/* --- title + lede (no eyebrow — banned) -------------------------------- */
+/* --- title + lede (section index-tab label above — 2026-10-28 user
+   decision supersedes the old no-eyebrow ban; tab = globals .u-sectab) --- */
 
 .sat-title {
   margin: 0;

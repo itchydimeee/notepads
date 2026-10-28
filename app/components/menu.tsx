@@ -7,6 +7,7 @@
 import { useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Accent from "./accent";
 import Reveal from "./reveal";
+import SectionTab from "./section-tab";
 import "../menu.css";
 
 // v4 copy: headline/lede rewritten warm (ui_design.md §0.1); every dish name,
@@ -423,6 +424,7 @@ export default function Menu() {
       <div className="menu-inner">
         <Reveal>
           <header className="menu-head">
+            <SectionTab num="02" label="Menu" tone="peach" />
             <h2 id="menu-title" className="menu-title">
               Open the menu <Accent>book</Accent>
             </h2>

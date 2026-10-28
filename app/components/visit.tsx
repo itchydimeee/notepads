@@ -7,6 +7,7 @@
 import ContactStrip from "./contact-strip";
 import Accent from "./accent";
 import Reveal from "./reveal";
+import SectionTab from "./section-tab";
 import "../visit.css";
 
 // v4: H2 carries the accent word; everything else (URLs, address, note)
@@ -38,6 +39,7 @@ export default function Visit() {
     <section id="visit" className="visit" aria-labelledby="visit-title">
       <div className="visit-inner">
         <Reveal>
+          <SectionTab num="06" label="Visit" tone="mustard" />
           <h2 id="visit-title" className="visit-title">
             Find your <Accent>seat</Accent>
           </h2>

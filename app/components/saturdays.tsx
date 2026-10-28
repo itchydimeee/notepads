@@ -13,6 +13,7 @@ import { Check, Coffee, Cookie, Palette } from "lucide-react";
 import { useEffect, useState } from "react";
 import Accent from "./accent";
 import Reveal from "./reveal";
+import SectionTab from "./section-tab";
 import "../saturdays.css";
 
 /* --- constants ----------------------------------------------------------------
@@ -152,6 +153,7 @@ export default function Saturdays() {
     <section id="saturdays" className="sat" aria-labelledby="saturdays-title">
       <div className="sat-inner">
         <Reveal>
+          <SectionTab num="04" label="Saturdays" tone="butter" />
           <h2 id="saturdays-title" className="sat-title">
             <Accent>Saturdays</Accent> at NotePads
           </h2>

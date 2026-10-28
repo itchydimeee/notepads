@@ -11,6 +11,7 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Reveal from "./reveal";
 import Accent from "./accent";
+import SectionTab from "./section-tab";
 import "../place.css";
 
 type RatioHint = "wide" | "tall" | "square";
@@ -164,6 +165,7 @@ export default function Place() {
       <div className="place-inner">
         <Reveal>
           <header className="place-head">
+            <SectionTab num="03" label="The Place" tone="mustard" />
             <h2 id="place-title" className="place-title">
               Come on <Accent>in</Accent>
             </h2>

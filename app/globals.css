@@ -38,6 +38,9 @@
   --shadow-lift: 0 10px 24px rgba(30, 37, 64, 0.16);
   --shadow-stick: 6px 6px 0 #1c3aae33;
   --nav-h: 72px;
+  /* 2026-10-28 — shared section-H2 size; every major section title uses this
+     so heads stay identical (hero keeps its own larger clamp) */
+  --section-title: clamp(2rem, 4.6vw, 4rem);
   --maxw: 1200px;
   --gutter: clamp(20px, 5vw, 64px);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -148,6 +151,60 @@ html {
 
 .u-sticker {
   box-shadow: var(--shadow-stick);
+}
+
+/* --- notebook index tab (2026-10-28) ----------------------------------------
+   Diary-divider tab marking each major section (user label request; the old
+   "no eyebrow" ban is superseded). Silhouette = rounded TOP corners + square
+   bottom, tiny Gaegu-stamped number, gentle -2deg tilt that straightens on
+   hover. Real text (not aria-hidden) so section names are always readable. */
+.u-sectab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 7px 18px 8px;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 14px 14px 3px 3px;
+  box-shadow: var(--shadow-soft);
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+  transition: transform 0.3s var(--ease);
+}
+
+.u-sectab:hover,
+.u-sectab:focus-within {
+  transform: rotate(0deg);
+}
+
+.u-sectab-num {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--terra);
+  transform: translateY(-1px);
+}
+
+/* warm-paper tones (all safely carry ink text) */
+.u-sectab.is-butter { background: var(--butter-soft); }
+.u-sectab.is-peach { background: var(--peach-soft); }
+.u-sectab.is-mustard { background: var(--mustard-soft); }
+.u-sectab.is-sage { background: var(--sage-soft); }
+.u-sectab.is-dusty { background: var(--dusty-soft); }
+
+@media (prefers-reduced-motion: reduce) {
+  .u-sectab,
+  .u-sectab:hover,
+  .u-sectab:focus-within {
+    transition: none;
+  }
 }
 
 /* --- accent word (ui_design.md §2.1, revised 2026-10-27) --------------------

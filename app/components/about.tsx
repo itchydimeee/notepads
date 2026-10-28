@@ -14,6 +14,7 @@ import {
 import "../about.css";
 import Accent from "./accent";
 import Reveal from "./reveal";
+import SectionTab from "./section-tab";
 
 // T16 About craft pass (2026-10-27) — content inventory + shipped copy:
 //   · every title/label/desc rewritten cozy & human (T13.1 tone brief);
@@ -152,6 +153,7 @@ export default function About() {
       <div className="about-sheet">
         <div className="about-inner">
           <Reveal>
+            <SectionTab num="01" label="About" tone="butter" />
             <div className="about-intro">
               <div className="about-title-col">
                 <h2 id="about-title" className="about-title">

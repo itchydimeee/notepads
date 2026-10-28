@@ -8,6 +8,7 @@
 import { Quote, Star } from "lucide-react";
 import Accent from "./accent";
 import Reveal from "./reveal";
+import SectionTab from "./section-tab";
 import "../reviews.css";
 
 // v4: headline rewritten warm; review quotes + roles stay VERBATIM (real
@@ -73,6 +74,7 @@ export default function Reviews() {
     <section id="reviews" className="rev" aria-labelledby="reviews-title">
       <Reveal>
         <div className="rev-inner">
+          <SectionTab num="05" label="Reviews" tone="dusty" />
           <h2 id="reviews-title" className="rev-title">
             What our <Accent>guests</Accent> are saying
           </h2>

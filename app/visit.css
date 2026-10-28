@@ -21,7 +21,8 @@
   width: 100%;
 }
 
-/* --- title + lede (no eyebrow — banned) ----------------------------------- */
+/* --- title + lede (section index-tab label above — 2026-10-28 user
+   decision supersedes the old no-eyebrow ban; tab = globals .u-sectab) --- */
 
 .visit-title {
   margin: 0;
