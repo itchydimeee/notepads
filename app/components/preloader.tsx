@@ -119,7 +119,11 @@ export default function Preloader() {
           </span>
 
           <p className="pre-note" suppressHydrationWarning>
-            {NOTES[0]}…
+            {/* single string child: two adjacent text nodes would make React
+                emit marker comments between them in SSR, and the inline
+                script's textContent swap then breaks hydration structurally
+                (suppressHydrationWarning only covers text/attribute diffs) */}
+            {NOTES[0] + "…"}
           </p>
         </div>
       </div>

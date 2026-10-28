@@ -494,4 +494,10 @@
   .sat-panel {
     padding: 24px 22px;
   }
+
+  /* nowrap would exceed the narrower board and scroll the page horizontally */
+  .sat-pkg,
+  .sat-save {
+    white-space: normal;
+  }
 }

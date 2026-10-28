@@ -155,6 +155,9 @@
 
 .nav-burger {
   margin-left: auto;
+  position: relative;
+  /* paints above the open mobile sheet (z-index 240) so the X stays tappable */
+  z-index: 260;
   display: inline-flex;
   align-items: center;
   justify-content: center;

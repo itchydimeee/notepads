@@ -21,9 +21,9 @@
 //    it, a page reload does. No message persistence, ever.
 //  • Nudge dismissal IS persisted (try/catch-guarded localStorage
 //    `notey-nudge-dismissed` — storage failures never surface or block).
-//  • Anchor action chips (#menu / #visit / #reviews / #saturdays) do NOT close
-//    the chat: the section scrolls behind the panel and the conversation
-//    context stays for follow-up questions.
+//  • Anchor action chips (#menu / #visit / #reviews / #saturdays) CLOSE the
+//    chat: on mobile the near-fullscreen panel would hide the section being
+//    scrolled to. tel: chips and external links keep the panel open.
 //  • Events: opening the panel auto-focuses the input and auto-dismisses the
 //    nudge (the "shown once" budget is spent).
 import { MessageCircle, Send, X } from "lucide-react";
@@ -545,6 +545,9 @@ export default function Chatbot() {
                         className="nt-chip"
                         href={c.href}
                         {...(c.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                        {...(!c.external && c.href.startsWith("#")
+                          ? { onClick: () => setOpen(false) }
+                          : {})}
                       >
                         {c.label}
                       </a>

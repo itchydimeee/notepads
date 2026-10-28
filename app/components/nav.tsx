@@ -56,18 +56,23 @@ export default function Nav() {
 
   useEffect(() => {
     if (!open) return;
+    // lock BOTH roots: iOS Safari keeps scrolling the viewport unless html
+    // itself is overflow-hidden, not just body (matches the preloader lock)
+    document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
     };
     window.addEventListener("keydown", onKey);
     return () => {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
   }, [open, close]);
 
   return (
+    <>
     <header className={`nav ${scrolled ? "is-scrolled" : ""}`}>
       <div className="nav-inner">
         <a href="#top" className="nav-brand" aria-label="NotePads — back to top">
@@ -121,8 +126,13 @@ export default function Nav() {
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
+      </div>
+    </header>
 
-        <div id="nav-sheet" className={`nav-sheet ${open ? "is-open" : ""}`} aria-hidden={!open}>
+    {/* Sibling of the header: a backdrop-filter on ".nav.is-scrolled" makes it
+        the containing block for fixed descendants, which would clip this
+        full-screen sheet to the 72px nav bar once the page has scrolled. */}
+    <div id="nav-sheet" className={`nav-sheet ${open ? "is-open" : ""}`} aria-hidden={!open}>
           <nav className="nav-sheet-links" aria-label="Site sections">
             {LINKS.map((l) => (
               <a
@@ -151,8 +161,7 @@ export default function Nav() {
             <a href="tel:+639565543184">0956 554 3184</a> ·{" "}
             <a href="mailto:notepadscafe1109@gmail.com">notepadscafe1109@gmail.com</a>
           </p>
-        </div>
-      </div>
-    </header>
+    </div>
+    </>
   );
 }

@@ -275,8 +275,9 @@
   right: -48px;
 }
 
-/* narrow screens: nav arrows sit outside the flow edges */
-@media (max-width: 760px) {
+/* ≤900px: the overlay's 4vw padding is narrower than the 48px arrow offset
+   below ~1200px, so outside-hanging arrows would clip — pull them inside */
+@media (max-width: 900px) {
   .place-lb {
     padding-inline: 72px;
   }

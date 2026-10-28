@@ -395,8 +395,9 @@
 /* --- responsive ------------------------------------------------------- */
 
 @media (max-width: 640px) {
-  /* page-tab strip bleeds to the screen edges and scrolls horizontally —
-     each tab is its own snap stop */
+  /* page-tab strip scrolls horizontally but stays INSIDE the section's
+     gutter box — the strip previously bled to the screen edges (no left
+     margin) and its edge-flush tabs read glued to the page below */
   .menu-tabs {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -405,7 +406,6 @@
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
     scrollbar-width: none;
-    margin-inline: calc(var(--gutter) * -1);
     padding: 2px var(--gutter) 0;
   }
 
@@ -417,8 +417,51 @@
     scroll-snap-align: start;
   }
 
+  /* detached strip: a small breathing gap between the tabs and the page
+     (desktop ≥641 keeps the connected flush-tab design) */
+  .menu-book {
+    row-gap: 3px;
+  }
+
   .menu-meta {
     white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 3-price rows: one shared row would squeeze the name into ~50px — the
+     name takes a FULL-width line above (track 1 is a 1fr filler so the
+     span really is the row width) and the three prices tuck underneath,
+     right-aligned in tracks 2–4 under their colsh headers */
+  .menu-row.is-cols {
+    grid-template-columns: minmax(0, 1fr) repeat(3, max-content);
+  }
+
+  .menu-row.is-cols .menu-n {
+    grid-column: 1 / -1;
+  }
+
+  /* track 1 stays empty on the price line; auto-place would drop the first
+     price into the 1fr track (left-aligned) */
+  .menu-row.is-cols .menu-pc:nth-of-type(1) {
+    grid-column: 2;
+  }
+
+  .menu-row.is-cols .menu-pc:nth-of-type(2) {
+    grid-column: 3;
+  }
+
+  .menu-row.is-cols .menu-pc:nth-of-type(3) {
+    grid-column: 4;
+  }
+
+  .menu-row.is-cols .menu-pc {
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  .menu-row.is-cols .menu-colsh {
+    justify-self: end;
   }
 }
 

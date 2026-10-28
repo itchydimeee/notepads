@@ -94,6 +94,12 @@ html {
   scroll-padding-top: calc(var(--nav-h) + 8px);
 }
 
+/* horizontal guard: nothing on the page may ever scroll the document sideways
+   (clip, not hidden — hidden would turn html into a scroll container) */
+html, body {
+  overflow-x: clip;
+}
+
 ::selection {
   background: #1c3aae;
   color: #fdfaf2;
@@ -103,6 +109,12 @@ html {
   outline: 3px solid var(--blue-deep);
   outline-offset: 3px;
   border-radius: 6px;
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 1.15rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -451,6 +451,7 @@
     left: 0;
   }
   /* keep small screens airy: only the big star + note survive */
+  .hero-spark.b,
   .hero-spark.c,
   .hero-spark.d,
   .hero-doodle,
