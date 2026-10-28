@@ -1,11 +1,13 @@
 "use client";
 
-// T7 — The Place (#place) gallery. Client island: the lightbox needs state.
-// Captions + alt text verbatim from docs/details.md §6 (no invented copy).
-// Images are the 5 branded placeholder PNGs in public/images (production
-// photos deferred in T0): slots are mapped onto them by reuse — exact subject
-// matches first (hero.tsx alts), the rest reuse the closest interior shot.
-// No priority: the hero owns LCP; every gallery src is lazy by default.
+// T7 — The Place (#place) gallery. Client island: the lightbox needs state. Captions + alt text verbatim from docs/details.md §6 (no
+// invented copy). Images are the 5 branded placeholder PNGs in
+// public/images (production photos deferred in T0): slots are mapped onto
+// them by reuse — exact subject matches first (hero.tsx alts), the rest
+// reuse the closest interior shot, differentiated by `pos` crops so repeats
+// read as distinct frames. Shots run the room's narrative: arrive → order →
+// snacks → study → perch → lounge → company → address. No priority: the
+// hero owns LCP; every gallery src is lazy by default.
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -21,6 +23,7 @@ type Shot = {
   alt: string; // alt of the FUTURE photo (verbatim from details.md §6)
   caption: string; // verbatim from details.md §6
   ratio: RatioHint; // layout hint from details.md §6
+  pos?: string; // object-position crop; differentiates reused srcs
   tape?: boolean; // décor budget: max 2 taped cards in the whole section
 };
 
@@ -33,28 +36,10 @@ const SHOTS: Shot[] = [
     tape: true,
   },
   {
-    src: "/images/cafe-05-sm.png", // students studying — closest subject
-    alt: "Students working at the long communal study table",
-    caption: "The communal table, in full focus",
-    ratio: "tall",
-  },
-  {
-    src: "/images/cafe-10-md.png", // hero: "lounge with the logo wall" — exact match
-    alt: "Lounge seating under the NotePads logo wall",
-    caption: "Lounge corner & logo wall",
-    ratio: "square",
-  },
-  {
     src: "/images/cafe-03-sm.png", // hero: "coffee counter with hanging lights" — exact match
     alt: "The NotePads coffee counter with warm hanging lights",
     caption: "The coffee counter",
     ratio: "square",
-  },
-  {
-    src: "/images/cafe-05-sm.png", // hero: "study stations and red chairs" — exact match
-    alt: "Study stations with red chairs and string lights",
-    caption: "Study stations",
-    ratio: "wide",
   },
   {
     src: "/images/cafe-12-sm.png", // hero: "the open pantry" — exact match
@@ -63,16 +48,37 @@ const SHOTS: Shot[] = [
     ratio: "square",
   },
   {
-    src: "/images/cafe-03-sm.png", // drinks warm the scene — reuse
+    src: "/images/cafe-05-sm.png", // students studying, cropped high — closest subject
+    alt: "Students working at the long communal study table",
+    caption: "The communal table, in full focus",
+    ratio: "tall",
+    pos: "50% 20%",
+  },
+  {
+    src: "/images/cafe-05-sm.png", // hero: "study stations and red chairs" — exact match
+    alt: "Study stations with red chairs and string lights",
+    caption: "Study stations",
+    ratio: "wide",
+  },
+  {
+    src: "/images/cafe-10-md.png", // hero: "lounge with the logo wall" — exact match
+    alt: "Lounge seating under the NotePads logo wall",
+    caption: "Lounge corner & logo wall",
+    ratio: "square",
+  },
+  {
+    src: "/images/cafe-03-sm.png", // drinks warm the scene — reused, left crop
     alt: "Guests studying with laptops and iced coffee",
     caption: "Laptops, coffee, good company",
     ratio: "tall",
+    pos: "20% 45%",
   },
   {
-    src: "/images/cafe-16-md.png", // signage/building — reuse
+    src: "/images/cafe-16-md.png", // signage/building — reused, low crop
     alt: "The SDC Building on Guzman–Jesena Street",
     caption: "SDC Building · 2nd floor · Guzman–Jesena St",
     ratio: "square",
+    pos: "50% 70%",
     tape: true,
   },
 ];
@@ -167,7 +173,7 @@ export default function Place() {
           <header className="place-head">
             <SectionTab num="03" label="The Place" tone="mustard" />
             <h2 id="place-title" className="place-title">
-              Come on <Accent>in</Accent>
+              Make yourself at <Accent>home</Accent>
             </h2>
             <p className="place-lede">{LEDE}</p>
           </header>
@@ -200,7 +206,10 @@ export default function Place() {
                         alt={shot.alt}
                         fill
                         sizes={CARD_SIZES}
-                        style={{ objectFit: "cover" }}
+                        style={{
+                          objectFit: "cover",
+                          objectPosition: shot.pos,
+                        }}
                       />
                     </div>
                     <figcaption className="place-shot-cap">{shot.caption}</figcaption>
@@ -266,7 +275,10 @@ export default function Place() {
                   alt={SHOTS[open].alt}
                   fill
                   sizes={LB_SIZES}
-                  style={{ objectFit: "cover" }}
+                  style={{
+                    objectFit: "cover",
+                    objectPosition: SHOTS[open].pos,
+                  }}
                 />
               </div>
               <figcaption className="place-lb-cap">{SHOTS[open].caption}</figcaption>

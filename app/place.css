@@ -1,5 +1,6 @@
 /* The Place (#place) — T7 gallery. 8 polaroid photo cards in a CSS
    multi-column masonry (3 ≥980 / 2 ≥640 / 1 below) + client lightbox.
+   ≥980px the wall drifts organically (nth-child translateY offsets ≤10px).
    Colors/fonts/shadows all via globals.css tokens. Captions + alt text
    verbatim from docs/details.md §6. */
 
@@ -325,5 +326,16 @@
 @media (min-width: 980px) {
   .place-wall {
     columns: 3;
+  }
+
+  /* static desktop-only drift — transforms don't touch the column flow and
+     the 32px gap absorbs ≤10px of offset; hover's transform lives on the
+     inner .place-shot so the two never collide */
+  .place-item:nth-child(3n + 1) {
+    transform: translateY(4px);
+  }
+
+  .place-item:nth-child(3n - 1) {
+    transform: translateY(10px);
   }
 }

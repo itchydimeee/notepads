@@ -294,19 +294,22 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 
 ## 6. The Place — Gallery (`#place`)
 
-- Eyebrow: `The Place` · H2: `Come on in` · Lede: `Warm lights, red chairs, a pantry within reach and a seat with a plug. Here's a peek around the 2nd floor.`
+- Eyebrow: `The Place` · H2: `Make yourself at home` · Lede: `Warm lights, red chairs, a pantry within reach and a seat with a plug. Here's a peek around the 2nd floor.`
 - 8 photos (polaroid-style, in a mosaic):
 
 | Photo | Layout | Alt text |
 |---|---|---|
 | Look for the glowing sign | wide | The glowing NotePads Study Hub Café sign at night |
-| The communal table, in full focus | tall | Students working at the long communal study table |
-| Lounge corner & logo wall | — | Lounge seating under the NotePads logo wall |
 | The coffee counter | — | The NotePads coffee counter with warm hanging lights |
-| Study stations | wide | Study stations with red chairs and string lights |
 | The open pantry | — | The open pantry shelves with fruit and cereal jars |
+| The communal table, in full focus | tall | Students working at the long communal study table |
+| Study stations | wide | Study stations with red chairs and string lights |
+| Lounge corner & logo wall | — | Lounge seating under the NotePads logo wall |
 | Laptops, coffee, good company | tall | Guests studying with laptops and iced coffee |
 | SDC Building · 2nd floor · Guzman–Jesena St | — | The SDC Building on Guzman–Jesena Street |
+
+- Lines list the shipped gallery order — a narrative walkthrough: arrive (`glowing sign`) → order (`coffee counter`) → snacks (`open pantry`) → study (`communal table`, `stations`) → perch/lounge (`lounge corner`) → company (`laptops, coffee`) → address (`SDC Building`). Tape strips on the first and last photo only.
+- Only 5 real photos exist for 8 slots, so reused sources get a distinct `object-position` crop per slot: communal table `50% 20%` (tall), laptops/coffee `20% 45%` (tall), building `50% 70%` (square). Crop values also recorded in `place.tsx`.
 
 ## 7. Saturdays — Kids Workshops (`#saturdays`)
 

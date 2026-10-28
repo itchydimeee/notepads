@@ -104,9 +104,16 @@
 
 ## T7 — The Place (Gallery)
 
-- [x] Fredoka H2 `Come on in`, lede from docs (no eyebrow); 8 photos w/ captions as polaroids (Gaegu captions), CSS masonry 3/2/1 cols, tilt ≤ 1.5°. (Shipped as CSS multi-column on a plain list — column-first reading order documented in the tsx; alternating ±0.8° tilt that settles to 0 on hover; tape strips on 2 of 8 cards = the section's full décor budget, per the ≤2-motif cleanliness bar.)
+- [x] Fredoka H2 ~~`Come on in`~~ → **`Make yourself at home`** (2026-10-28 H2 rename, accent word *home*), lede from docs (no eyebrow); 8 photos w/ captions as polaroids (Gaegu captions), CSS masonry 3/2/1 cols, tilt ≤ 1.5°. (Shipped as CSS multi-column on a plain list — column-first reading order documented in the tsx; alternating ±0.8° tilt that settles to 0 on hover; tape strips on 2 of 8 cards = the section's full décor budget, per the ≤2-motif cleanliness bar.)
 - [x] Lightbox: scrim `rgba(30,37,64,.88)`, figure scale-in `.4s cubic-bezier(.22,1,.36,1)` (re-keyed per nav), Escape/arrows/swipe. (Shipped as `role="dialog" aria-modal` + focus trap visiting Tab, focus→close on open / trigger on close, body scroll lock, wraps, scrim click closes; prev/next lucide chevron buttons ≥ 44px added as visible affordances for keyboard+touch; swipe Δx > 48px.)
 - [x] **DoD:** lazy-loaded images (`<Image>`), zero CLS (reserved aspect boxes). (No `priority` anywhere — hero owns LCP; 3/2 · 2/3 · 1/1 aspect boxes with `sizes` per breakpoint; alt text = the future production photo's, since placeholders are "to be replaced" stubs mapped across the 5 available PNGs.)
+
+### T7 — H2 rename + refined-masonry pass (2026-10-28)
+
+- [x] **H2 renamed (user-picked: "Make yourself at *home*", accent word *home*; user clarification: the old H2 "Come on in" was the target, NOT the "The Place" label — the mid-progress "Scenes from Upstairs" rename was reverted in the same pass)** — eyebrow/nav/section tab all stay `The Place`. H2 + Accent only, in `place.tsx`. Docs-first: details.md §6 H2 field updated, ui_design.md §4.6 rewritten, PRODUCT.md/labels untouched.
+- [x] **Shot order → narrative walkthrough** — arrive (`glowing sign`) → order (`coffee counter`) → snacks (`open pantry`) → study (`communal table`, `stations`) → perch/lounge → company (`laptops, coffee`) → address (`SDC Building`); ratios interleave wide/sq sq/tall/wide/sq/tall/sq so no two consecutive talls; tape strips remain exactly 2 — first and last (bookends). details.md §6 table rows reordered to the shipped sequence.
+- [x] **Duplicate-source differentiation** — only 5 PNGs cover 8 slots; reused srcs now crop differently via a `pos` object-position field (cafe-05 `50% 20%` tall vs center wide; cafe-03 `20% 45%` tall vs center square; cafe-16 `50% 70%` low square vs center wide). Lightbox inherits the crop for continuity.
+- [x] **Desktop drift ≥980** — `.place-item:nth-child(3n+1)` translateY(4px) / `nth-child(3n-1)` translateY(10px): static transforms that don't touch the column flow (32px gap absorbs them); hover's transform lives on the inner `.place-shot`, so the two never collide; 2-col/1-col layouts stay flat.
 
 ## T8 — Saturdays (Workshops)
 
