@@ -9,7 +9,15 @@
 
 import { useEffect, useRef } from "react";
 
-export default function Accent({ children }: { children: string }) {
+export default function Accent({
+  children,
+  variant,
+}: {
+  children: string;
+  /** "goldtext" = dark-ground treatment (--mustard text, swash hidden —
+   *  styles already live in globals.css `.accent-word--goldtext`). */
+  variant?: "goldtext";
+}) {
   const boxRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -43,8 +51,10 @@ export default function Accent({ children }: { children: string }) {
     };
   }, []);
 
+  const cls = variant === "goldtext" ? "accent-word accent-word--goldtext" : "accent-word";
+
   return (
-    <span className="accent-word" ref={boxRef}>
+    <span className={cls} ref={boxRef}>
       <span className="accent-word-text">{children}</span>
       <svg
         className="accent-word-swash"

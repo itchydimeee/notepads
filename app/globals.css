@@ -11,6 +11,9 @@
   --blush: #faf0dd;
   --paper: #fdfaf2;
   --kraft: #ead9bd;
+  /* warm oat — sheet ground for the floating About panel (#f4e9d6); sits
+     between --blush and --kraft so the sheet reads WARM, never white */
+  --oat: #f4e9d6;
   --ink: #1e2540;
   --ink-soft: #4d5878;
   --terra: #b85433;
@@ -45,6 +48,7 @@
   --color-blush: var(--blush);
   --color-paper: var(--paper);
   --color-kraft: var(--kraft);
+  --color-oat: var(--oat);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-mustard: var(--mustard);

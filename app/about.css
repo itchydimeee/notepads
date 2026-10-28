@@ -1,40 +1,105 @@
-/* About — layered ivory SHEET on the cream ground (reference style):
-   rounded floating panel, clearly separated from the blush hero seam. */
+/* About (#about) — T16 craft pass (2026-10-27, revision after user feedback).
+   One section, three moments on ONE inner alignment box (var(--maxw)):
+   1. .about-sheet — warm oat floating panel (full-page edge-to-edge edges,
+      vertical seams of body parchment above/below): intro copy → smaller
+      sticky-note trio (doodles flanking it) → a 4-up taped photo shelf;
+   2. .about-band — amenities on the parchment ground as a UNIFORM 4×2
+      card wall (round 6: the wide/full spans retired);
+   3. .about-package — the elevated moment as a BOARDING-PASS TICKET:
+      deal column (label · title · 2-column includes) + tear-off stub
+      (price · sub · CTA · small print) split by the perforation.
+   All colors/fonts/shadows via globals.css tokens (Ink & Indigo). */
 
 .about {
-  padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
-  background: var(--paper);
-  border-radius: clamp(24px, 4vw, 40px);
-  margin-inline: clamp(10px, 2vw, 22px);
+  /* the wrapper is transparent — vertical seams show the parchment body
+     between the hero, the sheet, the band, the package and the menu board */
+  display: grid;
+  gap: clamp(20px, 4vw, 40px);
+  padding-block: clamp(20px, 4vw, 40px);
 }
 
+/* shared max-width pool: every moment's content lines up with the menu,
+   place and visit sections at exactly var(--maxw) + var(--gutter);
+   its gap also spaces the sheet's stacked groups (copy / notes / shelf) —
+   tightened round 4 so no dead band opens between the header groups */
 .about-inner {
   max-width: var(--maxw);
   margin: 0 auto;
   width: 100%;
   display: grid;
-  gap: clamp(40px, 5vw, 64px);
+  gap: clamp(32px, 4vw, 48px);
 }
 
-/* --- title + lede --- */
+/* --- 1 · the floating oat sheet ------------------------------------------ */
+
+.about-sheet {
+  background: var(--oat);
+  border-radius: clamp(24px, 4vw, 40px);
+  /* full-page edge-to-edge (same language as hero/menu); room inside does
+     the section padding-y duty — spec floor 4rem on mobile kept */
+  padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
+}
+
+/* --- intro: title LEFT / lede RIGHT (the reference's balanced two-column
+   head; stacks ≤ 980). The heading column carries a location chip beneath
+   the H2 (round 6) so the left column never ends in dead oat --- */
+
+.about-intro {
+  display: grid;
+  gap: clamp(28px, 4vw, 48px);
+}
+
+@media (min-width: 980px) {
+  .about-intro {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.about-title-col {
+  display: grid;
+  gap: 22px;
+  justify-items: start;
+  align-content: start;
+}
+
+.about-loc {
+  margin: 6px 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--ink-soft);
+}
+
+.about-loc svg {
+  color: var(--blue);
+  flex: none;
+}
 
 .about-title {
   margin: 0;
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 700;
   font-style: normal;
-  font-size: clamp(2rem, 4.6vw, 4rem);
+  font-size: clamp(2rem, 4.6vw, 3.6rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
   color: var(--ink);
-  max-width: 22ch;
+  max-width: 20ch;
 }
 
 .about-lede {
   display: grid;
   gap: 16px;
-  max-width: 38em;
-  justify-items: start;
+  max-width: 36em;
+  align-content: start;
 }
 
 .about-lede p {
@@ -45,82 +110,169 @@
   color: var(--ink-soft);
 }
 
-.about-lede strong {
-  color: var(--ink);
-  font-weight: 700;
-}
+/* --- sticky-note stats (details.md facts): distinct warm papers, gathered
+   cluster with gentle tilts that settle to level on hover + bigger type so
+   the roomy cards feel inhabited. Base gap 32px (cleanliness floor); ≥1020
+   the cluster uses the in-scale 24px step — a deliberate gathered-desk
+   exception, band grids below keep 32px.
+   Tones: butter / paper / mustard-soft — warm family accents, each safely
+   carrying ink-soft (≥ 5:1 on mustard-soft, the deepest of the three). --- */
 
-/* --- stat cards --- */
-
-.about-stats {
+.about-notes {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 8px;
   display: grid;
   gap: 32px;
   grid-template-columns: 1fr;
+  /* each card hugs its own content height — no stretched dead card bottoms */
+  align-items: start;
 }
 
-.about-stat {
-  background: var(--paper);
-  border-radius: 14px;
+@media (min-width: 720px) {
+  .about-notes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1020px) {
+  /* round 5: the desk trio is deliberately SMALLER (capped at 900px,
+     centered) so it reads as a modest desk cluster, not a banner row */
+  .about-notes {
+    gap: 24px;
+    max-width: 900px;
+    justify-self: center;
+  }
+}
+
+.about-note {
+  position: relative;
+  border-radius: 12px;
   box-shadow: var(--shadow-soft);
-  padding: 28px 32px;
+  padding: 28px 30px;
   display: grid;
-  gap: 6px;
+  gap: 8px;
+  align-content: start;
   transition:
     transform 0.25s var(--ease),
     box-shadow 0.25s var(--ease);
 }
 
-.about-stat:hover {
+/* the gathered cluster: each note lands slightly out of line — a real desk
+   feel, never a machine row */
+.about-note:nth-child(1) {
+  rotate: -1.2deg;
+  background: var(--butter-soft);
+}
+
+.about-note:nth-child(2) {
+  rotate: 0.8deg;
+  background: var(--paper);
+}
+
+.about-note:nth-child(3) {
+  rotate: -0.6deg;
+  background: var(--mustard-soft);
+}
+
+.about-note:hover {
+  rotate: 0deg;
   transform: translateY(-4px);
   box-shadow: var(--shadow-lift);
 }
 
-.about-stat-value {
+/* tape pin: the shared u-tape treatment copied onto ::before (same zig-zag
+   clip + shadow as globals .u-tape) so the li stays clean */
+.about-note::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  translate: -50% 0;
+  rotate: -3deg;
+  width: 68px;
+  height: 22px;
+  background: #e2b064b8;
+  clip-path: polygon(
+    0 8%, 12% 0, 25% 8%, 38% 0, 50% 8%, 62% 0, 75% 8%, 88% 0, 100% 8%,
+    100% 92%, 88% 100%, 75% 92%, 62% 100%, 50% 92%, 38% 100%, 25% 92%, 12% 100%, 0 92%
+  );
+  box-shadow: 0 1px 2px rgba(30, 37, 64, 0.12);
+  z-index: 1;
+}
+
+.about-note:nth-child(2)::before {
+  rotate: 2.5deg;
+}
+
+.about-note:nth-child(3)::before {
+  rotate: -1.5deg;
+}
+
+.about-note-value {
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(2rem, 3.4vw, 2.75rem);
+  font-size: clamp(2.1rem, 3.2vw, 2.75rem);
   line-height: 1.08;
   letter-spacing: -0.01em;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
-.about-stat-label {
-  font-size: 1.08rem;
+.about-note-label {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: clamp(1.18rem, 1.4vw, 1.3rem);
   line-height: 1.45;
   color: var(--ink-soft);
 }
 
-/* --- taped polaroids --- */
-
-.about-shots {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 40px;
+/* the hours note's own small line (Sunday window) — quiet, but its own row */
+.about-note-extra {
+  margin-top: 2px;
+  padding-top: 10px;
+  border-top: 1.5px dashed #1e254026;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.08rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
 }
 
-/* layered still-life: the second polaroid tucks into the first (≥ 900px
-   only — stacked and airy on mobile) */
+/* --- photo shelf (round 5/6): FOUR taped prints side by side in one row —
+   2×2 on phones, 2-up mid-size, 4-up ≥ 1020, gentle alternating tilts;
+   the shelf top is CLEAN now (doodles moved to flank the trio, round 6) --- */
 
-@media (min-width: 900px) {
-  .about-shot:nth-child(even) {
-    margin-left: -44px;
-    z-index: 1;
-  }
+.about-shots {
+  position: relative;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 0 0 8px;
 }
 
 .about-shot {
   position: relative;
-  margin: 14px 0 0;
-  width: min(100%, 320px);
+  margin: 8px 0 0;
+  transition:
+    rotate 0.25s var(--ease),
+    translate 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
 }
 
-.about-shot:nth-child(odd) {
-  transform: rotate(-1.2deg);
+/* the strip leans: alternate prints land slightly out of line */
+.about-shot:nth-child(1) {
+  rotate: -1.6deg;
 }
 
-.about-shot:nth-child(even) {
-  transform: rotate(1.2deg);
+.about-shot:nth-child(2) {
+  rotate: 1.2deg;
+}
+
+.about-shot:nth-child(3) {
+  rotate: -1deg;
+}
+
+.about-shot:nth-child(4) {
+  rotate: 1.8deg;
 }
 
 .about-shot .u-tape {
@@ -134,6 +286,19 @@
 
 .about-shot:nth-child(even) .u-tape {
   rotate: 2.5deg;
+}
+
+.about-shot:hover {
+  rotate: 0deg;
+  translate: 0 0;
+  box-shadow: var(--shadow-lift);
+}
+
+@media (min-width: 1020px) {
+  .about-shots {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 24px 0 8px;
+  }
 }
 
 .about-shot-photo {
@@ -156,7 +321,76 @@
   text-align: center;
 }
 
-/* --- amenity grid (4 / 2 / 1) --- */
+/* --- the two hand-drawn doodles (motif budget: 2/section) ---
+   round 6: they flank the 900px-capped sticky trio — cup LEFT of the row,
+   arrow RIGHT pointing on toward the photo strip — eating the trio's side
+   bands instead of floating over the shelf. crisp linework, ink-soft @ .4
+   with honey steam; both aria-hidden decoration, pointer-events none;
+   hidden < 1020 (only the capped row leaves side bands). */
+
+.about-notes-row {
+  position: relative;
+}
+
+.about-notes-row .about-doodle {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+  opacity: 0.4;
+  color: var(--ink-soft);
+  display: none;
+}
+
+.about-notes-row .about-doodle-cup {
+  left: 0;
+  rotate: -8deg;
+}
+
+.about-notes-row .about-doodle-arrow {
+  right: 0;
+  rotate: 20deg;
+}
+
+@media (min-width: 1020px) {
+  .about-notes-row .about-doodle {
+    display: block;
+  }
+}
+
+/* --- 2 · amenities bento band (on the parchment ground) ------------------- */
+
+.about-band {
+  padding-inline: var(--gutter);
+}
+
+.about-band-head {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about-band-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.about-band-sub {
+  margin: 8px 0 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+/* round 6: UNIFORM card wall — 4 columns ≥ 1080, 2 ≥ 640, 1 below.
+   Every card equal (no wide/full spans): same `--paper` ground, same 24px
+   padding, same 48px icon disc; the 8 cards land as two even rows of four. */
 
 .about-amenities {
   display: grid;
@@ -181,6 +415,18 @@
 .about-amenity:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lift);
+}
+
+@media (min-width: 640px) {
+  .about-amenities {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1080px) {
+  .about-amenities {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .amenity-ico {
@@ -210,146 +456,226 @@
   color: var(--ink-soft);
 }
 
-/* --- ₱350 Study Space Package ticket (the one elevated card) --- */
+/* --- 3 · ₱350 package ticket (the one elevated moment, cobalt) --------------
+   Boarding-pass format: the deal column (label · title · includes) and a
+   tear-off stub (price · sub · CTA · hourly small print), split by the
+   perforation. ≥ 900px: deal LEFT, stub RIGHT, vertical perforation with two
+   punched holes, includes run in 2 columns so the ticket stays compact.
+   Below 900: deal on top, stub under a horizontal perforation.
+   Vars: --pkg-pad / --pkg-gap are shared by padding, gap and overhang math. */
 
-.about-ticket {
+.about-package-wrap {
+  padding-inline: var(--gutter);
+}
+
+.about-package {
+  --pkg-pad: clamp(28px, 4vw, 44px);
+  --pkg-gap: clamp(24px, 4vw, 40px);
   position: relative;
+  /* uniform with the content pool — never wider than var(--maxw) */
+  max-width: var(--maxw);
+  margin-inline: auto;
   width: 100%;
-  max-width: 720px;
-  justify-self: center;
-  background: var(--paper);
-  border-radius: 18px;
+  background: var(--blue);
+  border-radius: clamp(18px, 3vw, 24px);
   box-shadow: var(--shadow-lift);
-  padding: 32px;
-  transform: rotate(-0.4deg);
-}
-
-.about-ticket-head {
+  padding: var(--pkg-pad);
+  color: var(--paper);
   display: grid;
-  gap: 4px;
-  justify-items: center;
-  text-align: center;
-  padding: 0 12px 22px;
+  gap: var(--pkg-gap);
 }
 
-.about-ticket-label {
+.about-package-deal {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+  min-width: 0;
+}
+
+.about-package-label {
   margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--blue);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  color: var(--mustard);
 }
 
-.about-ticket-price {
+.about-package-title {
   margin: 0;
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(2.2rem, 4vw, 3rem);
-  line-height: 1.08;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1.12;
   letter-spacing: -0.01em;
-  color: var(--ink);
+  color: var(--paper);
 }
 
-.about-ticket-sub {
-  margin: 0;
-  font-size: 1.1rem;
-  line-height: 1.45;
-  color: var(--ink-soft);
-}
-
-/* perforation: dashed line spanning the full card + two punched holes
-   (parchment cutouts ringed in blue — the sticker punch detail) */
-
-.about-ticket-perf {
-  position: relative;
-  margin: 4px -32px 26px;
-  border-top: 2px dashed #1e254026;
-}
-
-.about-ticket-hole {
-  position: absolute;
-  top: -14px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 0 60%, #1c3aae33 61% 82%, transparent 83%),
-    radial-gradient(circle, var(--parchment) 0 72%, transparent 73%);
-}
-
-.about-ticket-hole.start {
-  left: -14px;
-}
-
-.about-ticket-hole.end {
-  right: -14px;
-}
-
-.about-ticket-list {
+/* the includes checklist — the ticket's long body. Multi-column ≥ 720px
+   (items break-avoid, per-item padding carries the row rhythm since columns
+   don't support row gaps) keeps the six facts from stacking into a wall. */
+.about-package-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 14px;
+  font-size: 1.05rem;
+  line-height: 1.5;
 }
 
-.about-ticket-list li {
+.about-package-list li {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  font-size: 1.06rem;
-  line-height: 1.55;
-  color: var(--ink-soft);
+  color: #fdfaf2d9;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  margin-bottom: 14px;
 }
 
-.about-ticket-check {
-  color: var(--honey);
-  flex: none;
-  margin-top: 4px;
+.about-package-list li:last-child {
+  margin-bottom: 0;
 }
 
-.about-ticket-n {
-  color: var(--ink);
+.about-package-n {
+  color: var(--paper);
   font-weight: 700;
 }
 
-.about-ticket-foot {
+.about-package-check {
+  color: var(--honey);
+  flex: none;
+  margin-top: 3px;
+}
+
+@media (min-width: 720px) {
+  .about-package-list {
+    columns: 2;
+    column-gap: var(--pkg-gap);
+  }
+}
+
+/* the tear-off stub */
+
+.about-package-stub {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  justify-items: start;
+}
+
+/* perforation — horizontal stub cut on mobile, vertical ≥ 900 */
+.about-package-stub::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--pkg-gap) / -2);
+  border-top: 2px dashed #fdfaf24d;
+}
+
+@media (min-width: 900px) {
+  .about-package {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+  }
+
+  .about-package-stub::before {
+    top: calc(var(--pkg-pad) * -1);
+    bottom: calc(var(--pkg-pad) * -1);
+    left: calc(var(--pkg-gap) / -2 - 1px);
+    right: auto;
+    border-top: 0;
+    border-left: 2px dashed #fdfaf24d;
+  }
+}
+
+/* punched holes — parchment cutouts on the vertical perforation only */
+.about-package-hole {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .about-package-hole {
+    display: block;
+    position: absolute;
+    left: calc(var(--pkg-gap) / -2);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--parchment);
+    translate: -50% -50%;
+  }
+
+  .about-package-hole.top {
+    top: calc(var(--pkg-pad) * -1);
+  }
+
+  .about-package-hole.bottom {
+    top: calc(100% + var(--pkg-pad));
+    left: calc(var(--pkg-gap) / -2);
+  }
+}
+
+.about-package-price {
+  margin: 2px 0 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.4rem, 4.4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.about-package-sub {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: #fdfaf2d9;
+}
+
+.about-package-btn {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.about-package-btn:hover {
+  box-shadow: 6px 6px 0 #142c8066;
+  transform: translateY(-2px);
+}
+
+/* hourly small print: its own dashed notch inside the stub ≥ 900 */
+.about-package-foot {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 22px;
-  font-size: 1.05rem;
-  color: var(--ink-soft);
+  margin-top: 4px;
+  padding-top: 12px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: #fdfaf2d9;
 }
 
-.about-ticket-foot svg {
-  color: var(--blue);
+@media (min-width: 900px) {
+  .about-package-foot {
+    border-top: 2px dashed #fdfaf24d;
+    padding-top: 14px;
+    width: 100%;
+  }
+}
+
+.about-package-foot svg {
+  color: var(--honey);
   flex: none;
 }
 
-/* --- responsive --- */
+/* --- responsive notes --- */
 
-@media (min-width: 640px) {
-  .about-stats {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .about-amenities {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .about-ticket-list li {
-    font-size: 1.12rem;
-  }
-}
-
-@media (min-width: 980px) {
-  .about-lede {
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    max-width: none;
-  }
-
-  .about-amenities {
-    grid-template-columns: repeat(4, 1fr);
+@media (min-width: 720px) {
+  .about-package-list li {
+    font-size: 1.02rem;
   }
 }

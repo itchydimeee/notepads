@@ -8,10 +8,11 @@
 
 .visit {
   padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
-  /* layered ivory SHEET (matched with About) before the navy footer */
+  /* layered ivory SHEET (edge language matched with About's floating sheet,
+     2026-10-27: full-page edges + vertical seams of body parchment) */
   background: var(--paper);
   border-radius: clamp(24px, 4vw, 40px);
-  margin-inline: clamp(10px, 2vw, 22px);
+  margin-block: clamp(20px, 4vw, 40px);
 }
 
 .visit-inner {
