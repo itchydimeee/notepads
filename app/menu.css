@@ -1,18 +1,31 @@
-/* Menu (T6) — kraft chapter ground with an ink-tinted dot grid, tabbed
-   menu-book chapters, dotted-leader price rows, ₱350 welcome ticket.
-   All colors/fonts/shadows via globals.css tokens (Ink & Indigo). */
+/* Menu (T6 + T17 craft pass, M9 book-only revert 2026-10-28) — warm kraft
+   ground with a bottom blend + softened ink dot grid, one-column header
+   (the ₱350 ticket that duplicated the About boarding-pass is GONE), index
+   page tabs attached to the plain paper page card (no notepad/spiral/flip),
+   grouped rows with hover + per-group stagger, and a readable small-print
+   chip footnote. All colors/fonts/shadows via globals.css tokens (v4 Golden
+   Corner). */
 
 /* --- section ground -------------------------------------------------- */
 
 .menu {
   padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
   background-color: var(--kraft);
-  /* ink-tinted dot grid (derived values #1e254012 / #1e25400c) */
+  /* warm blend toward a lighter kraft at the bottom + ink-tinted dot grid
+     (softened from the T6 wash; derived values #1e254010 / #1e25400c) */
   background-image:
-    radial-gradient(#1e254012 1.2px, transparent 1.5px),
+    linear-gradient(180deg, rgba(253, 250, 242, 0) 55%, rgba(253, 250, 242, 0.28) 100%),
+    radial-gradient(#1e254010 1.2px, transparent 1.5px),
     radial-gradient(#1e25400c 1.1px, transparent 1.4px);
-  background-size: 22px 22px;
-  background-position: 0 0, 11px 11px;
+  background-repeat: no-repeat, repeat, repeat;
+  background-size:
+    100% 100%,
+    22px 22px,
+    22px 22px;
+  background-position:
+    0 0,
+    0 0,
+    11px 11px;
 }
 
 .menu-inner {
@@ -23,8 +36,12 @@
   gap: clamp(40px, 5vw, 64px);
 }
 
-/* --- title + lede (section index-tab label above — 2026-10-28 user
-   decision supersedes the old no-eyebrow ban; tab = globals .u-sectab) --- */
+/* --- header: one column (SectionTab + H2 + lede) ---------------------- */
+
+.menu-head {
+  display: grid;
+  justify-items: start;
+}
 
 .menu-title {
   margin: 0;
@@ -32,203 +49,133 @@
   font-weight: 700;
   font-style: normal;
   font-size: clamp(2rem, 4.6vw, 4rem);
-  line-height: 1.12;
+  line-height: 1.1;
   letter-spacing: -0.01em;
   color: var(--ink);
 }
 
 .menu-lede {
   margin: 14px 0 0;
-  max-width: 38em;
+  max-width: 34em;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   line-height: 1.6;
   color: var(--ink-soft);
 }
 
-/* --- the main stack: ticket → tabs → panel → footnote ---------------- */
+/* --- the main stack: book → footnote --------------------------------- */
 
 .menu-main {
   display: grid;
-  gap: 32px;
-  justify-items: stretch;
+  gap: 28px;
 }
 
-/* --- ₱350 welcome ticket (the one elevated sticker moment) ----------- */
-
-.menu-ticket {
-  position: relative;
-  width: 100%;
-  max-width: 640px;
-  justify-self: center;
+.menu-book {
   display: grid;
-  grid-template-columns: auto 3px 1fr;
-  column-gap: 26px;
-  align-items: stretch;
-  background: var(--paper);
-  border-radius: 16px;
-  box-shadow: var(--shadow-stick);
-  padding: 26px 32px;
-  transform: rotate(-0.4deg);
+  /* full pool width, centered — the pad maximizes the space again */
+  width: 100%;
 }
 
-.menu-ticket-tape {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  translate: -50% 0;
-  rotate: -3deg;
-  z-index: 2;
-}
-
-.menu-ticket-stub {
-  align-self: center;
-}
-
-.menu-ticket-price {
-  font-family: var(--font-fredoka), system-ui, sans-serif;
-  font-weight: 700;
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-/* vertical perforation between stub and info, with two punched holes
-   (kraft cutouts ringed in blue — the punch detail from the About ticket) */
-
-.menu-ticket-perf {
-  position: relative;
-  border-left: 2px dashed #1e254026;
-  margin-block: -14px;
-}
-
-.menu-ticket-hole {
-  position: absolute;
-  left: 50%;
-  translate: -50% 0;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 0 60%, #1c3aae33 61% 82%, transparent 83%),
-    radial-gradient(circle, var(--kraft) 0 72%, transparent 73%);
-}
-
-.menu-ticket-hole-a {
-  top: -11px;
-}
-
-.menu-ticket-hole-b {
-  bottom: -11px;
-}
-
-.menu-ticket-info {
-  align-self: center;
-}
-
-.menu-ticket-name {
-  margin: 0;
-  font-family: var(--font-fredoka), system-ui, sans-serif;
-  font-weight: 700;
-  font-size: 1.3rem;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-.menu-ticket-sub {
-  margin: 4px 0 0;
-  font-size: 1.05rem;
-  line-height: 1.45;
-  color: var(--ink-soft);
-}
-
-.menu-ticket-hint {
-  margin: 8px 0 0;
-}
-
-.menu-ticket-hint a {
-  font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--blue);
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 3px;
-}
-
-.menu-ticket-hint a:hover {
-  color: var(--blue-deep);
-}
-
-/* --- chapter tabs (chip row) ----------------------------------------- */
+/* --- notebook page tabs (attached to the book card below) ------------ */
 
 .menu-tabs {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .menu-tab {
+  position: relative;
   flex: none;
   min-height: 44px;
-  padding: 8px 20px;
-  border-radius: 999px;
-  border: 1.5px solid #1e254033;
-  background: transparent;
+  padding: 8px 18px 13px;
+  border-radius: 12px 12px 0 0;
+  /* detached index tab: tinted translucent paper floating over the kraft */
+  background: rgba(253, 250, 242, 0.66);
   color: var(--ink-soft);
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-weight: 700;
   font-size: 1.08rem;
   line-height: 1.2;
+  white-space: nowrap;
   cursor: pointer;
   transition:
     background-color 0.25s var(--ease),
     color 0.25s var(--ease),
-    box-shadow 0.25s var(--ease),
-    border-color 0.25s var(--ease),
     transform 0.25s var(--ease);
 }
 
 .menu-tab:hover {
-  background: var(--paper);
+  background: rgba(253, 250, 242, 0.9);
   color: var(--ink);
+  transform: translateY(-2px);
 }
 
+/* the open chapter: full paper, flush against the page below +
+   a short honey binding-line accent */
 .menu-tab[aria-selected="true"] {
   background: var(--paper);
   color: var(--ink);
-  border-color: transparent;
-  box-shadow: var(--shadow-soft);
-  transform: translateY(-1px);
+  transform: none;
 }
 
-/* --- panel ------------------------------------------------------------ */
+.menu-tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 10px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: var(--honey);
+  opacity: 0.65;
+}
+
+/* --- the page: plain paper card -------------------------------------- */
 
 .menu-panel {
   position: relative;
   background: var(--paper);
-  border-radius: 18px;
+  border-radius: 0 18px 18px 18px;
   box-shadow: var(--shadow-soft);
-  padding: clamp(24px, 3.5vw, 40px);
-  padding-left: calc(clamp(24px, 3.5vw, 40px) + 18px);
+  padding: clamp(26px, 3.5vw, 42px);
+  padding-left: calc(clamp(26px, 3.5vw, 42px) + 18px);
 }
 
-/* notebook margin line — décor motif 2 of 2 (ticket tape is motif 1) */
+/* notebook margin line (page texture; keeps text off the left edge) */
 .menu-panel::before {
   content: "";
   position: absolute;
   left: clamp(16px, 2.4vw, 26px);
-  top: clamp(24px, 3.5vw, 40px);
-  bottom: clamp(24px, 3.5vw, 40px);
+  top: clamp(30px, 3.5vw, 44px);
+  bottom: clamp(26px, 3.5vw, 42px);
   width: 2px;
   border-radius: 2px;
   background: #1c3aae3d;
 }
 
-.menu-body {
-  animation: menu-in 0.4s var(--ease) both;
+/* punched paper holes along the top edge (kraft cutouts, faint blue ring) */
+.menu-panel::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  height: 15px;
+  background:
+    radial-gradient(circle, var(--kraft) 0 5px, #1c3aae30 5px 7px, transparent 7.5px)
+      no-repeat left 36px top 0 / 15px 15px,
+    radial-gradient(circle, var(--kraft) 0 5px, #1c3aae30 5px 7px, transparent 7.5px)
+      no-repeat right 36px top 0 / 15px 15px;
+  pointer-events: none;
+}
+
+/* chapter entrance: groups rise in together, staggered per group */
+.menu-group {
+  animation: menu-in 0.5s var(--ease) both;
+  animation-delay: calc(min(var(--i, 0), 3) * 70ms);
 }
 
 @keyframes menu-in {
@@ -240,12 +187,11 @@
 
 /* rows area: 6–10 rows fit; dense tabs (Coffee = 19) scroll inside */
 .menu-scroll {
-  max-height: min(36rem, 72svh);
+  max-height: min(40rem, 76svh);
   overflow-y: auto;
   overscroll-behavior: contain;
   /* keep text off the margin line */
   padding-left: 4px;
-  /* themed scrollbar (browser surface) */
   scrollbar-width: thin;
   scrollbar-color: #1e254033 transparent;
 }
@@ -263,32 +209,56 @@
   background: transparent;
 }
 
-/* --- group (one dataset chapter) + price rows ------------------------- */
+/* --- chapters (datasets) + price rows -------------------------------- */
 
 .menu-group + .menu-group {
-  margin-top: 32px;
+  margin-top: 30px;
 }
 
 .menu-label {
-  margin: 0 0 14px;
+  margin: 0 0 12px;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-weight: 700;
-  font-size: 1.18rem;
+  font-size: 1.25rem;
   line-height: 1.3;
   color: var(--blue);
 }
 
 .menu-list {
-  max-width: 720px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
-  column-gap: 20px;
-  row-gap: 18px;
-  align-items: baseline;
+  /* readable measure, centered in the full-width pad — the dotted
+     leaders don't stretch absurdly wide, and the leftover paper is a
+     symmetric pair of slim bands, not one gray slab */
+  max-width: 1020px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.menu-list.is-cols {
+/* each row = one hoverable unit: name + leader left, price(s) right */
+
+.menu-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  column-gap: 24px;
+  align-items: baseline;
+  padding: 9px 14px;
+  border-radius: 12px;
+  transition: background-color 0.25s var(--ease);
+}
+
+.menu-row.is-cols {
   grid-template-columns: minmax(0, 1fr) repeat(3, max-content);
+  column-gap: 12px;
+}
+
+.menu-row:hover {
+  /* honey wash — decoration tint, never text */
+  background-color: #d9a44114;
+}
+
+.menu-row:hover .menu-name {
+  color: var(--blue);
 }
 
 .menu-n {
@@ -310,6 +280,7 @@
   font-size: 1.1rem;
   line-height: 1.35;
   color: var(--ink);
+  transition: color 0.25s var(--ease);
 }
 
 .menu-leader {
@@ -331,7 +302,7 @@
   justify-self: end;
   display: inline-flex;
   align-items: baseline;
-  gap: 3px;
+  gap: 5px;
   text-align: right;
 }
 
@@ -379,68 +350,71 @@
   visibility: hidden;
 }
 
-/* --- footnote --------------------------------------------------------- */
+/* --- footnote: readable small-print chip card ------------------------ */
 
 .menu-footnote {
-  margin: -12px 0 0;
+  justify-self: center;
+  width: fit-content;
+  max-width: 100%;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  background: var(--paper);
+  border: 1.5px dashed #1e254033;
+  border-radius: 14px;
+  padding: 10px 22px;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1.06rem;
   line-height: 1.5;
   color: var(--ink-soft);
+  transform: rotate(-0.5deg);
+  box-shadow: 0 2px 8px rgba(30, 37, 64, 0.07);
+  text-align: left;
 }
 
 .menu-footnote .menu-star {
   font-size: 1em;
 }
 
+/* the flush active-tab↔page connection (desktop only; mobile keeps a
+   small gap since overflow-x scroll clips negative-margin overlap) */
+@media (min-width: 641px) {
+  .menu-tab[aria-selected="true"] {
+    margin-bottom: -2px;
+  }
+
+  /* fixed price columns: Hot / Iced 12oz / Iced 16oz line up across every
+     row and under their headers instead of per-row max-content drift */
+  .menu-row.is-cols {
+    grid-template-columns: minmax(0, 1fr) 74px 80px 90px;
+    column-gap: 12px;
+  }
+}
+
 /* --- responsive ------------------------------------------------------- */
 
 @media (max-width: 640px) {
-  /* chip row bleeds to the screen edges and scrolls horizontally,
-     scrollbar never painted over the text */
+  /* page-tab strip bleeds to the screen edges and scrolls horizontally —
+     each tab is its own snap stop */
   .menu-tabs {
     flex-wrap: nowrap;
     justify-content: flex-start;
+    align-items: flex-end;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
     scrollbar-width: none;
     margin-inline: calc(var(--gutter) * -1);
-    padding: 4px var(--gutter) 8px;
+    padding: 2px var(--gutter) 0;
   }
 
   .menu-tabs::-webkit-scrollbar {
     display: none;
   }
 
-  .menu-ticket {
-    grid-template-columns: 1fr;
-    column-gap: 0;
-    padding: 20px 22px;
-  }
-
-  .menu-ticket-stub {
-    justify-self: start;
-  }
-
-  .menu-ticket-perf {
-    border-left: none;
-    border-top: 2px dashed #1e254026;
-    height: 0;
-    margin-block: 16px;
-  }
-
-  .menu-ticket-hole-a {
-    top: -10px;
-    left: 0;
-    translate: 0 0;
-  }
-
-  .menu-ticket-hole-b {
-    bottom: auto;
-    top: -10px;
-    left: auto;
-    right: 0;
-    translate: 0 0;
+  .menu-tab {
+    scroll-snap-align: start;
   }
 
   .menu-meta {
@@ -449,11 +423,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu-body {
+  .menu-group,
+  .menu-tab,
+  .menu-row,
+  .menu-name {
     animation: none;
-  }
-
-  .menu-tab {
     transition: none;
   }
 }

@@ -4,19 +4,20 @@
 // All copy verbatim from docs/details.md §5 (14 datasets intact) and §4
 // lines 105–107 (₱350 Study Space Package). Strings kept as constants
 // outside JSX so ₱ / — / apostrophes survive untouched.
-import { useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import Accent from "./accent";
 import Reveal from "./reveal";
 import SectionTab from "./section-tab";
 import "../menu.css";
 
-// v4 copy: headline/lede rewritten warm (ui_design.md §0.1); every dish name,
-// price, note and dataset name stays verbatim from docs/details.md §5.
+// v4 copy (T17 craft pass; M9 book-only revert): headline/lede rewritten
+// warm + cozy (ui_design.md §4.5); every dish name, price, note and dataset
+// name stays verbatim from docs/details.md §5. The ₱350 study-space ticket
+// was REMOVED from this section (it duplicated the About boarding-pass
+// ticket); the notepad/sequential-flip book experiment was likewise
+// reverted — the book is the plain tabbed-chapters page again.
 const LEDE =
-  "Rice bowls and crunchy bites, pasta, coffee, sodas and bakes — every chapter, just like the printed book on our counter.";
-const TICKET_NAME = "Study space package";
-const TICKET_SUB = "Single space · 2 hours of uninterrupted study time";
-const TICKET_HINT = "full details up in the About section →";
+  "Rice bowls, crunchy bites, pasta, noodles and fresh-brewed coffee — flip through, find your favorite, and settle in.";
 const FOOTNOTE = "from our printed menu — please confirm the price with us.";
 
 // Row/Group/Tab + TABS are exported (T12) so the Notey chatbot can compose
@@ -346,7 +347,10 @@ function MenuRow({ row, cols }: { row: Row; cols?: 3 }) {
       ? `${row.note} · ${row.desc}`
       : row.note ?? row.desc ?? null;
   return (
-    <>
+    // T17 — row wrapper = one hoverable unit (honey wash + name→blue);
+    // the outer .menu-list is a vertical stack of these. 3-price rows
+    // (Hot / Iced 12oz / Iced 16oz) need the is-cols template on the row.
+    <div className={`menu-row${cols === 3 ? " is-cols" : ""}`}>
       <div className="menu-n">
         <span className="menu-nline">
           <span className="menu-name">{row.name}</span>
@@ -372,26 +376,26 @@ function MenuRow({ row, cols }: { row: Row; cols?: 3 }) {
           {row.star && <Star />}
         </span>
       )}
-    </>
+    </div>
   );
 }
 
-function MenuGroup({ group }: { group: Group }) {
+function MenuGroup({ group, i }: { group: Group; i: number }) {
   return (
-    <div className="menu-group">
+    <div
+      className="menu-group"
+      style={{ "--i": i } as CSSProperties}
+      key={group.label}
+    >
       <h3 className="menu-label">{group.label}</h3>
-      <div className={group.cols === 3 ? "menu-list is-cols" : "menu-list"}>
+      <div className="menu-list">
         {group.cols === 3 && (
-          <span className="menu-colsh is-blank" aria-hidden="true">
-            {"\u00a0"}
-          </span>
-        )}
-        {group.cols === 3 && (
-          <>
+          <div className="menu-row is-colsh is-cols" aria-hidden="true">
+            <span className="menu-colsh is-blank">{"\u00a0"}</span>
             <span className="menu-colsh">Hot</span>
             <span className="menu-colsh">Iced 12oz</span>
             <span className="menu-colsh">Iced 16oz</span>
-          </>
+          </div>
         )}
         {group.rows.map((row) => (
           <MenuRow key={row.name} row={row} cols={group.cols} />
@@ -423,90 +427,78 @@ export default function Menu() {
     <section id="menu" className="menu" aria-labelledby="menu-title">
       <div className="menu-inner">
         <Reveal>
+          {/* T17/M9 — one-column header, no ₱350 ticket (removed — it
+              duplicated the About boarding-pass ticket). */}
           <header className="menu-head">
             <SectionTab num="02" label="Menu" tone="peach" />
             <h2 id="menu-title" className="menu-title">
-              Open the menu <Accent>book</Accent>
+              There&rsquo;s a <Accent>chapter</Accent> for every craving
             </h2>
             <p className="menu-lede">{LEDE}</p>
           </header>
         </Reveal>
 
-        {/* T13 — ONE Reveal over the whole menu-main stack (ticket + tabs +
-            panels + footnote come in together). Wrapping ticket/tabs
-            individually would turn them into plain children of a block div
-            and lose .menu-ticket's justify-self: center grid placement. */}
+        {/* T13 — ONE Reveal over the whole menu-main stack (tabs + panels +
+            footnote come in together). */}
         <Reveal delay={0.06}>
           <div className="menu-main">
-          <aside className="menu-ticket" aria-label="Study space package — ₱350">
-            <span className="u-tape menu-ticket-tape" aria-hidden="true" />
-            <div className="menu-ticket-stub">
-              <span className="menu-ticket-price">₱350</span>
-            </div>
-            <span className="menu-ticket-perf" aria-hidden="true">
-              <span className="menu-ticket-hole menu-ticket-hole-a" />
-              <span className="menu-ticket-hole menu-ticket-hole-b" />
-            </span>
-            <div className="menu-ticket-info">
-              <p className="menu-ticket-name">{TICKET_NAME}</p>
-              <p className="menu-ticket-sub">{TICKET_SUB}</p>
-              <p className="menu-ticket-hint">
-                <a href="#about">{TICKET_HINT}</a>
-              </p>
-            </div>
-          </aside>
-
-          <div
-            className="menu-tabs"
-            role="tablist"
-            aria-label="Menu chapters"
-            onKeyDown={onKeyDown}
-          >
-            {TABS.map((t, i) => (
-              <button
-                key={t.id}
-                ref={(el) => {
-                  tabRefs.current[i] = el;
-                }}
-                id={`menu-tab-${t.id}`}
-                className="menu-tab"
-                role="tab"
-                aria-selected={active === t.id}
-                aria-controls={`menu-panel-${t.id}`}
-                tabIndex={active === t.id ? 0 : -1}
-                onClick={() => setActive(t.id)}
+            {/* T17/M9 — "chapter book", back to the plain page card: index
+                page tabs attached to the card's top edge (the active tab
+                connects flush), punched holes + margin line on the page.
+                Panel ARIA/keyboard untouched. */}
+            <div className="menu-book">
+              <div
+                className="menu-tabs"
+                role="tablist"
+                aria-label="Menu chapters"
+                onKeyDown={onKeyDown}
               >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          {TABS.map((t) => (
-            <div
-              key={t.id}
-              id={`menu-panel-${t.id}`}
-              role="tabpanel"
-              aria-labelledby={`menu-tab-${t.id}`}
-              className="menu-panel"
-              tabIndex={0}
-              hidden={active !== t.id}
-            >
-              <div className="menu-body" key={`${t.id}:${active}`}>
-                <div className="menu-scroll">
-                  {t.groups.map((g) => (
-                    <MenuGroup key={g.label} group={g} />
-                  ))}
-                </div>
+                {TABS.map((t, i) => (
+                  <button
+                    key={t.id}
+                    ref={(el) => {
+                      tabRefs.current[i] = el;
+                    }}
+                    id={`menu-tab-${t.id}`}
+                    className="menu-tab"
+                    role="tab"
+                    aria-selected={active === t.id}
+                    aria-controls={`menu-panel-${t.id}`}
+                    tabIndex={active === t.id ? 0 : -1}
+                    onClick={() => setActive(t.id)}
+                  >
+                    {t.label}
+                  </button>
+                ))}
               </div>
-            </div>
-          ))}
 
-          <p className="menu-footnote">
-            <abbr className="menu-star" title={`* ${FOOTNOTE}`}>
-              *
-            </abbr>{" "}
-            {FOOTNOTE}
-          </p>
+              {TABS.map((t) => (
+                <div
+                  key={t.id}
+                  id={`menu-panel-${t.id}`}
+                  role="tabpanel"
+                  aria-labelledby={`menu-tab-${t.id}`}
+                  className="menu-panel"
+                  tabIndex={0}
+                  hidden={active !== t.id}
+                >
+                  <div className="menu-body" key={`${t.id}:${active}`}>
+                    <div className="menu-scroll">
+                      {t.groups.map((g, gi) => (
+                        <MenuGroup key={g.label} group={g} i={gi} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="menu-footnote">
+              <abbr className="menu-star" title={`* ${FOOTNOTE}`}>
+                *
+              </abbr>{" "}
+              {FOOTNOTE}
+            </p>
           </div>
         </Reveal>
       </div>
