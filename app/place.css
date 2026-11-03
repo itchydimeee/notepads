@@ -155,26 +155,51 @@
 
 /* --- lightbox --- */
 
+/* z-index 340 sits ABOVE the fixed nav (z 300 in nav.css — which otherwise
+   paints over the close button) and below the transient preloader (z 400) */
 .place-lb {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 340;
   display: grid;
   place-items: center;
-  background: rgba(30, 37, 64, 0.88);
+  background: rgba(30, 37, 64, 0.96);
   padding: clamp(24px, 4vw, 48px) var(--gutter);
+  opacity: 1;
+  transition: opacity 0.2s var(--ease);
+}
+
+/* fade-out state: close() delays unmount 200ms so this gets to play
+   (reduced motion skips the delay entirely in place.tsx) */
+.place-lb.is-closing {
+  opacity: 0;
 }
 
 .place-lb-box {
-  position: relative;
   display: grid;
   justify-items: center;
   max-width: 100%;
 }
 
+/* polaroid frame: paper card around photo + caption (caption lives INSIDE
+   the frame, same idiom as the wall cards above) */
 .place-lb-fig {
   margin: 0;
+  background: var(--paper);
+  padding: 10px 10px 0;
+  border-radius: 6px;
+  box-shadow: var(--shadow-lift);
   animation: place-lb-in 0.4s var(--ease) both;
+}
+
+/* direction-aware enter (dirRef in place.tsx): slide in from the travel
+   direction on arrow/swipe moves */
+.place-lb-fig--next {
+  animation: place-lb-in-next 0.35s var(--ease) both;
+}
+
+.place-lb-fig--prev {
+  animation: place-lb-in-prev 0.35s var(--ease) both;
 }
 
 @keyframes place-lb-in {
@@ -188,6 +213,28 @@
   }
 }
 
+@keyframes place-lb-in-next {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes place-lb-in-prev {
+  from {
+    transform: translateX(-24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 @keyframes place-lb-fade {
   from {
     opacity: 0;
@@ -197,16 +244,17 @@
   }
 }
 
-/* reserved box for the lightbox photo; aspect-ratio from the layout hint */
+/* reserved box for the lightbox photo; aspect-ratio from the layout hint.
+   Height trimmed from 72svh so the paper frame + caption still fit */
 .place-lb-photo {
   position: relative;
-  height: min(72svh, 140vw);
+  height: min(66svh, 132vw);
   aspect-ratio: var(--ar, auto);
   max-width: calc(100vw - var(--gutter) * 2);
   border-radius: 4px;
   overflow: hidden;
-  background: #1e254010;
-  box-shadow: 0 10px 24px rgba(30, 37, 64, 0.4);
+  background: var(--kraft);
+  box-shadow: inset 0 0 0 1px #1e254014;
 }
 
 .place-lb-photo.place-ar-wide {
@@ -222,12 +270,12 @@
 }
 
 .place-lb-cap {
-  margin-top: 16px;
   max-width: 38em;
+  padding: 10px 8px 14px;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-size: 1.1rem;
   line-height: 1.4;
-  color: var(--paper);
+  color: var(--ink);
   text-align: center;
 }
 
@@ -256,10 +304,25 @@
   box-shadow: var(--shadow-lift);
 }
 
+/* chrome is anchored to the OVERLAY (direct children of .place-lb), never
+   the box — so it always sits inside the viewport padding zone */
 .place-lb-close {
   position: absolute;
-  top: calc(var(--gutter) * -1 + 4px);
-  right: 0;
+  top: calc(14px + env(safe-area-inset-top));
+  right: calc(var(--gutter) - 8px);
+}
+
+.place-lb-count {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top));
+  left: calc(var(--gutter) - 8px);
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.25rem;
+  color: var(--paper);
 }
 
 .place-lb-nav {
@@ -269,42 +332,33 @@
 }
 
 .place-lb-prev {
-  left: -48px;
+  left: calc(var(--gutter) - 8px);
 }
 
 .place-lb-next {
-  right: -48px;
+  right: calc(var(--gutter) - 8px);
 }
 
-/* ≤900px: the overlay's 4vw padding is narrower than the 48px arrow offset
-   below ~1200px, so outside-hanging arrows would clip — pull them inside */
+/* ≤900px: arrows now always sit inside the overlay edges, so the old
+   outside-hang + 72px padding-inline workaround is gone; instead the box
+   gets inline padding so the photo clears the 44px buttons */
 @media (max-width: 900px) {
-  .place-lb {
-    padding-inline: 72px;
-  }
-
-  .place-lb-prev {
-    left: 8px;
-  }
-
-  .place-lb-next {
-    right: 8px;
-  }
-
-  .place-lb-close {
-    top: 10px;
-    right: 8px;
+  .place-lb-box {
+    padding-inline: 56px;
   }
 
   .place-lb-photo {
-    height: min(64svh, 120vw);
+    height: min(60svh, 120vw);
+    max-width: calc(100vw - var(--gutter) * 2 - 112px);
   }
 }
 
-/* --- reduced motion: scale-in becomes a plain opacity fade (globals keeps
-     the kill-switch; this is the explicit per-section block) --- */
+/* --- reduced motion: scale-in/slide-ins become a plain opacity fade (globals
+     keeps the kill-switch; this is the explicit per-section block) --- */
 @media (prefers-reduced-motion: reduce) {
-  .place-lb-fig {
+  .place-lb-fig,
+  .place-lb-fig--next,
+  .place-lb-fig--prev {
     animation: place-lb-fade 0.3s var(--ease) both;
   }
 
@@ -312,6 +366,12 @@
   .place-lb-close,
   .place-lb-nav {
     transition: none;
+  }
+
+  /* hover lift off too */
+  .place-lb-close:hover,
+  .place-lb-nav:hover {
+    transform: none;
   }
 }
 

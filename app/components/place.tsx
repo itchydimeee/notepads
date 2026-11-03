@@ -97,23 +97,46 @@ const BUTTON_BOTH = { strokeWidth: 2.4 } as const;
 
 export default function Place() {
   const [open, setOpen] = useState<number | null>(null);
+  const [closing, setClosing] = useState(false);
+  // "next"/"prev" drives the direction-aware enter animation; null (first
+  // open, reset on card click) falls back to the scale-in. State, not a ref:
+  // the figure's className reads it during render.
+  const [dir, setDir] = useState<"next" | "prev" | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
-  const boxRef = useRef<HTMLDivElement | null>(null);
+  // Overlay root — anchors the chrome AND scopes the Tab trap, since the
+  // close/prev/next buttons live outside the dialog box.
+  const lbRef = useRef<HTMLDivElement | null>(null);
   // Triggering card, captured in the click handler so focus returns there on close.
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const touchX = useRef<number | null>(null);
+  // Pending close-fade timer; non-null doubles as the double-close guard.
+  const closeTimer = useRef<number | null>(null);
 
   const isOpen = open !== null;
 
   const next = useCallback(() => {
+    setDir("next");
     setOpen((i) => (i === null ? i : (i + 1) % SHOTS.length));
   }, []);
 
   const prev = useCallback(() => {
+    setDir("prev");
     setOpen((i) => (i === null ? i : (i - 1 + SHOTS.length) % SHOTS.length));
   }, []);
 
-  const close = useCallback(() => setOpen(null), []);
+  const close = useCallback(() => {
+    if (closeTimer.current !== null) return; // fade already running
+    // Reduced motion: skip the 200ms fade and unmount immediately.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setOpen(null);
+      return;
+    }
+    setClosing(true);
+    closeTimer.current = window.setTimeout(() => {
+      closeTimer.current = null;
+      setOpen(null);
+    }, 200);
+  }, []);
 
   // Focus management + body scroll lock. Runs once per open/close (not per
   // index change), so arrow navigation doesn't bounce focus back to the close.
@@ -121,16 +144,32 @@ export default function Place() {
     if (!isOpen) return;
     const trigger = triggerRef.current;
     closeRef.current?.focus();
-    const prevOverflow = document.body.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
     document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
       trigger?.focus();
     };
   }, [isOpen]);
 
+  // Abort a pending close-fade if the lightbox unmounts or reopens mid-fade,
+  // and reset the flag so the next open starts from the scale-in.
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current !== null) {
+        window.clearTimeout(closeTimer.current);
+        closeTimer.current = null;
+      }
+      setClosing(false);
+    };
+  }, [isOpen]);
+
   // Escape closes; ArrowLeft/ArrowRight navigate (wrapping); Tab stays trapped
-  // inside the dialog's controls. Only mounted while the lightbox is open.
+  // across the overlay's controls (close + prev + next — the dialog box holds
+  // no focusables). Only mounted while the lightbox is open.
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => {
@@ -144,10 +183,10 @@ export default function Place() {
         e.preventDefault();
         prev();
       } else if (e.key === "Tab") {
-        const box = boxRef.current;
-        if (!box) return;
+        const root = lbRef.current;
+        if (!root) return;
         const focusables = Array.from(
-          box.querySelectorAll<HTMLButtonElement>("button:not([disabled])"),
+          root.querySelectorAll<HTMLButtonElement>("button:not([disabled])"),
         );
         if (focusables.length === 0) return;
         const first = focusables[0];
@@ -195,6 +234,7 @@ export default function Place() {
                   aria-haspopup="dialog"
                   onClick={(e) => {
                     triggerRef.current = e.currentTarget;
+                    setDir(null); // first open: scale-in, not directional
                     setOpen(i);
                   }}
                 >
@@ -223,8 +263,13 @@ export default function Place() {
 
       {open !== null && (
         <div
-          className="place-lb"
-          onClick={close}
+          ref={lbRef}
+          className={closing ? "place-lb is-closing" : "place-lb"}
+          onClick={(e) => {
+            // close only on a true backdrop tap — never when a child (nav
+            // arrows, count, dialog box) is the click target
+            if (e.target === e.currentTarget) close();
+          }}
           onTouchStart={(e) => {
             const t = e.touches[0];
             touchX.current = t ? t.clientX : null;
@@ -242,33 +287,50 @@ export default function Place() {
             }
           }}
         >
+          {/* chrome anchored to the overlay itself, not the dialog box, so the
+              fixed nav can never paint over it; DOM order = Tab order */}
+          <button
+            ref={closeRef}
+            type="button"
+            className="place-lb-close"
+            aria-label="Close photo view"
+            onClick={close}
+          >
+            <X size={22} aria-hidden="true" {...BUTTON_BOTH} />
+          </button>
+          <p className="place-lb-count" aria-hidden="true">
+            {open + 1} / {SHOTS.length}
+          </p>
+          <button
+            type="button"
+            className="place-lb-nav place-lb-prev"
+            aria-label="Previous photo"
+            onClick={prev}
+          >
+            <ChevronLeft size={24} aria-hidden="true" {...BUTTON_BOTH} />
+          </button>
+          <button
+            type="button"
+            className="place-lb-nav place-lb-next"
+            aria-label="Next photo"
+            onClick={next}
+          >
+            <ChevronRight size={24} aria-hidden="true" {...BUTTON_BOTH} />
+          </button>
           <div
-            ref={boxRef}
             className="place-lb-box"
             role="dialog"
             aria-modal="true"
             aria-label={SHOTS[open].caption}
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              ref={closeRef}
-              type="button"
-              className="place-lb-close"
-              aria-label="Close photo view"
-              onClick={close}
+            {/* key={} restarts the enter animation on every arrow/swipe move;
+                the dir class slides it in from the travel direction (null on
+                first open = scale-in) */}
+            <figure
+              className={dir ? `place-lb-fig place-lb-fig--${dir}` : "place-lb-fig"}
+              key={open}
             >
-              <X size={22} aria-hidden="true" {...BUTTON_BOTH} />
-            </button>
-            <button
-              type="button"
-              className="place-lb-nav place-lb-prev"
-              aria-label="Previous photo"
-              onClick={prev}
-            >
-              <ChevronLeft size={24} aria-hidden="true" {...BUTTON_BOTH} />
-            </button>
-            {/* key={} restarts the scale-in on every arrow/swipe move */}
-            <figure className="place-lb-fig" key={open}>
               <div className={`place-lb-photo place-ar-${SHOTS[open].ratio}`}>
                 <Image
                   src={SHOTS[open].src}
@@ -283,14 +345,6 @@ export default function Place() {
               </div>
               <figcaption className="place-lb-cap">{SHOTS[open].caption}</figcaption>
             </figure>
-            <button
-              type="button"
-              className="place-lb-nav place-lb-next"
-              aria-label="Next photo"
-              onClick={next}
-            >
-              <ChevronRight size={24} aria-hidden="true" {...BUTTON_BOTH} />
-            </button>
           </div>
         </div>
       )}
