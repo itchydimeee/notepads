@@ -245,12 +245,14 @@
 }
 
 /* reserved box for the lightbox photo; aspect-ratio from the layout hint.
-   Height trimmed from 72svh so the paper frame + caption still fit */
+   Height trimmed from 72svh so the paper frame + caption still fit; the
+   max-width also reserves room for the figure's own 20px padding so the
+   paper card can't spill past the overlay padding zone */
 .place-lb-photo {
   position: relative;
   height: min(66svh, 132vw);
   aspect-ratio: var(--ar, auto);
-  max-width: calc(100vw - var(--gutter) * 2);
+  max-width: calc(100vw - var(--gutter) * 2 - 40px);
   border-radius: 4px;
   overflow: hidden;
   background: var(--kraft);
@@ -339,17 +341,26 @@
   right: calc(var(--gutter) - 8px);
 }
 
-/* ≤900px: arrows now always sit inside the overlay edges, so the old
-   outside-hang + 72px padding-inline workaround is gone; instead the box
-   gets inline padding so the photo clears the 44px buttons */
+/* ≤900px: arrows always sit inside the overlay edges; the box and figure
+   stretch to the full content width so the photo is WIDTH-driven
+   (height: auto + aspect-ratio) instead of height-driven — the old
+   height: min(60svh, 120vw) plus max-width clamp let the paper card
+   drift into the 44px nav buttons on narrow screens */
 @media (max-width: 900px) {
+  .place-lb-box,
+  .place-lb-fig {
+    width: 100%;
+  }
+
   .place-lb-box {
     padding-inline: 56px;
   }
 
   .place-lb-photo {
-    height: min(60svh, 120vw);
-    max-width: calc(100vw - var(--gutter) * 2 - 112px);
+    height: auto;
+    width: 100%;
+    max-width: 100%;
+    max-height: 60svh;
   }
 }
 

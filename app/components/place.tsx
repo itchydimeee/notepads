@@ -230,6 +230,7 @@ export default function Place() {
                 <button
                   type="button"
                   className={`place-card place-tilt-${i % 2 === 0 ? "l" : "r"}`}
+                  suppressHydrationWarning
                   aria-label={shot.caption}
                   aria-haspopup="dialog"
                   onClick={(e) => {

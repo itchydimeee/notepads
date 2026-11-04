@@ -601,6 +601,7 @@ export default function Chatbot() {
         ref={fabRef}
         type="button"
         className="btn btn-blue nt-fab"
+        suppressHydrationWarning
         aria-expanded={open}
         aria-controls="notey-panel"
         aria-label={open ? "Close chat" : "Chat with Notey"}

@@ -460,6 +460,7 @@ export default function Menu() {
                       tabRefs.current[i] = el;
                     }}
                     id={`menu-tab-${t.id}`}
+                    suppressHydrationWarning
                     className="menu-tab"
                     role="tab"
                     aria-selected={active === t.id}
