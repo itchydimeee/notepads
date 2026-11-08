@@ -1,10 +1,11 @@
-/* Menu (T6 + T17 craft pass, M9 book-only revert 2026-10-28) — warm kraft
-   ground with a bottom blend + softened ink dot grid, one-column header
-   (the ₱350 ticket that duplicated the About boarding-pass is GONE), index
-   page tabs attached to the plain paper page card (no notepad/spiral/flip),
-   grouped rows with hover + per-group stagger, and a readable small-print
-   chip footnote. All colors/fonts/shadows via globals.css tokens (v4 Golden
-   Corner). */
+/* Menu (T6 + T17 craft pass; chapter-book redesign) — warm kraft ground
+   with a bottom blend + softened ink dot grid, one-column header, and a
+   paginated chapter book: a detached chapter-tag strip above an open
+   two-page paper spread on the warm ground (no cover) with center spiral
+   binding + terra bookmark ribbon; chapters that outrun the spread overflow
+   into an "Also in this chapter" panel (mobile: "Show N more" expander);
+   pagination controls below. All colors/fonts/shadows via globals.css tokens
+   (v4 Golden Corner). */
 
 /* --- section ground -------------------------------------------------- */
 
@@ -12,7 +13,7 @@
   padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
   background-color: var(--kraft);
   /* warm blend toward a lighter kraft at the bottom + ink-tinted dot grid
-     (softened from the T6 wash; derived values #1e254010 / #1e25400c) */
+     (derived values #1e254010 / #1e25400c) */
   background-image:
     linear-gradient(180deg, rgba(253, 250, 242, 0) 55%, rgba(253, 250, 242, 0.28) 100%),
     radial-gradient(#1e254010 1.2px, transparent 1.5px),
@@ -63,26 +64,65 @@
   color: var(--ink-soft);
 }
 
-/* --- the main stack: book → footnote --------------------------------- */
+/* --- the main stack: book → controls → footnote ----------------------- */
 
 .menu-main {
   display: grid;
   gap: 28px;
 }
 
-.menu-book {
+/* --- the book: detached tags above an uncovered spread ----------------- */
+
+.menu-bookwrap {
   display: grid;
-  /* full pool width, centered — the pad maximizes the space again */
+  gap: 12px;
   width: 100%;
 }
 
-/* --- notebook page tabs (attached to the book card below) ------------ */
+.menu-book {
+  position: relative;
+  width: 100%;
+}
+
+/* inactive tab panels stay in the layout (menu.tsx measures every spread to
+   size the book to the tallest chapter) but are invisible and inert */
+.menu-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.menu-panel.is-active {
+  position: relative;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* bookmark ribbon (terra = non-primary decoration seasoning; motif budget:
+   binding + ribbon = 2) */
+.menu-ribbon {
+  position: absolute;
+  top: -10px;
+  right: clamp(6px, 1vw, 12px);
+  width: 26px;
+  height: 88px;
+  background: var(--terra);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 12px), 0 100%);
+  z-index: 1;
+}
+
+/* --- chapter tags (detached strip above the book) ---------------------- */
 
 .menu-tabs {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   gap: 8px;
 }
 
@@ -90,10 +130,10 @@
   position: relative;
   flex: none;
   min-height: 44px;
-  padding: 8px 18px 13px;
-  border-radius: 12px 12px 0 0;
-  /* detached index tab: tinted translucent paper floating over the kraft */
-  background: rgba(253, 250, 242, 0.66);
+  padding: 8px 18px;
+  border-radius: 12px;
+  /* translucent paper tag floating over the kraft */
+  background: rgba(253, 250, 242, 0.82);
   color: var(--ink-soft);
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-weight: 700;
@@ -101,6 +141,7 @@
   line-height: 1.2;
   white-space: nowrap;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(30, 37, 64, 0.07);
   transition:
     background-color 0.25s var(--ease),
     color 0.25s var(--ease),
@@ -108,68 +149,144 @@
 }
 
 .menu-tab:hover {
-  background: rgba(253, 250, 242, 0.9);
+  background: rgba(253, 250, 242, 0.94);
   color: var(--ink);
   transform: translateY(-2px);
 }
 
-/* the open chapter: full paper, flush against the page below +
-   a short honey binding-line accent */
+/* the open chapter: honey tag with ink text (ink on honey ≥ 7:1) */
 .menu-tab[aria-selected="true"] {
-  background: var(--paper);
+  background: var(--honey);
   color: var(--ink);
   transform: none;
+  box-shadow: 0 2px 8px rgba(30, 37, 64, 0.12);
 }
 
-.menu-tab[aria-selected="true"]::after {
-  content: "";
-  position: absolute;
-  left: 14px;
-  right: 14px;
-  bottom: 10px;
-  height: 2.5px;
-  border-radius: 2px;
-  background: var(--honey);
-  opacity: 0.65;
+/* --- the spread: two paper pages + center binding ---------------------- */
+
+.menu-spread {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(18px, 2.6vw, 32px);
 }
 
-/* --- the page: plain paper card -------------------------------------- */
-
-.menu-panel {
+.menu-page {
+  --pad: clamp(20px, 2.4vw, 30px);
+  /* the notebook header band: title zone above the rules, same on every page */
+  --headband: 72px;
   position: relative;
   background: var(--paper);
-  border-radius: 0 18px 18px 18px;
+  border: 1px solid #1e254014;
+  border-radius: 14px;
   box-shadow: var(--shadow-soft);
-  padding: clamp(26px, 3.5vw, 42px);
-  padding-left: calc(clamp(26px, 3.5vw, 42px) + 18px);
+  padding: calc(var(--pad) + var(--headband)) calc(var(--pad) + 18px) calc(var(--pad) + 16px)
+    var(--pad);
 }
 
-/* notebook margin line (page texture; keeps text off the left edge) */
-.menu-panel::before {
+/* the notebook body: full-width rules starting exactly at the body top —
+   text line-heights are pinned to the same 24px pitch (see .menu-name etc.),
+   so every line sits on a rule; the band above stays blank for the title */
+.menu-page::before {
   content: "";
   position: absolute;
-  left: clamp(16px, 2.4vw, 26px);
-  top: clamp(30px, 3.5vw, 44px);
-  bottom: clamp(26px, 3.5vw, 42px);
-  width: 2px;
-  border-radius: 2px;
-  background: #1c3aae3d;
-}
-
-/* punched paper holes along the top edge (kraft cutouts, faint blue ring) */
-.menu-panel::after {
-  content: "";
-  position: absolute;
-  top: 10px;
+  top: calc(var(--pad) + var(--headband));
+  bottom: calc(var(--pad) + 16px);
   left: 0;
   right: 0;
-  height: 15px;
-  background:
-    radial-gradient(circle, var(--kraft) 0 5px, #1c3aae30 5px 7px, transparent 7.5px)
-      no-repeat left 36px top 0 / 15px 15px,
-    radial-gradient(circle, var(--kraft) 0 5px, #1c3aae30 5px 7px, transparent 7.5px)
-      no-repeat right 36px top 0 / 15px 15px;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 31px,
+    #1e254014 31px 32px
+  );
+  border-top: 2px solid #1e25401f;
   pointer-events: none;
+}
+
+/* paint the content above the rules */
+.menu-pagehead,
+.menu-group,
+.menu-also {
+  position: relative;
+}
+
+/* left page head: icon coin + chapter title, centered in the header band */
+.menu-pagehead {
+  position: absolute;
+  top: var(--pad);
+  left: var(--pad);
+  right: calc(var(--pad) + 18px);
+  height: var(--headband);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* constant book size, NEVER scrollable: the frame height is --book-h,
+   measured from the tallest chapter's real spread (fallback clamp
+   pre-hydration) — every chapter fits and the page scroll stays uninterrupted */
+@media (min-width: 901px) {
+  .menu-body {
+    height: var(--book-h, clamp(540px, 72svh, 760px));
+    overflow: visible;
+  }
+
+  .menu-spread {
+    min-height: 100%;
+  }
+}
+
+/* spiral binding: column of ring holes down the gutter (decoration, ≤.25) */
+.menu-binding {
+  position: absolute;
+  left: 50%;
+  top: 14px;
+  bottom: 14px;
+  width: 16px;
+  transform: translateX(-50%);
+  background-image: radial-gradient(
+    circle,
+    rgba(30, 37, 64, 0.18) 0 3px,
+    rgba(28, 58, 174, 0.28) 3px 4.5px,
+    transparent 5px
+  );
+  background-size: 16px 26px;
+  background-repeat: repeat-y;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.menu-coin {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(217, 164, 65, 0.18);
+  color: var(--ink);
+  transform: rotate(-2deg);
+}
+
+.menu-chapter {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.9rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.menu-pageno {
+  position: absolute;
+  left: 16px;
+  bottom: 8px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink-soft);
+  opacity: 0.75;
 }
 
 /* chapter entrance: groups rise in together, staggered per group */
@@ -185,54 +302,24 @@
   }
 }
 
-/* rows area: 6–10 rows fit; dense tabs (Coffee = 19) scroll inside */
-.menu-scroll {
-  max-height: min(40rem, 76svh);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  /* keep text off the margin line */
-  padding-left: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: #1e254033 transparent;
-}
-
-.menu-scroll::-webkit-scrollbar {
-  width: 10px;
-}
-
-.menu-scroll::-webkit-scrollbar-thumb {
-  background: #1e254026;
-  border-radius: 999px;
-}
-
-.menu-scroll::-webkit-scrollbar-track {
-  background: transparent;
-}
-
 /* --- chapters (datasets) + price rows -------------------------------- */
 
 .menu-group + .menu-group {
-  margin-top: 30px;
+  margin-top: 32px;
 }
 
 .menu-label {
-  margin: 0 0 12px;
+  margin: 0 0 32px;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-weight: 700;
   font-size: 1.25rem;
-  line-height: 1.3;
+  line-height: 32px;
   color: var(--blue);
 }
 
 .menu-list {
-  /* readable measure, centered in the full-width pad — the dotted
-     leaders don't stretch absurdly wide, and the leftover paper is a
-     symmetric pair of slim bands, not one gray slab */
-  max-width: 1020px;
-  margin-inline: auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 /* each row = one hoverable unit: name + leader left, price(s) right */
@@ -242,7 +329,7 @@
   grid-template-columns: minmax(0, 1fr) max-content;
   column-gap: 24px;
   align-items: baseline;
-  padding: 9px 14px;
+  padding: 0 14px;
   border-radius: 12px;
   transition: background-color 0.25s var(--ease);
 }
@@ -278,7 +365,7 @@
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 700;
   font-size: 1.1rem;
-  line-height: 1.35;
+  line-height: 32px;
   color: var(--ink);
   transition: color 0.25s var(--ease);
 }
@@ -291,10 +378,10 @@
 }
 
 .menu-meta {
-  margin-top: 2px;
+  margin-top: 0;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 32px;
   color: var(--ink-soft);
 }
 
@@ -310,7 +397,7 @@
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 600;
   font-size: 1.05rem;
-  line-height: 1.35;
+  line-height: 32px;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -337,17 +424,173 @@
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
-  line-height: 1.2;
+  line-height: 32px;
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   text-align: right;
-  border-bottom: 2px dotted #1e254026;
-  padding-bottom: 8px;
 }
 
 .menu-colsh.is-blank {
   visibility: hidden;
+}
+
+/* --- "Also in this chapter" overflow panel ---------------------------- */
+
+.menu-also {
+  /* sits directly ON the page rules: transparent, top aligned to the grid,
+     no padding — its contents share the notebook rhythm */
+  margin-top: 32px;
+  border: 1.5px dashed #1e254033;
+  border-radius: 14px;
+  animation: menu-in 0.5s var(--ease) both;
+  animation-delay: calc(min(var(--i, 0), 3) * 70ms);
+}
+
+.menu-also-head,
+.menu-also-static {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 32px;
+  padding: 0 8px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 32px;
+  color: var(--ink-soft);
+}
+
+/* desktop shows the static header only — the expander button is hidden so
+   it never becomes a focusable no-op while the list is always visible */
+.menu-also-static {
+  display: none;
+}
+
+.menu-also-head {
+  cursor: pointer;
+}
+
+@media (min-width: 901px) {
+  .menu-also-head {
+    display: none;
+  }
+
+  .menu-also-static {
+    display: flex;
+  }
+}
+
+.menu-also-hint {
+  margin-left: auto;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.menu-also-chev {
+  flex: none;
+  transition: transform 0.25s var(--ease);
+}
+
+.menu-also.is-open .menu-also-chev {
+  transform: rotate(180deg);
+}
+
+/* compact overflow rows: two mini-columns for single-price rows; 3-price
+   rows keep the is-cols template and span the full panel width */
+.menu-also-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 10px;
+  margin-top: 0;
+}
+
+.menu-also .menu-row {
+  padding: 0 8px;
+}
+
+.menu-also .menu-row.is-cols,
+.menu-also .menu-row.is-wide {
+  grid-column: 1 / -1;
+}
+
+/* --- chapter pagination controls -------------------------------------- */
+
+.menu-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+}
+
+.menu-pager-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+}
+
+.menu-progress {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  color: var(--ink-soft);
+}
+
+.menu-dots {
+  display: flex;
+}
+
+.menu-dot {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-dot-core {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #1e254033;
+  transition:
+    background-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.menu-dot:hover .menu-dot-core {
+  background: #1e254059;
+  transform: scale(1.2);
+}
+
+.menu-dot[aria-current="true"] .menu-dot-core {
+  background: var(--honey);
+  transform: scale(1.25);
+}
+
+.menu-pager-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.menu-pager .btn:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+  cursor: default;
+  pointer-events: none;
 }
 
 /* --- footnote: readable small-print chip card ------------------------ */
@@ -377,15 +620,9 @@
   font-size: 1em;
 }
 
-/* the flush active-tab↔page connection (desktop only; mobile keeps a
-   small gap since overflow-x scroll clips negative-margin overlap) */
+/* fixed price columns: Hot / Iced 12oz / Iced 16oz line up across every
+   row and under their headers instead of per-row max-content drift */
 @media (min-width: 641px) {
-  .menu-tab[aria-selected="true"] {
-    margin-bottom: -2px;
-  }
-
-  /* fixed price columns: Hot / Iced 12oz / Iced 16oz line up across every
-     row and under their headers instead of per-row max-content drift */
   .menu-row.is-cols {
     grid-template-columns: minmax(0, 1fr) 74px 80px 90px;
     column-gap: 12px;
@@ -394,19 +631,47 @@
 
 /* --- responsive ------------------------------------------------------- */
 
+@media (max-width: 900px) {
+  /* spread stacks: left page then right page, binding gone, ribbon kept;
+     the Also panel collapses into the "Show N more" expander; inactive
+     panels leave the flow entirely (no fixed frame on mobile) */
+  .menu-spread {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-panel {
+    display: none;
+  }
+
+  .menu-panel.is-active {
+    display: block;
+  }
+
+  .menu-binding {
+    display: none;
+  }
+
+  .menu-also-list {
+    display: none;
+  }
+
+  .menu-also.is-open .menu-also-list {
+    display: grid;
+  }
+}
+
 @media (max-width: 640px) {
-  /* page-tab strip scrolls horizontally but stays INSIDE the section's
-     gutter box — the strip previously bled to the screen edges (no left
-     margin) and its edge-flush tabs read glued to the page below */
+  /* tag strip scrolls horizontally but stays INSIDE the section's gutter
+      box (in-gutter, snap; detached from the spread below) */
   .menu-tabs {
     flex-wrap: nowrap;
     justify-content: flex-start;
-    align-items: flex-end;
+    align-items: center;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x proximity;
     scrollbar-width: none;
-    padding: 2px var(--gutter) 0;
+    padding: 2px 2px 4px;
   }
 
   .menu-tabs::-webkit-scrollbar {
@@ -415,12 +680,6 @@
 
   .menu-tab {
     scroll-snap-align: start;
-  }
-
-  /* detached strip: a small breathing gap between the tabs and the page
-     (desktop ≥641 keeps the connected flush-tab design) */
-  .menu-book {
-    row-gap: 3px;
   }
 
   .menu-meta {
@@ -467,9 +726,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .menu-group,
+  .menu-also,
+  .menu-also-chev,
   .menu-tab,
   .menu-row,
-  .menu-name {
+  .menu-name,
+  .menu-coin,
+  .menu-dot-core {
     animation: none;
     transition: none;
   }
