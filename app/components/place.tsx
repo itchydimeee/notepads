@@ -1,11 +1,11 @@
 "use client";
 
-// T7 — The Place (#place) gallery. Client island: the lightbox needs state. Captions + alt text verbatim from docs/details.md §6 (no
-// invented copy). Images are the 5 branded placeholder PNGs in
-// public/images (production photos deferred in T0): slots are mapped onto
-// them by reuse — exact subject matches first (hero.tsx alts), the rest
-// reuse the closest interior shot, differentiated by `pos` crops so repeats
-// read as distinct frames. Shots run the room's narrative: arrive → order →
+// T7 — The Place (#place) gallery. Client island: the lightbox needs state. Captions verbatim from docs/details.md §6 (no
+// invented copy). Images are the real photos in public/images (descriptive
+// file names), mapped to slots by subject match with the caption; alt text
+// describes the actual photo. src is null where no honest match exists —
+// those cards render as styled empty frames (photo coming soon) and never
+// open the lightbox. Shots run the room's narrative: arrive → order →
 // snacks → study → perch → lounge → company → address. No priority: the
 // hero owns LCP; every gallery src is lazy by default.
 import Image from "next/image";
@@ -19,8 +19,8 @@ import "../place.css";
 type RatioHint = "wide" | "tall" | "square";
 
 type Shot = {
-  src: string;
-  alt: string; // alt of the FUTURE photo (verbatim from details.md §6)
+  src: string | null;
+  alt: string; // describes the actual photo (or the wanted one when src is null)
   caption: string; // verbatim from details.md §6
   ratio: RatioHint; // layout hint from details.md §6
   pos?: string; // object-position crop; differentiates reused srcs
@@ -29,52 +29,52 @@ type Shot = {
 
 const SHOTS: Shot[] = [
   {
-    src: "/images/cafe-16-md.png", // hero: "the sign at night" — exact match
-    alt: "The glowing NotePads Study Hub Café sign at night",
+    src: "/images/glowing-sign-night.webp", // the actual glowing sign at dusk
+    alt: "The glowing NotePads Study Hub Café sign at dusk",
     caption: "Look for the glowing sign",
     ratio: "wide",
     tape: true,
   },
   {
-    src: "/images/cafe-03-sm.png", // hero: "coffee counter with hanging lights" — exact match
-    alt: "The NotePads coffee counter with warm hanging lights",
+    src: "/images/counter-menu-board.webp", // counter + barista + menu board
+    alt: "Coffee counter and menu board behind the barista",
     caption: "The coffee counter",
     ratio: "square",
   },
   {
-    src: "/images/cafe-12-sm.png", // hero: "the open pantry" — exact match
+    src: null, // no pantry-shelves photo yet — left blank, not forced
     alt: "The open pantry shelves with fruit and cereal jars",
     caption: "The open pantry",
     ratio: "square",
   },
   {
-    src: "/images/cafe-05-sm.png", // students studying, cropped high — closest subject
-    alt: "Students working at the long communal study table",
+    src: "/images/communal-table-red-chairs.webp", // empty communal table, clear view
+    alt: "Empty communal table with red chairs under the logo wall",
     caption: "The communal table, in full focus",
     ratio: "tall",
     pos: "50% 20%",
   },
   {
-    src: "/images/cafe-05-sm.png", // hero: "study stations and red chairs" — exact match
-    alt: "Study stations with red chairs and string lights",
+    src: "/images/study-stations-printing.webp", // workstation pods — reused from hero
+    alt: "Workstation pods with ergonomic chairs by the window",
     caption: "Study stations",
     ratio: "wide",
   },
   {
-    src: "/images/cafe-10-md.png", // hero: "lounge with the logo wall" — exact match
-    alt: "Lounge seating under the NotePads logo wall",
+    src: "/images/logo-wall-mural.webp", // NotePads mural wall + booth seating
+    alt: "NotePads Café mural wall with booth seating",
     caption: "Lounge corner & logo wall",
     ratio: "square",
   },
   {
-    src: "/images/cafe-03-sm.png", // drinks warm the scene — reused, left crop
-    alt: "Guests studying with laptops and iced coffee",
+    src: "/images/laptops-daylight.webp", // guests with laptops, bright room
+    alt: "Guests working on laptops in the bright café",
     caption: "Laptops, coffee, good company",
     ratio: "tall",
     pos: "20% 45%",
   },
   {
-    src: "/images/cafe-16-md.png", // signage/building — reused, low crop
+    src: null, // unbranded building exterior — left blank per owner decision
     alt: "The SDC Building on Guzman–Jesena Street",
     caption: "SDC Building · 2nd floor · Guzman–Jesena St",
     ratio: "square",
@@ -82,6 +82,9 @@ const SHOTS: Shot[] = [
     tape: true,
   },
 ];
+
+// Indices of shots that have a photo — the lightbox only cycles through these.
+const VIEWABLE_INDICES = SHOTS.flatMap((s, i) => (s.src ? [i] : []));
 
 // v4 copy: headline carries the accent word; lede stays warm (details facts).
 const LEDE =
@@ -116,12 +119,14 @@ export default function Place() {
 
   const next = useCallback(() => {
     setDir("next");
-    setOpen((i) => (i === null ? i : (i + 1) % SHOTS.length));
+    setOpen((i) => (i === null ? i : (i + 1) % VIEWABLE_INDICES.length));
   }, []);
 
   const prev = useCallback(() => {
     setDir("prev");
-    setOpen((i) => (i === null ? i : (i - 1 + SHOTS.length) % SHOTS.length));
+    setOpen((i) =>
+      i === null ? i : (i - 1 + VIEWABLE_INDICES.length) % VIEWABLE_INDICES.length,
+    );
   }, []);
 
   const close = useCallback(() => {
@@ -225,7 +230,8 @@ export default function Place() {
             fragmenting; flex only lives inside each card (figure). */}
         <Reveal delay={0.06}>
           <ul className="place-wall">
-          {SHOTS.map((shot, i) => (
+          {SHOTS.map((shot, i) =>
+            shot.src ? (
               <li key={shot.alt} className="place-item">
                 <button
                   type="button"
@@ -236,7 +242,7 @@ export default function Place() {
                   onClick={(e) => {
                     triggerRef.current = e.currentTarget;
                     setDir(null); // first open: scale-in, not directional
-                    setOpen(i);
+                    setOpen(VIEWABLE_INDICES.indexOf(i));
                   }}
                 >
                   <figure className="place-shot">
@@ -257,7 +263,23 @@ export default function Place() {
                   </figure>
                 </button>
               </li>
-            ))}
+            ) : (
+              // No matching photo yet: a non-interactive empty frame keeps the
+              // masonry rhythm (same tilt/tape/caption, kraft box + note) and
+              // never opens the lightbox.
+              <li key={shot.alt} className="place-item">
+                <figure
+                  className={`place-shot place-shot-empty place-tilt-${i % 2 === 0 ? "l" : "r"}`}
+                >
+                  {shot.tape && <span className="u-tape place-tape" aria-hidden="true" />}
+                  <div className={`place-shot-photo place-ar-${shot.ratio}`}>
+                    <span className="place-empty-note">photo coming soon</span>
+                  </div>
+                  <figcaption className="place-shot-cap">{shot.caption}</figcaption>
+                </figure>
+              </li>
+            ),
+          )}
           </ul>
         </Reveal>
       </div>
@@ -300,7 +322,7 @@ export default function Place() {
             <X size={22} aria-hidden="true" {...BUTTON_BOTH} />
           </button>
           <p className="place-lb-count" aria-hidden="true">
-            {open + 1} / {SHOTS.length}
+            {open + 1} / {VIEWABLE_INDICES.length}
           </p>
           <button
             type="button"
@@ -322,7 +344,7 @@ export default function Place() {
             className="place-lb-box"
             role="dialog"
             aria-modal="true"
-            aria-label={SHOTS[open].caption}
+            aria-label={SHOTS[VIEWABLE_INDICES[open]].caption}
             onClick={(e) => e.stopPropagation()}
           >
             {/* key={} restarts the enter animation on every arrow/swipe move;
@@ -332,19 +354,21 @@ export default function Place() {
               className={dir ? `place-lb-fig place-lb-fig--${dir}` : "place-lb-fig"}
               key={open}
             >
-              <div className={`place-lb-photo place-ar-${SHOTS[open].ratio}`}>
+              <div className={`place-lb-photo place-ar-${SHOTS[VIEWABLE_INDICES[open]].ratio}`}>
                 <Image
-                  src={SHOTS[open].src}
-                  alt={SHOTS[open].alt}
+                  src={SHOTS[VIEWABLE_INDICES[open]].src!}
+                  alt={SHOTS[VIEWABLE_INDICES[open]].alt}
                   fill
                   sizes={LB_SIZES}
                   style={{
                     objectFit: "cover",
-                    objectPosition: SHOTS[open].pos,
+                    objectPosition: SHOTS[VIEWABLE_INDICES[open]].pos,
                   }}
                 />
               </div>
-              <figcaption className="place-lb-cap">{SHOTS[open].caption}</figcaption>
+              <figcaption className="place-lb-cap">
+                {SHOTS[VIEWABLE_INDICES[open]].caption}
+              </figcaption>
             </figure>
           </div>
         </div>

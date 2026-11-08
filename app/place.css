@@ -144,6 +144,23 @@
   aspect-ratio: 1 / 1;
 }
 
+/* Empty frame — a slot waiting for its photo: same kraft box, dashed inner
+   edge + handwritten note instead of an image. Non-interactive by markup. */
+.place-shot-empty .place-shot-photo {
+  display: grid;
+  place-items: center;
+  border: 1.5px dashed #1e254033;
+}
+
+.place-empty-note {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  opacity: 0.75;
+  padding: 0 12px;
+  text-align: center;
+}
+
 .place-shot-cap {
   padding: 12px 8px 14px;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;

@@ -6,15 +6,19 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import Accent from "./accent";
 import "../hero.css";
 
-// Placeholder photos (branded PNG stubs; real photos to be swapped in — alt text from docs/details.md).
-const SLIDES = [
-  { src: "/images/cafe-10-md.png", alt: "The NotePads lounge with the logo wall", caption: "the lounge, in its natural state" },
-  { src: "/images/cafe-16-md.png", alt: "The NotePads Study Hub Café sign at night", caption: "look for the glowing sign" },
-  { src: "/images/cafe-05-sm.png", alt: "Study stations and red chairs", caption: "stations with a plug and a view" },
-  { src: "/images/cafe-12-sm.png", alt: "The open pantry", caption: "pantry within reach" },
+// Real photos from public/images (descriptive file names). src is null when no
+// photo matches the caption yet — null slides are filtered out before render.
+type HeroShot = { src: string | null; alt: string; caption: string };
+
+const SLIDES: HeroShot[] = [
+  { src: "/images/lounge-navy-sofas.webp", alt: "Lounge corner with navy sofas and a street view", caption: "the lounge, in its natural state" },
+  { src: "/images/glowing-sign-night.webp", alt: "The glowing NotePads Study Hub Café sign at dusk", caption: "look for the glowing sign" },
+  { src: "/images/study-stations-printing.webp", alt: "Workstation pods with ergonomic chairs by the window", caption: "stations with a plug and a view" },
+  // No pantry photo yet — left blank rather than forcing a near-miss image.
+  { src: null, alt: "", caption: "pantry within reach" },
 ];
 
-const BACK_SHOT = { src: "/images/cafe-03-sm.png", alt: "The NotePads coffee counter with warm hanging lights", caption: "the counter with warm lights" };
+const BACK_SHOT = { src: "/images/counter-evening-lights.webp", alt: "Coffee counter and menu board in warm evening light", caption: "the counter with warm lights" };
 
 function manilaNow() {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -60,7 +64,10 @@ export default function Hero() {
   const [visible, setVisible] = useState(true);
   const status = useSyncExternalStore(subscribeClock, getClockSnapshot, getServerClockSnapshot);
 
-  const slides = useMemo(() => SLIDES, []);
+  const slides = useMemo(
+    () => SLIDES.filter((s): s is HeroShot & { src: string } => s.src !== null),
+    [],
+  );
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval>;

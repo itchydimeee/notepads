@@ -50,29 +50,27 @@ const STICKIES = [
 ];
 
 // Photo shelf (round 5): FOUR taped polaroids side by side in a row.
-// Captions/alt carry doc vocabulary: two About captions verbatim from
-// details.md §4, one rewritten cozy line from the lede, and the §6 sign
-// caption for the sign image. Alt text = the future production photo's
-// subject (placeholder PNG stubs).
+// Captions stay verbatim site copy; src points at the real photo in
+// public/images whose subject matches the caption (alt describes it).
 const POLAROIDS = [
   {
-    src: "/images/cafe-10-md.png",
-    alt: "The NotePads lounge with the logo wall",
+    src: "/images/full-house-evening.webp",
+    alt: "Communal study table full of guests in the evening",
     caption: "study hub, in full swing",
   },
   {
-    src: "/images/cafe-05-sm.png",
-    alt: "Study stations and red chairs",
+    src: "/images/students-communal-table.webp",
+    alt: "Guests studying at the long communal table",
     caption: "single space · 2 hrs of focus",
   },
   {
-    src: "/images/cafe-03-sm.png",
-    alt: "The NotePads coffee counter with warm hanging lights",
+    src: "/images/drinks-tray-shop-view.webp",
+    alt: "Three NotePads drinks on a tray inside the café",
     caption: "coffee that never rushes you",
   },
   {
-    src: "/images/cafe-16-md.png",
-    alt: "The glowing NotePads Study Hub Café sign at night",
+    src: "/images/glowing-sign-night.webp",
+    alt: "The glowing NotePads Study Hub Café sign at dusk",
     caption: "look for the glowing sign",
   },
 ];
