@@ -6,7 +6,7 @@
 //
 // Every reply is composed from docs/details.md facts only: §Site Identity table
 // (hours/address/phones/socials), §4 lines 105–115 (₱350 package + premium),
-// §7 (Saturday workshops), amenity cards, reviews, and the §11 intent table
+// amenity cards, reviews, and the §11 intent table
 // (lines 400–423). Menu prices come from the SHARED source menu.tsx TABS
 // (the only menu.tsx edit: `export` keywords — no data duplicated, no refactors).
 // Never-invent rule honored: payment / parking / delivery / dietary / pets get
@@ -21,7 +21,7 @@
 //    it, a page reload does. No message persistence, ever.
 //  • Nudge dismissal IS persisted (try/catch-guarded localStorage
 //    `notey-nudge-dismissed` — storage failures never surface or block).
-//  • Anchor action chips (#menu / #visit / #reviews / #saturdays) CLOSE the
+//  • Anchor action chips (#menu / #visit / #reviews) CLOSE the
 //    chat: on mobile the near-fullscreen panel would hide the section being
 //    scrolled to. tel: chips and external links keep the panel open.
 //  • Events: opening the panel auto-focuses the input and auto-dismisses the
@@ -34,10 +34,10 @@ import "../chatbot.css";
 /* ------------------------------- vocabulary -------------------------------- */
 
 const GREETING =
-  "Hi! I'm Notey ☕ — ask me anything about NotePads: menu prices, study rates, hours, directions or Saturday workshops.";
+  "Hi! I'm Notey ☕ — ask me anything about NotePads: menu prices, study rates, hours or directions.";
 const BYE = "Bye for now! ☕ Come study, sip, and stay a while.";
 const FALLBACK =
-  "I didn't quite catch that — try one of the chips below, or ask me about the menu, hours, rates or Saturday workshops.";
+  "I didn't quite catch that — try one of the chips below, or ask me about the menu, hours or rates.";
 
 const NUDGE_TEXT = "Questions? Ask Notey!";
 const NUDGE_DISMISS = "Dismiss nudge";
@@ -53,7 +53,7 @@ const QUICK = [
   "Opening hours",
   "Study rates",
   "Show the menu",
-  "Saturday workshops",
+  "Study packages",
   "Where are you?",
 ];
 
@@ -70,12 +70,10 @@ const CH = {
   map: { label: "See the map", href: "#visit", external: false },
   call: { label: "Call us", href: "tel:+639565543184", external: false },
   wa: { label: "WhatsApp", href: "https://wa.me/639952293755", external: true },
-  reserve: { label: "Call to reserve", href: "tel:+639177169035", external: false },
   ig: { label: "Instagram DM", href: "https://www.instagram.com/notepads.cafe/", external: true },
   fb: { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61582392323170", external: true },
   msg: { label: "Message us", href: "https://wa.me/639952293755", external: true },
   reviews: { label: "Read the reviews", href: "#reviews", external: false },
-  workshops: { label: "See the workshops", href: "#saturdays", external: false },
 } satisfies Record<string, Chip>;
 
 /* ---------------------------- composed answers ----------------------------- */
@@ -111,70 +109,7 @@ function hoursReply(): string {
   return `Our hours:\n${HOURS_LINES}${live ? `\n${live}` : ""}\nHoliday hours are not posted online.`;
 }
 
-// --- Saturday batch logic: reimplemented locally (deliberately NOT imported
-// from saturdays.tsx — no cross-island coupling), same Asia/Manila approach:
-// the verdict is computed at reply time on the client, never at SSR. ---
-const MANILA_TZ = "Asia/Manila";
-const MONTH_NO: Record<string, number> = {
-  Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6,
-  Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12,
-};
-
-function manilaToday(): string {
-  try {
-    const parts = new Intl.DateTimeFormat("en-US", {
-      timeZone: MANILA_TZ,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).formatToParts(new Date());
-    const get = (t: string) => parts.find((p) => p.type === t)?.value ?? "00";
-    return `${get("year")}-${get("month")}-${get("day")}`;
-  } catch {
-    return ""; // unknown → never flip the batch (fail live, no invented past)
-  }
-}
-
-// "Aug 22, 2026" → sortable "YYYY-MM-DD" key parsed from the verbatim string.
-function lastDateKey(dates: string): string {
-  const tail = dates.split(" & ").pop() ?? "";
-  const m = /^([A-Z][a-z]{2}) (\d{1,2}), (\d{4})$/.exec(tail);
-  if (!m) return "";
-  return `${m[3]}-${String(MONTH_NO[m[1]] ?? 0).padStart(2, "0")}-${m[2].padStart(2, "0")}`;
-}
-
-// Strictly AFTER the last date (the final Saturday morning itself stays live).
-function batchOver(dates: string[], today: string): boolean {
-  if (today === "") return false;
-  return dates.every((d) => lastDateKey(d) !== "" && today > lastDateKey(d));
-}
-
-const SAT_SESSIONS = [
-  { name: "Art Workshop", tag: "Unleash creativity through colors & craft!", dates: "Aug 15 & Aug 22, 2026" },
-  { name: "Little Barista", tag: "Learn basic coffee skills + make their own drinks!", dates: "Aug 29 & Sep 5, 2026" },
-  { name: "Cookie Decor", tag: "Bake, design, and eat their yummy creations!", dates: "Sep 12 & Sep 19, 2026" },
-];
-const SAT_OVER =
-  "The 2026 batch of sessions has wrapped up — message us for the next dates!\nSaturdays at NotePads: 9:00 – 11:00 AM · ages 6 – 10.";
-
-function satReply(): string {
-  const over = batchOver(SAT_SESSIONS.map((s) => s.dates), manilaToday());
-  if (over) return SAT_OVER;
-  return [
-    "No Gadget Kids Workshops — Learn · Create · Imagine",
-    "Saturdays · 9:00 – 11:00 AM · ages 6 – 10",
-    ...SAT_SESSIONS.map((s) => `${s.name} — ${s.dates} — ${s.tag}`),
-    "₱1,299 per workshop · includes Apron, ID, Materials, Snacks, Certificate",
-    "Reserve early — limited slots!",
-  ].join("\n");
-}
-
-const SAT_RESERVE =
-  "Limited slots only! Saturdays only: message our FB/IG, call, or visit us to reserve.";
-const SAT_RESERVE_OVER =
-  "The 2026 batch of sessions has wrapped up — message us to ask about the next dates.";
-
-// --- rates / package / amenities / contact ( §§Site Identity, 4, 7 ) ---
+// --- rates / package / amenities / contact ( §§Site Identity, 4 ) ---
 const RATES_TEXT =
   "Up to 2 hours of stay are free — Wi-Fi & charging included.\nBeyond that it's just ₱40 per hour.\nAsk me about the ₱350 Study Space package!";
 
@@ -182,7 +117,7 @@ const PACKAGE_TEXT =
   "Study Space package — ₱350 · single space · 2 hours of uninterrupted study time:\n1. One complimentary meal — pork or chicken adobo, embotido rice meal, or ham & cheese sandwich\n2. One free drink — signature hot chocolate, iced tea, cucumber lemonade, blue lemonade, or pink lychee\n3. Free access to our open pantry\n4. Complimentary Wi-Fi & free charging stations\n5. Free use of a laptop\n6. 2 hours of stay included\nExtra time: ₱40 per hour beyond the 2-hour stay. A Premium Space package exists — message us for details.";
 
 const CONTACT_TEXT =
-  "Call or text: 0956 554 3184\nWhatsApp: +63 995 229 3755 · Email: notepadscafe1109@gmail.com\nWorkshop line: 0917 716 9035 · 0995 229 3755";
+  "Call or text: 0956 554 3184\nWhatsApp: +63 995 229 3755 · Email: notepadscafe1109@gmail.com";
 
 const LOCATION_TEXT =
   "NotePads Cafe\n2/F SDC Building, Guzman–Jesena Street\nMandurriao, Iloilo City\nIt's on the 2nd floor of the SDC Building — look for the glowing NotePads Study Hub Café sign.";
@@ -211,9 +146,6 @@ const RECO_TEXT =
 
 const NOT_POSTED_TEXT =
   "That one isn't posted online — message us and we'll fill you in!";
-
-const WORKSHOP_PRICES_TEXT =
-  "Workshop pricing:\nPer workshop — ₱1,299\nAny 2 workshops — ₱2,298 · save ₱300\nAll 3 workshops — ₱3,497 · save ₱400";
 
 /* ------------------------- menu data (shared TABS) -------------------------- */
 
@@ -298,29 +230,9 @@ export function replyTo(textRaw: string): Reply {
     return { text: GREETING, keepChips: true };
   }
 
-  // workshop sub-intents (price / included / age / reserve / venue — §11) need workshop context
-  if (/\b(workshops?|saturdays?|barista|cookie decor)\b/.test(t)) {
-    if (/\b(age|ages|years old|years)\b/.test(t)) {
-      return { text: "Kids workshops are for ages 6 – 10 years old, every Saturday 9:00 – 11:00 AM.", chips: [CH.workshops] };
-    }
-    if (/\b(includes?|included|apron|materials?|snacks?|certificate|id)\b/.test(t)) {
-      return { text: "What's included: Apron · ID · Materials · Snacks · Certificate.", chips: [CH.workshops] };
-    }
-    if (/\b(venues?|bookings?|event|events|functions?)\b/.test(t)) {
-      return { text: "The venue is open for bookings — good coffee, cozy space. Message us to arrange yours.", chips: [CH.msg] };
-    }
-    if (/\b(reserves?|reserved|reservations?|slots?|sign ?ups?|sign ?up|registers?|limited)\b/.test(t)) {
-      const over = batchOver(SAT_SESSIONS.map((s) => s.dates), manilaToday());
-      return { text: over ? `${SAT_RESERVE_OVER}\nMessage our FB/IG, call, or visit us.` : SAT_RESERVE, chips: [CH.reserve, CH.workshops] };
-    }
-    if (/\b(prices?|costs?|how much|pay|fees?|1,?299|2,?298|3,?497)\b/.test(t)) {
-      return { text: WORKSHOP_PRICES_TEXT, chips: [CH.workshops] };
-    }
-    // generic Saturday → the full listing (or batch-over variant)
-    return { text: satReply(), chips: [CH.workshops, CH.reserve] };
-  }
-  if (/\b(kids?|child|children)\b/.test(t)) {
-    return { text: satReply(), chips: [CH.workshops, CH.reserve] };
+  // venue bookings (§11)
+  if (/\b(venues?|bookings?|event|events|functions?)\b/.test(t)) {
+    return { text: "The venue is open for bookings — good coffee, cozy space. Message us to arrange yours.", chips: [CH.msg] };
   }
 
   // recommend (intent table: customer favorites)

@@ -36,7 +36,7 @@ import SectionTab from "./section-tab";
 const LEDE_1 =
   "Tucked on the second floor of the SDC Building along Guzman–Jesena Street in Mandurriao, Iloilo City — long tables, warm lights, and coffee that never rushes you.";
 const LEDE_2 =
-  "Cramming before finals, working from the cafe, a board game catch-up with friends, or a hands-on Saturday for the kids — there's a seat, a cup, and a plug waiting for you.";
+  "Cramming before finals, working from the cafe, or a board game catch-up with friends — there's a seat, a cup, and a plug waiting for you.";
 
 // Sticky-note stats — same three facts as details.md §4. The hours note
 // carries a friendly header ("Open daily") with the times verbatim below:

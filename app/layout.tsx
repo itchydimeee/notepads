@@ -25,7 +25,7 @@ const fredoka = localFont({
 export const metadata: Metadata = {
   title: "NotePads Study Hub Cafe · Iloilo City",
   description:
-    "NotePads Study Hub Cafe in Mandurriao, Iloilo City — where learning meets comfort. Coffee, hearty meals, study spaces with free Wi-Fi & charging, and Saturday kids workshops.",
+    "NotePads Study Hub Cafe in Mandurriao, Iloilo City — where learning meets comfort. Coffee, hearty meals, and study spaces with free Wi-Fi & charging.",
 };
 
 export const viewport: Viewport = {

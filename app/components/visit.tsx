@@ -39,7 +39,7 @@ export default function Visit() {
     <section id="visit" className="visit" aria-labelledby="visit-title">
       <div className="visit-inner">
         <Reveal>
-          <SectionTab num="06" label="Visit" tone="mustard" />
+          <SectionTab num="05" label="Visit" tone="mustard" />
           <h2 id="visit-title" className="visit-title">
             Find your <Accent>seat</Accent>
           </h2>

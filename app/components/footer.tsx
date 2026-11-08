@@ -30,7 +30,6 @@ const EXPLORE = [
   { text: "About", href: "#about" },
   { text: "Menu book", href: "#menu" },
   { text: "The place", href: "#place" },
-  { text: "Saturday workshops", href: "#saturdays" },
   { text: "Reviews", href: "#reviews" },
   { text: "Find us", href: "#visit" },
 ];

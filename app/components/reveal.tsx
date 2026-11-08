@@ -18,7 +18,7 @@
 //    ONLY applied after first client mount (mounted gate). Consequences:
 //      - Server HTML + no-JS visitors: every Reveal block fully visible.
 //      - First client render (mounted = false): identical markup → NO hydration
-//        mismatch (same pattern the hero clock and the Saturday batch logic use).
+//        mismatch (same pattern the hero clock uses).
 //      - After mount: the element gets `initial` and animates in on the next
 //        paint — an imperceptible handoff for below-viewport reveals.
 //

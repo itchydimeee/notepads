@@ -12,7 +12,6 @@ const LINKS = [
   { href: "#about", label: "About" },
   { href: "#menu", label: "Menu" },
   { href: "#place", label: "The Place" },
-  { href: "#saturdays", label: "Saturdays" },
   { href: "#reviews", label: "Reviews" },
   { href: "#visit", label: "Visit" },
 ];
