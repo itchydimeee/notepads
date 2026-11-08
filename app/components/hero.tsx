@@ -1,8 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowRight, ChevronDown, MapPin, Sparkle } from "lucide-react";
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import {
+  ArrowRight,
+  ChevronDown,
+  MapPin,
+  Pause,
+  Play,
+  Snowflake,
+  Sparkle,
+  Wifi,
+  Zap,
+} from "lucide-react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Accent from "./accent";
 import "../hero.css";
 
@@ -14,11 +24,10 @@ const SLIDES: HeroShot[] = [
   { src: "/images/lounge-navy-sofas.webp", alt: "Lounge corner with navy sofas and a street view", caption: "the lounge, in its natural state" },
   { src: "/images/glowing-sign-night.webp", alt: "The glowing NotePads Study Hub Café sign at dusk", caption: "look for the glowing sign" },
   { src: "/images/study-stations-printing.webp", alt: "Workstation pods with ergonomic chairs by the window", caption: "stations with a plug and a view" },
+  { src: "/images/counter-evening-lights.webp", alt: "Coffee counter and menu board in warm evening light", caption: "the counter with warm lights" },
   // No pantry photo yet — left blank rather than forcing a near-miss image.
   { src: null, alt: "", caption: "pantry within reach" },
 ];
-
-const BACK_SHOT = { src: "/images/counter-evening-lights.webp", alt: "Coffee counter and menu board in warm evening light", caption: "the counter with warm lights" };
 
 function manilaNow() {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -61,6 +70,13 @@ const getServerClockSnapshot = () => null;
 
 export default function Hero() {
   const [slide, setSlide] = useState(0);
+  // Page-tear transition: `tearing` holds the OUTGOING slide while its piece
+  // rips away (cleared by onAnimationEnd); `tick` rekeys the overlay so the
+  // animation restarts every cycle.
+  const [tearing, setTearing] = useState<number | null>(null);
+  const [tick, setTick] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const slideRef = useRef(0);
   const [visible, setVisible] = useState(true);
   const status = useSyncExternalStore(subscribeClock, getClockSnapshot, getServerClockSnapshot);
 
@@ -69,19 +85,27 @@ export default function Hero() {
     [],
   );
 
+  // Shared by the interval and the pagination dots: tear to a slide.
+  const goTo = (i: number) => {
+    if (i === slideRef.current) return;
+    setTearing(slideRef.current);
+    setTick((t) => t + 1);
+    slideRef.current = i;
+    setSlide(i);
+  };
+
   useEffect(() => {
     let timer: ReturnType<typeof setInterval>;
-    // Reduced motion = the hero shows ONE static photo (the crossfade interval
-    // never runs; the CSS kill-switch would otherwise turn crossfades into
-    // hard cuts).
-    const reduce =
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (visible && !reduce) {
-      timer = setInterval(() => setSlide((s) => (s + 1) % slides.length), 6000);
+    // The interval runs whenever the hero is on screen and not paused — even
+    // under reduced motion (the CSS layer swaps the tear for a gentle fade
+    // there; the state change itself must still happen so the photo updates).
+    if (visible && !paused) {
+      timer = setInterval(() => {
+        goTo((slideRef.current + 1) % slides.length);
+      }, 6000);
     }
     return () => clearInterval(timer);
-  }, [visible, slides.length]);
+  }, [visible, paused, slides.length]);
 
   useEffect(() => {
     const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), {
@@ -94,12 +118,6 @@ export default function Hero() {
 
   return (
     <section id="top" className="hero" aria-label="NotePads Study Hub Cafe — welcome">
-      {/* Tiny sparkle stays a section-level garnish; the diamond star lives
-          INSIDE the collage so it tracks the polaroid, not the navbar. */}
-      <svg viewBox="0 0 24 24" className="hero-spark b" width="16" height="16" fill="currentColor" aria-hidden="true">
-        <path d="M12 2l2.6 7.4L22 12l-7.4 2.6L12 22l-2.6-7.4L2 12l7.4-2.6Z" />
-      </svg>
-
       <div className="hero-inner">
         <div className="hero-copy">
           {/* v4 rework per user reference (ui_structure_reference.png): small
@@ -113,8 +131,8 @@ export default function Hero() {
             Your <Accent>cozy</Accent> corner for coffee, focus, and fresh ideas
           </h1>
           <p className="hero-lede">
-            With <strong>free Wi-Fi, free charging, and 2 study hours on the house</strong> —
-            on the 2nd floor of the SDC Building, Mandurriao, Iloilo City.
+            A calm second-floor space with good coffee, hearty meals, and a seat
+            with a plug waiting for you.
           </p>
           <div className="hero-ctas">
             <a href="#menu" className="btn btn-blue">
@@ -125,20 +143,37 @@ export default function Hero() {
               Find your seat
             </a>
           </div>
-          <div className="hero-chips">
-            {status ? (
-              <>
-                <span className="chip" aria-live="polite">
-                  <span className={`chip-dot ${status.open ? "is-open" : "is-closed"}`} />
-                  {status.open ? `Open now · until ${status.closes}` : `Closed · opens ${status.opens}`}
-                </span>
-                <span className="chip">Today {status.today}</span>
-              </>
-            ) : (
-              <span className="chip">{LIVE_HOURS}</span>
-            )}
-            <span className="chip loc">
-              <MapPin size={16} className="chip-ico" aria-hidden="true" />
+          {/* feature row + live meta line (reference structure): drawn icons,
+              a hairline rule, then the live open/closed dot + address. */}
+          <ul className="hero-feats" aria-label="What's included with your visit">
+            <li>
+              <Wifi size={16} strokeWidth={2.4} aria-hidden="true" />
+              Free Wi-Fi
+            </li>
+            <li>
+              <Zap size={16} strokeWidth={2.4} aria-hidden="true" />
+              Free charging
+            </li>
+            <li>
+              <Snowflake size={16} strokeWidth={2.4} aria-hidden="true" />
+              Air-conditioned
+            </li>
+          </ul>
+          <div className="hero-meta">
+            <span className="hero-status" aria-live="polite">
+              <span className={`chip-dot ${status?.open ? "is-open" : "is-closed"}`} />
+              {status ? (
+                status.open ? (
+                  <>Open today · {status.today}</>
+                ) : (
+                  <>Closed · opens {status.opens}</>
+                )
+              ) : (
+                <>{LIVE_HOURS}</>
+              )}
+            </span>
+            <span className="hero-loc">
+              <MapPin size={15} strokeWidth={2.4} aria-hidden="true" />
               2/F SDC Bldg, Guzman–Jesena St
             </span>
           </div>
@@ -146,13 +181,9 @@ export default function Hero() {
 
         <div className="hero-shots">
           {/* Collage garnish (drawn SVG, all in the mustard/honey decoration
-              family, placed only in genuinely open zones of the collage):
-              top-right open band above the small polaroid holds the big
-              diamond star + 16px companion star + hand-drawn honey flourish
-              + a tiny plus scribble, drifting down like written margin
-              marks; the narrow bottom gap between sticky note and small
-              polaroid holds a 12px star + a second plus. Repositioned per
-              user feedback — nothing sits on a polaroid anymore. */}
+              family): big diamond star + twinkling companion + hand-drawn
+              honey flourish + one plus mark ride the open upper-right band
+              above the single polaroid — never over the print. */}
           <svg viewBox="0 0 24 24" className="hero-spark a" width="34" height="34" fill="currentColor" aria-hidden="true">
             <path d="M12 0c.9 5.4 3.6 8.6 8.6 10.2 1.4.45 1.4 2.15 0 2.6C15.6 14.4 12.9 17.6 12 24c-.9-6.4-3.6-9.6-8.6-11.2-1.4-.45-1.4-2.15 0-2.6C8.4 8.6 11.1 5.4 12 0Z" />
           </svg>
@@ -170,64 +201,89 @@ export default function Hero() {
           <svg viewBox="0 0 24 24" className="hero-plus o1" width="12" height="12" fill="none" aria-hidden="true">
             <path d="M12 3.5v17M3.5 12h17" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
           </svg>
-          <figure className="shot is-back">
-            <span className="u-tape" aria-hidden="true" />
-            <div className="shot-frame">
-              <div className="shot-photo">
-                <Image
-                  src={BACK_SHOT.src}
-                  alt={BACK_SHOT.alt}
-                  fill
-                  sizes="(max-width: 980px) 88vw, 290px"
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-              <figcaption className="shot-cap">{BACK_SHOT.caption}</figcaption>
-            </div>
-          </figure>
 
-          <figure className="shot">
+          {/* THE polaroid: the page-tear slideshow. The outgoing slide is
+              clipped by a jagged polygon that sweeps off like a ripped page;
+              the incoming slide is already fully visible beneath. The photo's
+              bottom edge carries the static torn-paper zigzag from the
+              reference. figure = the frame itself, so the figcaption is a
+              direct child. */}
+          <figure className="shot-frame">
             <span className="u-tape" aria-hidden="true" />
-            <div className="shot-frame">
-              <div className="shot-photo">
+            <div className="shot-photo">
+              {slides.map((s, i) => (
+                <Image
+                  key={s.src}
+                  src={s.src}
+                  alt={i === slide ? s.alt : ""}
+                  fill
+                  priority={i === 0}
+                  sizes="(max-width: 980px) 92vw, 500px"
+                  style={{
+                    objectFit: "cover",
+                    opacity: i === slide ? 1 : 0,
+                  }}
+                />
+              ))}
+              {tearing !== null && slides[tearing] ? (
+                <div
+                  className="shot-tear"
+                  key={tick}
+                  onAnimationEnd={() => setTearing(null)}
+                  aria-hidden="true"
+                >
+                  <div className="shot-tear-piece">
+                    <Image
+                      src={slides[tearing].src}
+                      alt=""
+                      fill
+                      sizes="(max-width: 980px) 92vw, 500px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                </div>
+              ) : null}
+            </div>
+            {/* Caption sits IN FLOW under the photo — it can never overlap
+                the print. key={} restarts the rise-in on every tear. */}
+            <figcaption className="shot-cap tear-in" key={slide} aria-live="off">
+              {slides[slide].caption}
+            </figcaption>
+            {/* slideshow controls: pagination dots + pause, per reference */}
+            <div className="shot-ctrls">
+              <div className="shot-dots">
                 {slides.map((s, i) => (
-                  <Image
+                  <button
                     key={s.src}
-                    src={s.src}
-                    alt={i === slide ? s.alt : ""}
-                    fill
-                    priority={i === 0}
-                    sizes="(max-width: 980px) 92vw, 470px"
-                    style={{
-                      objectFit: "cover",
-                      opacity: i === slide ? 1 : 0,
-                    }}
+                    type="button"
+                    className={`shot-dot${i === slide ? " is-active" : ""}`}
+                    aria-label={`Show photo ${i + 1} — ${s.caption}`}
+                    aria-current={i === slide}
+                    onClick={() => goTo(i)}
                   />
                 ))}
               </div>
-              <figcaption className="shot-cap" aria-live="off">
-                {slides[slide].caption}
-              </figcaption>
+              <button
+                type="button"
+                className="shot-pause"
+                aria-label={paused ? "Play slideshow" : "Pause slideshow"}
+                onClick={() => setPaused((p) => !p)}
+              >
+                {paused ? (
+                  <Play size={12} aria-hidden="true" />
+                ) : (
+                  <Pause size={12} aria-hidden="true" />
+                )}
+              </button>
             </div>
           </figure>
 
-          {/* Gold sticky note riding the collage's bottom-left corner — a real
-              note ("2 free hours, on us"), not pure décor: it states the study
-              stay fact. Its shadow + tilt mirror the taped-polaroid world. */}
-          <p className="hero-note">
-            2 free hours
-            <br />
-            on the house!
+          {/* Round "2 hrs" stamp riding the polaroid's top-right corner — a
+              real fact (2 free study hours), not pure décor. */}
+          <p className="hero-badge">
+            <strong>2 hrs</strong>
+            <span>on the house</span>
           </p>
-
-          {/* bottom-gap beat: tiny star + plus scribble in the open sliver
-              between the note and the small polaroid */}
-          <svg viewBox="0 0 24 24" className="hero-spark d" width="12" height="12" fill="currentColor" aria-hidden="true">
-            <path d="M12 0c.9 5.4 3.6 8.6 8.6 10.2 1.4.45 1.4 2.15 0 2.6C15.6 14.4 12.9 17.6 12 24c-.9-6.4-3.6-9.6-8.6-11.2-1.4-.45-1.4-2.15 0-2.6C8.4 8.6 11.1 5.4 12 0Z" />
-          </svg>
-          <svg viewBox="0 0 24 24" className="hero-plus o2" width="10" height="10" fill="none" aria-hidden="true">
-            <path d="M12 3.5v17M3.5 12h17" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-          </svg>
         </div>
       </div>
 

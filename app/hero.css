@@ -1,5 +1,6 @@
-/* Hero — parchment opening with copy left, taped polaroids right.
-   Photos crossfade inside the front polaroid; the ground stays paper. */
+/* Hero — parchment opening with copy left, ONE taped slideshow polaroid right.
+   Slide changes tear off like a page ripped from the pad; the ground stays
+   paper. */
 
 .hero {
   position: relative;
@@ -77,25 +78,67 @@
   margin-top: 6px;
 }
 
-.hero-chips {
+/* feature row (reference): small drawn icons + short facts */
+.hero-feats {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 10px 26px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.chip {
+.hero-feats li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.08rem;
+  color: var(--ink);
+}
+
+.hero-feats svg {
+  color: var(--blue);
+  flex: none;
+}
+
+/* live meta line under a hairline rule (reference structure, site's Gaegu
+   handwriting voice — same voice the old chips carried) */
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  padding-top: 16px;
+  border-top: 1px solid #1e25401f;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+
+.hero-status {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  min-height: 40px;
-  padding: 4px 16px;
-  border-radius: 999px;
-  background: var(--paper);
-  box-shadow: var(--shadow-soft);
-  font-family: var(--font-gaegu), cursive;
   font-weight: 700;
-  font-size: 0.98rem;
   color: var(--ink);
+}
+
+.hero-status .chip-dot {
+  width: 9px;
+  height: 9px;
+}
+
+.hero-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.hero-loc svg {
+  color: var(--blue);
+  flex: none;
 }
 
 .chip-dot {
@@ -136,141 +179,199 @@
   }
 }
 
-.chip.loc .chip-ico {
-  color: var(--blue);
-}
-
-/* --- polaroid collage (v4, per ui_structure_reference.png) -------------------
-   Big polaroid fills the upper-left (front layer); the second polaroid hangs
-   over its bottom-right corner (in FRONT — z2 — like the reference) and
-   extends past the container's bottom edge; the gold sticky note sits at the
-   bottom-LEFT below the photo's bottom edge; the diamond star floats above
-   the top-right corner. The collage is deliberately LARGE so the right
-   column balances the copy column. */
+/* --- single slideshow polaroid ------------------------------------------------
+   One taped polaroid is the whole right column: the torn-edge photo area
+   carries the page-tear slideshow, the caption + dots + pause share the foot
+   row, and the round "2 hrs" stamp rides the top-right corner. The polaroid
+   is deliberately LARGE — the visual anchor that balances the copy column. */
 
 .hero-shots {
   position: relative;
-  width: min(100%, 470px);
-  aspect-ratio: 1 / 1.04;
+  width: min(100%, 500px);
   margin-top: 4px;
 }
 
-.shot {
-  position: absolute;
-  display: block;
-}
-
-/* front polaroid: upper-left, generous photo area */
-.shot:not(.is-back) {
-  top: 0;
-  left: 0;
-  width: 72%;
-  height: 74%;
-  transform: rotate(-2deg);
-  z-index: 1;
-}
-
-/* second polaroid: bottom-right, over the front card's corner, hanging low */
-.shot.is-back {
-  right: 1%;
-  bottom: 1%;
-  width: 50%;
-  height: 58%;
-  transform: rotate(5deg);
-  z-index: 2;
-}
-
-/* polaroid frames: taller, with a roomier caption band so the placeholders
-   feel like real prints, not thumbnails */
+/* THE polaroid — the figure IS the frame. Gentle tilt, full column width;
+   z 1 above the badge's backdrop band. Grid: photo full width, then caption
+   (left) + slideshow controls (right) share the foot row. */
 .shot-frame {
-  padding: 14px 14px 60px;
-  border-radius: 5px;
-}
-
-.hero-note {
-  position: absolute;
-  left: 0;
-  bottom: -1%;
-  z-index: 3;
-  width: min(42%, 158px);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "photo photo"
+    "cap ctrl";
+  align-items: center;
+  column-gap: 12px;
   margin: 0;
-  padding: 14px 15px;
-  border-radius: 3px;
-  background: var(--butter-soft);
-  color: var(--ink);
-  font-weight: 700;
-  font-size: 1.08rem;
-  line-height: 1.3;
-  text-align: center;
-  transform: rotate(-4deg);
-  box-shadow: var(--shadow-soft);
-}
-
-.hero-note::before {
-  content: "";
-  position: absolute;
-  top: -8px;
-  left: 50%;
-  translate: -50% 0;
-  width: 60px;
-  height: 17px;
-  background: #e2b064b8;
-  clip-path: polygon(
-    0 24%, 18% 0, 40% 18%, 62% 0, 84% 16%, 100% 28%,
-    100% 100%, 0 100%
-  );
-  box-shadow: 0 1px 2px rgba(30, 37, 64, 0.12);
-}
-
-.shot-frame {
   background: var(--paper);
-  padding: 12px 12px 46px;
+  padding: 12px 12px 8px;
   border-radius: 4px;
   box-shadow: var(--shadow-lift);
-  position: relative;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  transform: rotate(-1.5deg);
   transition:
     transform 0.35s var(--ease),
     box-shadow 0.35s var(--ease);
 }
 
-.shot:hover .shot-frame {
+.shot-frame:hover {
   transform: translateY(-6px) rotate(-0.5deg);
   box-shadow: var(--shadow-lift);
 }
 
+/* photo box: fixed 5/4 print with the reference's TORN bottom edge — a
+   zigzag clip revealing the frame paper beneath (the tear animation's
+   ripping piece plays inside this same clipped box). */
 .shot-photo {
+  grid-area: photo;
   position: relative;
-  flex: 1;
-  border-radius: 3px;
+  aspect-ratio: 5 / 4;
+  border-radius: 3px 3px 0 0;
   overflow: hidden;
   background: #1e254010;
+  clip-path: polygon(
+    0 0, 100% 0, 100% 100%,
+    93.5% calc(100% - 9px), 87% 100%, 80.5% calc(100% - 9px),
+    74% 100%, 67.5% calc(100% - 9px), 61% 100%, 54.5% calc(100% - 9px),
+    48% 100%, 41.5% calc(100% - 9px), 35% 100%, 28.5% calc(100% - 9px),
+    22% 100%, 15.5% calc(100% - 9px), 9% 100%, 2.5% calc(100% - 9px),
+    0 100%
+  );
 }
 
-.shot-photo img {
-  transition: opacity 0.9s ease;
-}
+/* --- page-tear transition (the hero's authored moment) ------------------------
+   The OUTGOING slide is clipped by a jagged (torn-edge) polygon whose points
+   sweep diagonally up-and-right while the piece lifts and tilts — like
+   ripping a spent page off the pad. The incoming slide is already fully
+   visible beneath: the reveal IS the tear. Clip-path + transform + opacity
+   only; drop-shadow lives on the un-clipped wrapper so the torn edge keeps
+   its paper depth. */
 
-.shot.is-back .shot-cap {
-  opacity: 0.85;
-}
-
-.shot-cap {
+.shot-tear {
   position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 12px;
+  inset: 0;
+  z-index: 2;
+  filter: drop-shadow(0 -3px 7px rgba(30, 37, 64, 0.3));
+  pointer-events: none;
+}
+
+.shot-tear-piece {
+  position: absolute;
+  inset: 0;
+  animation: tear-off 0.7s cubic-bezier(0.65, 0, 0.35, 1) both;
+  will-change: clip-path, transform;
+}
+
+/* Same point count in both polygons → the browser interpolates the tear
+   smoothly. The edge slopes upward to the right with a hand-torn jitter. */
+@keyframes tear-off {
+  0% {
+    clip-path: polygon(
+      0% 0%, 100% 0%,
+      100% 94%, 96% 93%, 89% 98%, 80% 96%, 71% 102%, 62% 100%,
+      53% 106%, 44% 104%, 35% 110%, 26% 108%, 17% 114%, 8% 112%, 0% 117%
+    );
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    clip-path: polygon(
+      0% 0%, 100% 0%,
+      100% -34%, 96% -35%, 89% -30%, 80% -32%, 71% -26%, 62% -28%,
+      53% -22%, 44% -24%, 35% -18%, 26% -20%, 17% -14%, 8% -16%, 0% -11%
+    );
+    transform: translate(4%, -7%) rotate(2.5deg);
+  }
+}
+
+/* caption: IN FLOW under the photo (grid cell) — structurally cannot overlap
+   the print. Rises in once the tear has landed. */
+.shot-cap {
+  grid-area: cap;
+  min-height: 2.6em;
+  padding: 9px 4px 4px;
   font-family: var(--font-gaegu), cursive;
   color: var(--ink-soft);
-  font-size: 1rem;
+  font-size: 1.05rem;
   line-height: 1.3;
-  height: 2.6em;
   overflow: hidden;
 }
 
-.shot .u-tape {
+.shot-cap.tear-in {
+  animation: cap-in 0.55s var(--ease) 0.4s both;
+}
+
+@keyframes cap-in {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* slideshow controls (reference): pagination dots + pause, in the foot row */
+.shot-ctrls {
+  grid-area: ctrl;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 4px 4px 0;
+}
+
+.shot-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shot-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #1e25402e;
+  cursor: pointer;
+  transition:
+    width 0.3s var(--ease),
+    background-color 0.3s var(--ease);
+}
+
+.shot-dot:hover {
+  background: #1e254055;
+}
+
+.shot-dot.is-active {
+  width: 18px;
+  background: var(--honey);
+}
+
+.shot-pause {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1.5px solid #1e254033;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.shot-pause:hover {
+  color: var(--ink);
+  border-color: #1e254066;
+  transform: scale(1.06);
+}
+
+.shot-frame .u-tape {
   position: absolute;
   top: -12px;
   left: 50%;
@@ -279,8 +380,49 @@
   z-index: 2;
 }
 
-.shot.is-back .u-tape {
-  rotate: 3deg;
+/* round "2 hrs · on the house" stamp riding the polaroid's top-right corner
+   (reference): mustard disc, dashed stamp ring, slight rotation */
+.hero-badge {
+  position: absolute;
+  top: -6%;
+  right: -3%;
+  z-index: 3;
+  display: grid;
+  place-content: center;
+  gap: 1px;
+  width: 96px;
+  height: 96px;
+  margin: 0;
+  border-radius: 50%;
+  background: #e8b45f;
+  text-align: center;
+  transform: rotate(8deg);
+  box-shadow: var(--shadow-soft);
+}
+
+.hero-badge::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1.5px dashed #1e254059;
+  border-radius: 50%;
+}
+
+.hero-badge strong {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.hero-badge span {
+  font-family: var(--font-gaegu), cursive;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
 
 /* --- sparkles + scroll cue --- */
@@ -293,29 +435,30 @@
   pointer-events: none;
 }
 
+/* --- garnish: one authored row of margin scribbles ABOVE the polaroid ---------
+   The frame's top edge is at 0, so the whole band above it is open paper.
+   Big star anchors the top-right corner; doodle line + plus + companion star
+   trail left across the band like handwriting above the print. */
+
 .hero-spark.a {
-  top: -3%;
-  right: 6%;
+  top: -17%;
+  right: 1%;
   opacity: 0.9;
   z-index: 4;
 }
 
-/* star pair companion: sits left-below the big star, nudged to read as a
-   written constellation */
 .hero-spark.c {
-  top: 8%;
+  top: -8%;
   right: 15%;
   opacity: 0.55;
   z-index: 4;
   animation: spark-twinkle 5.2s ease-in-out 0.6s infinite;
 }
 
-/* hand-drawn honey flourish: parked in the CLEAR upper-right band between
-   the big star and the small polaroid's top edge — never over a print */
 .hero-doodle {
   position: absolute;
-  top: 15%;
-  right: 7.5%;
+  top: -7%;
+  left: 5%;
   color: var(--honey);
   opacity: 0.5;
   transform: rotate(5deg);
@@ -323,8 +466,6 @@
   z-index: 4;
 }
 
-/* tiny plus scribbles: hand-margin marks, drifting down the same open
-   band (o1) and echoing in the bottom sliver (o2) */
 .hero-plus {
   position: absolute;
   color: var(--honey);
@@ -333,34 +474,10 @@
 }
 
 .hero-plus.o1 {
-  top: 27%;
-  right: 5%;
+  top: -3%;
+  left: 26%;
   opacity: 0.45;
   transform: rotate(9deg);
-}
-
-.hero-plus.o2 {
-  bottom: 11%;
-  left: 43%;
-  opacity: 0.38;
-  transform: rotate(-7deg);
-}
-
-/* tiny star in the gap between the sticky note and the small polaroid —
-   bottom edge gets its own quiet beat, with the plus above it */
-.hero-spark.d {
-  bottom: 2.5%;
-  left: 42.5%;
-  opacity: 0.4;
-  z-index: 4;
-  animation: spark-twinkle 6s ease-in-out 2.1s infinite;
-}
-
-.hero-spark.b {
-  top: 46%;
-  right: 22%;
-  opacity: 0.25;
-  animation: spark-twinkle 4.4s ease-in-out 1.2s infinite;
 }
 
 @keyframes spark-twinkle {
@@ -447,13 +564,23 @@
 }
 
 @media (max-width: 640px) {
-  .hero-note {
-    left: 0;
+  /* meta items stack on small screens */
+  .hero-meta {
+    gap: 8px;
+    padding-top: 12px;
   }
-  /* keep small screens airy: only the big star + note survive */
-  .hero-spark.b,
+  /* badge scales down but stays readable at the corner */
+  .hero-badge {
+    top: -5%;
+    right: -2%;
+    width: 82px;
+    height: 82px;
+  }
+  .hero-badge strong {
+    font-size: 1.3rem;
+  }
+  /* keep small screens airy: only the big star + badge survive */
   .hero-spark.c,
-  .hero-spark.d,
   .hero-doodle,
   .hero-plus {
     display: none;
@@ -463,7 +590,26 @@
 @media (prefers-reduced-motion: reduce) {
   .chip-dot.is-open::after,
   .hero-spark,
-  .hero-scroll svg {
+  .hero-scroll svg,
+  .shot-cap.tear-in {
     animation: none;
+  }
+  /* No tear under reduced motion: the outgoing piece gently fades instead,
+     and the incoming slide crossfades beneath it — the state change stays
+     legible, the movement is gone. */
+  .shot-tear-piece {
+    animation: tear-fade 0.9s ease both;
+  }
+  .shot-photo img {
+    transition: opacity 0.9s ease;
+  }
+}
+
+@keyframes tear-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
