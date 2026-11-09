@@ -25,7 +25,19 @@ type Shot = {
   ratio: RatioHint; // layout hint from details.md §6
   pos?: string; // object-position crop; differentiates reused srcs
   tape?: boolean; // décor budget: max 2 taped cards in the whole section
+  sizes?: string; // overrides CARD_SIZES when the cover crop needs more width (see cardSizes)
 };
+
+// object-fit: cover scales a photo up until it covers the box, so a LANDSCAPE
+// source in a square/tall box is scaled by the box HEIGHT, not the width. A
+// width-only `sizes` hint then underserves the card: the browser picks the
+// w=384 variant for a ~356px column and cover stretches it 1.2–1.9×, which
+// reads as blur (worst on the tall communal-table card). mult = how much
+// wider than the box the painted image is: 1.34 ≈ 4/3 source in a square box,
+// 1.5 ≈ 3/2 source in a square box, 2 ≈ 4/3 source in a tall box (or a ~2:1
+// source in a square box).
+const cardSizes = (mult: number) =>
+  `(min-width: 980px) calc((min(100vw, 1200px) - 160px) / 3 * ${mult}), (min-width: 640px) calc((100vw - 96px) / 2 * ${mult}), calc((100vw - 48px) * ${mult})`;
 
 const SHOTS: Shot[] = [
   {
@@ -40,12 +52,14 @@ const SHOTS: Shot[] = [
     alt: "Coffee counter and menu board behind the barista",
     caption: "The coffee counter",
     ratio: "square",
+    sizes: cardSizes(1.34), // 4:3 landscape source, cover-scaled to a square box
   },
   {
-    src: null, // no pantry-shelves photo yet — left blank, not forced
-    alt: "The open pantry shelves with fruit and cereal jars",
+    src: "/images/the-open-pantry.webp", // the actual open pantry — fruit trays, cereal dispensers, snack jars
+    alt: "The open pantry with fruit trays, cereal dispensers, and snack jars under a Pantry sign",
     caption: "The open pantry",
     ratio: "square",
+    sizes: cardSizes(1.5), // 3:2 landscape source, cover-scaled to a square box
   },
   {
     src: "/images/communal-table-red-chairs.webp", // empty communal table, clear view
@@ -53,6 +67,7 @@ const SHOTS: Shot[] = [
     caption: "The communal table, in full focus",
     ratio: "tall",
     pos: "50% 20%",
+    sizes: cardSizes(2), // 4:3 landscape source, cover-scaled to a tall box
   },
   {
     src: "/images/study-stations-printing.webp", // workstation pods — reused from hero
@@ -65,6 +80,7 @@ const SHOTS: Shot[] = [
     alt: "NotePads Café mural wall with booth seating",
     caption: "Lounge corner & logo wall",
     ratio: "square",
+    sizes: cardSizes(1.34), // 4:3 landscape source, cover-scaled to a square box
   },
   {
     src: "/images/laptops-daylight.webp", // guests with laptops, bright room
@@ -74,12 +90,12 @@ const SHOTS: Shot[] = [
     pos: "20% 45%",
   },
   {
-    src: null, // unbranded building exterior — left blank per owner decision
-    alt: "The SDC Building on Guzman–Jesena Street",
+    src: "/images/SDC-building-2nd-floor.webp", // NotePads sign on the 2nd-floor balcony, Easymart below
+    alt: "The SDC Building on Guzman–Jesena Street with the NotePads sign on its 2nd-floor balcony",
     caption: "SDC Building · 2nd floor · Guzman–Jesena St",
     ratio: "square",
-    pos: "50% 70%",
     tape: true,
+    sizes: cardSizes(2), // ~2:1 landscape source, cover-scaled to a square box
   },
 ];
 
@@ -92,8 +108,7 @@ const LEDE =
 
 // Single content column (--maxw) minus gutters/gap, split by the masonry
 // column count at each breakpoint (3 ≥980, 2 ≥640, 1 below).
-const CARD_SIZES =
-  "(min-width: 980px) calc((min(100vw, 1200px) - 160px) / 3), (min-width: 640px) calc((100vw - 96px) / 2), calc(100vw - 48px)";
+const CARD_SIZES = cardSizes(1);
 const LB_SIZES = "(min-width: 1100px) 900px, 92vw";
 
 const BUTTON_BOTH = { strokeWidth: 2.4 } as const;
@@ -252,7 +267,7 @@ export default function Place() {
                         src={shot.src}
                         alt={shot.alt}
                         fill
-                        sizes={CARD_SIZES}
+                        sizes={shot.sizes ?? CARD_SIZES}
                         style={{
                           objectFit: "cover",
                           objectPosition: shot.pos,

@@ -25,8 +25,7 @@ const SLIDES: HeroShot[] = [
   { src: "/images/glowing-sign-night.webp", alt: "The glowing NotePads Study Hub Café sign at dusk", caption: "look for the glowing sign" },
   { src: "/images/study-stations-printing.webp", alt: "Workstation pods with ergonomic chairs by the window", caption: "stations with a plug and a view" },
   { src: "/images/counter-evening-lights.webp", alt: "Coffee counter and menu board in warm evening light", caption: "the counter with warm lights" },
-  // No pantry photo yet — left blank rather than forcing a near-miss image.
-  { src: null, alt: "", caption: "pantry within reach" },
+  { src: "/images/the-open-pantry.webp", alt: "The open pantry with fruit trays, cereal dispensers, and snack jars", caption: "pantry within reach" },
 ];
 
 function manilaNow() {
