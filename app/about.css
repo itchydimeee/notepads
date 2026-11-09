@@ -385,6 +385,25 @@
   opacity: 0.92;
 }
 
+/* phone range: the 2-up shelf makes each photo box short, so the overlaid
+   caption block scales down to fit the scrim without eating the photo */
+@media (max-width: 639.98px) {
+  .about-shot-cap {
+    padding: 8px 10px;
+    gap: 1px;
+  }
+
+  .about-cap {
+    font-size: 0.82rem;
+    line-height: 1;
+  }
+
+  .about-sub {
+    font-size: 0.8rem;
+    line-height: 0.8;
+  }
+}
+
 /* --- the two hand-drawn doodles (motif budget: 2/section) ---
    round 6: they flank the 900px-capped sticky trio — cup LEFT of the row,
    arrow RIGHT pointing on toward the photo strip — eating the trio's side

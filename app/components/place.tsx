@@ -83,7 +83,7 @@ const SHOTS: Shot[] = [
     ratio: "4 / 3",
   },
   {
-    src: "/images/logo-wall-mural.webp", // NotePads mural wall + booth seating (4:3)
+    src: "/images/logo-wall.webp", // NotePads mural wall + booth seating (4:3)
     alt: "NotePads Café mural wall with booth seating",
     caption: "Lounge corner & logo wall",
     sub: "Soft seats under our logo. Slow chats welcome.",
