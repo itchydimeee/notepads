@@ -1,11 +1,15 @@
-/* Menu (T6 + T17 craft pass; chapter-book redesign) — warm kraft ground
+/* Menu (T6 + T17 craft pass; spiral-notebook redesign) — warm kraft ground
    with a bottom blend + softened ink dot grid, one-column header, and a
-   paginated chapter book: a detached chapter-tag strip above an open
-   two-page paper spread on the warm ground (no cover) with center spiral
-   binding + terra bookmark ribbon; chapters that outrun the spread overflow
-   into an "Also in this chapter" panel (mobile: "Show N more" expander);
-   pagination controls below. All colors/fonts/shadows via globals.css tokens
-   (v4 Golden Corner). */
+   single-page spiral-bound notebook card per chapter: one wide paper page
+   with a spiral binding across the TOP edge (navy/blue rings + punched
+   paper holes, CSS gradients only) and a navy back-cover layer peeking at
+   the bottom/right; chapter tabs are vertical sticky-note pills on the
+   notebook's right edge (mobile: a horizontally scrollable chip row above
+   the card); chapters that outrun the page overflow into an "Also in this
+   chapter" wash panel (mobile: "Show N more" expander pill); the card
+   footer carries the printed-menu footnote, chapter progress + dots and
+   Previous/Next. Motif budget: spiral + back cover = 2. All colors/fonts/
+   shadows via globals.css tokens (v4 Golden Corner). */
 
 /* --- section ground -------------------------------------------------- */
 
@@ -64,19 +68,24 @@
   color: var(--ink-soft);
 }
 
-/* --- the main stack: book → controls → footnote ----------------------- */
+/* --- the main stack: notebook → progress ------------------------------- */
 
 .menu-main {
   display: grid;
   gap: 28px;
 }
 
-/* --- the book: detached tags above an uncovered spread ----------------- */
+/* --- the notebook: tabs + one-page card -------------------------------- */
 
 .menu-bookwrap {
   display: grid;
   gap: 12px;
   width: 100%;
+  /* anchors the desktop tab rail (.menu-tabs goes position:absolute at
+     ≥901px) to the notebook area instead of the page; the only other
+     absolute descendants (.menu-panel, back cover, spiral) anchor to
+     .menu-book / .menu-notebook, which are positioned themselves */
+  position: relative;
 }
 
 .menu-book {
@@ -84,8 +93,8 @@
   width: 100%;
 }
 
-/* inactive tab panels stay in the layout (menu.tsx measures every spread to
-   size the book to the tallest chapter) but are invisible and inert */
+/* inactive tab panels stay in the layout (menu.tsx measures every notebook
+   page to size the card to the tallest chapter) but are invisible and inert */
 .menu-panel {
   position: absolute;
   top: 0;
@@ -101,20 +110,113 @@
   pointer-events: auto;
 }
 
-/* bookmark ribbon (terra = non-primary decoration seasoning; motif budget:
-   binding + ribbon = 2) */
-.menu-ribbon {
-  position: absolute;
-  top: -10px;
-  right: clamp(6px, 1vw, 12px);
-  width: 26px;
-  height: 88px;
-  background: var(--terra);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 12px), 0 100%);
-  z-index: 1;
+/* constant card size, NEVER scrollable, ALL widths: the frame height is
+   --book-h, measured from the tallest chapter's real page (fallback clamp
+   pre-hydration) — every chapter fits, the footer's dashed rule lands at
+   the same spot on every chapter, and the page scroll stays uninterrupted */
+.menu-body {
+  height: var(--book-h, clamp(540px, 72svh, 760px));
+  overflow: visible;
 }
 
-/* --- chapter tags (detached strip above the book) ---------------------- */
+/* a chapter shorter than the tallest still renders a FULL-size card: the
+   active panel and its notebook stretch to the fixed frame height (the
+   measuring effect's inline height:auto on .menu-notebook outranks the
+   100% here, so natural heights are still measured correctly) */
+.menu-panel.is-active {
+  height: 100%;
+}
+
+.menu-notebook {
+  height: 100%;
+}
+
+/* footer pinning, ALL widths: the page is a flex column so the footer's
+   dashed rule sits at a consistent spot whatever the chapter length — on
+   every width the leftover height reads as intentional page whitespace
+   above the printed-menu rule (the measured frame, not a min-height, is
+   what keeps short chapters at full card height) */
+.menu-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-page > :nth-last-child(2) {
+  margin-bottom: 28px;
+}
+
+/* the card: one paper page over a navy back-cover layer that peeks at the
+   bottom/right (offset layer, not hard-neobrutalist). Motif 1 of 2. */
+.menu-notebook {
+  position: relative;
+  /* margins clear the back-cover peek (and, on desktop, the tab rail —
+     see the >900px block); the spiral may stick 11px above the top edge */
+  margin: 0 12px 12px 0;
+}
+
+.menu-notebook::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: -12px;
+  bottom: -12px;
+  border-radius: 16px;
+  background: var(--blue-deep);
+  z-index: 0;
+}
+
+/* the page itself */
+.menu-page {
+  --pad: clamp(20px, 2.4vw, 34px);
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+  border: 1px solid #1e254014;
+  border-radius: 16px;
+  box-shadow: var(--shadow-soft);
+  /* extra top padding leaves room under the spiral rings */
+  padding: calc(var(--pad) + 14px) var(--pad) var(--pad);
+  min-height: 100%;
+}
+
+/* spiral binding: a row of rings across the TOP edge, half-overlapping the
+   page. Motif 2 of 2 — navy/blue wire bars via repeating-linear-gradient,
+   with punched paper holes (radial-gradient) where each wire enters the
+   page. 32px period; wires centered on x=16 of each tile, holes use the
+   same tile so they stay aligned. */
+.menu-spiral {
+  position: absolute;
+  top: -11px;
+  left: clamp(24px, 4vw, 48px);
+  right: clamp(24px, 4vw, 48px);
+  height: 22px;
+  z-index: 2;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0 13px,
+    var(--blue) 13px 16px,
+    var(--blue-deep) 16px 19px,
+    transparent 19px 32px
+  );
+}
+
+.menu-spiral::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 15px;
+  height: 8px;
+  background-image: radial-gradient(circle, #1e254033 0 3px, transparent 3.5px);
+  background-size: 32px 8px;
+  background-repeat: repeat-x;
+}
+
+/* --- chapter tabs: sticky-note pills on the notebook's right edge -------
+   (mobile-first: chip row ABOVE the card; the >900px block repositions the
+   same role="tablist" markup onto the right edge) */
 
 .menu-tabs {
   position: relative;
@@ -132,8 +234,11 @@
   min-height: 44px;
   padding: 8px 18px;
   border-radius: 12px;
-  /* translucent paper tag floating over the kraft */
-  background: rgba(253, 250, 242, 0.82);
+  /* solid warm cream tag (paper/kraft blend, #f3ead6) — reads as a colored
+     tab against the #fdfaf2 notebook page and lifts off the kraft ground,
+     chips included (same class renders the ≤900px chip row) */
+  background: #f3ead6;
+  border: 1px solid #1e25401f;
   color: var(--ink-soft);
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-weight: 700;
@@ -149,7 +254,8 @@
 }
 
 .menu-tab:hover {
-  background: rgba(253, 250, 242, 0.94);
+  /* slightly lighter cream — same family, never as loud as honey */
+  background: #f8f1e1;
   color: var(--ink);
   transform: translateY(-2px);
 }
@@ -162,98 +268,91 @@
   box-shadow: 0 2px 8px rgba(30, 37, 64, 0.12);
 }
 
-/* --- the spread: two paper pages + center binding ---------------------- */
-
-.menu-spread {
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(18px, 2.6vw, 32px);
-}
-
-.menu-page {
-  --pad: clamp(20px, 2.4vw, 30px);
-  /* the notebook header band: title zone above the rules, same on every page */
-  --headband: 72px;
-  position: relative;
-  background: var(--paper);
-  border: 1px solid #1e254014;
-  border-radius: 14px;
-  box-shadow: var(--shadow-soft);
-  padding: calc(var(--pad) + var(--headband)) calc(var(--pad) + 18px) calc(var(--pad) + 16px)
-    var(--pad);
-}
-
-/* the notebook body: full-width rules starting exactly at the body top —
-   text line-heights are pinned to the same 24px pitch (see .menu-name etc.),
-   so every line sits on a rule; the band above stays blank for the title */
-.menu-page::before {
-  content: "";
-  position: absolute;
-  top: calc(var(--pad) + var(--headband));
-  bottom: calc(var(--pad) + 16px);
-  left: 0;
-  right: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0 31px,
-    #1e254014 31px 32px
-  );
-  border-top: 2px solid #1e25401f;
-  pointer-events: none;
-}
-
-/* paint the content above the rules */
-.menu-pagehead,
-.menu-group,
-.menu-also {
-  position: relative;
-}
-
-/* left page head: icon coin + chapter title, centered in the header band */
-.menu-pagehead {
-  position: absolute;
-  top: var(--pad);
-  left: var(--pad);
-  right: calc(var(--pad) + 18px);
-  height: var(--headband);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* constant book size, NEVER scrollable: the frame height is --book-h,
-   measured from the tallest chapter's real spread (fallback clamp
-   pre-hydration) — every chapter fits and the page scroll stays uninterrupted */
+/* desktop: tabs detach from the flow and hang off the notebook's right
+   edge as rounded-left pills, TOP-ALIGNED like the approved mockup (7 ×
+   44px pills + 6 × 10px gaps ≈ 368px, well inside the 540–760px frame
+   clamp). The notebook reserves a 176px rail (margin-right); each pill is
+   190px wide anchored 12px in from the bookwrap edge, so its rounded end
+   overlaps the paper edge by ~26px and rides over the back-cover peek
+   regardless of label length. */
 @media (min-width: 901px) {
-  .menu-body {
-    height: var(--book-h, clamp(540px, 72svh, 760px));
-    overflow: visible;
+  .menu-tabs {
+    position: absolute;
+    top: 24px;
+    right: 12px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 10px;
+    z-index: 3;
+    width: 190px;
   }
 
-  .menu-spread {
-    min-height: 100%;
+  .menu-tab {
+    width: 100%;
+    text-align: left;
+    padding: 9px 14px 9px 18px;
+    font-size: 0.98rem;
+  }
+
+  .menu-notebook {
+    margin-right: 176px;
   }
 }
 
-/* spiral binding: column of ring holes down the gutter (decoration, ≤.25) */
-.menu-binding {
-  position: absolute;
-  left: 50%;
-  top: 14px;
-  bottom: 14px;
-  width: 16px;
-  transform: translateX(-50%);
-  background-image: radial-gradient(
-    circle,
-    rgba(30, 37, 64, 0.18) 0 3px,
-    rgba(28, 58, 174, 0.28) 3px 4.5px,
-    transparent 5px
-  );
-  background-size: 16px 26px;
-  background-repeat: repeat-y;
-  pointer-events: none;
-  z-index: 1;
+/* --- page head: eyebrow + chapter title + deal badge, coin top-right --- */
+
+.menu-cardhead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.menu-headtext {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.menu-eyebrow {
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.menu-chapter {
+  margin: 2px 0 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* approved honey pill badge under the title */
+.menu-deal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  /* honey wash on paper (#d9a441 ≈ 16%) */
+  background: #d9a44129;
+  color: var(--ink);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 0.98rem;
+  line-height: 1.2;
 }
 
 .menu-coin {
@@ -268,27 +367,6 @@
   transform: rotate(-2deg);
 }
 
-.menu-chapter {
-  margin: 0;
-  font-family: var(--font-fredoka), system-ui, sans-serif;
-  font-weight: 700;
-  font-size: 1.9rem;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-}
-
-.menu-pageno {
-  position: absolute;
-  left: 16px;
-  bottom: 8px;
-  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--ink-soft);
-  opacity: 0.75;
-}
-
 /* chapter entrance: groups rise in together, staggered per group */
 .menu-group {
   animation: menu-in 0.5s var(--ease) both;
@@ -299,6 +377,57 @@
   from {
     opacity: 0;
     transform: translateY(14px);
+  }
+}
+
+/* --- page body: items flow in TWO columns on desktop ------------------- */
+
+.menu-pagebody {
+  min-width: 0;
+}
+
+@media (min-width: 901px) {
+  .menu-pagebody {
+    columns: 2;
+    column-gap: 40px;
+  }
+
+  /* rows (not whole groups) are the atomic break unit, so long chapters
+      flow across both columns instead of leaving the right one blank.
+      Flex containers don't fragment, so the list relaxes to block flow
+      here — rows are block-level grids with no margins, so they stack
+      identically. Solo chapters (Rice Meals, Coffee) keep that row flow;
+      multi-group chapters keep each group atomic (see :not(.is-solo)). */
+  .menu-list {
+    display: block;
+  }
+
+  .menu-row {
+    break-inside: avoid;
+  }
+
+  /* keep headers attached to what follows: a 3-price header row must not
+      be orphaned from its first data row, and a group label must stay with
+      its first row */
+  .menu-row.is-colsh,
+  .menu-label {
+    break-after: avoid;
+  }
+
+  /* multi-group chapters' groups never straddle the column break: a label
+      at the bottom of column 1 with some of its rows spilling into column
+      2 reads out of place (Frappuccino). Solo chapters keep flowing rows
+      across columns — whole-group atomicity there left the second column
+      half empty. */
+  .menu-pagebody .menu-group:not(.is-solo) {
+    break-inside: avoid;
+  }
+
+  /* 3-price tables (Hot / Iced 12oz / Iced 16oz) span the full page width
+     so their column headers stay aligned; the span-all block stays atomic */
+  .menu-group.is-cols3 {
+    break-inside: avoid;
+    column-span: all;
   }
 }
 
@@ -370,6 +499,15 @@
   transition: color 0.25s var(--ease);
 }
 
+/* printed-menu flag: honey check by the name (tooltip carries the copy) */
+.menu-check {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  color: var(--honey);
+  text-decoration: none;
+}
+
 .menu-leader {
   flex: 1 1 14px;
   min-width: 14px;
@@ -410,13 +548,6 @@
   color: var(--ink-soft);
 }
 
-.menu-star {
-  color: var(--blue);
-  font-weight: 700;
-  font-size: 0.92em;
-  text-decoration: none;
-}
-
 /* column headers for hot / iced 12oz / iced 16oz rows */
 
 .menu-colsh {
@@ -438,58 +569,50 @@
 /* --- "Also in this chapter" overflow panel ---------------------------- */
 
 .menu-also {
-  /* sits directly ON the page rules: transparent, top aligned to the grid,
-     no padding — its contents share the notebook rhythm */
-  margin-top: 32px;
-  border: 1.5px dashed #1e254033;
+  /* honey wash panel on the page (honey ≈ 12%) */
+  margin-top: 28px;
+  padding: 16px 18px 18px;
+  background: #d9a4411f;
   border-radius: 14px;
   animation: menu-in 0.5s var(--ease) both;
   animation-delay: calc(min(var(--i, 0), 3) * 70ms);
 }
 
-.menu-also-head,
+/* desktop shows the static uppercase heading only — the expander button is
+   hidden so it never becomes a focusable no-op while the list is always
+   visible */
 .menu-also-static {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  height: 32px;
-  padding: 0 8px;
-  background: none;
-  border: none;
-  text-align: left;
+  display: none;
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 600;
-  font-size: 0.9rem;
-  line-height: 32px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--ink-soft);
 }
 
-/* desktop shows the static header only — the expander button is hidden so
-   it never becomes a focusable no-op while the list is always visible */
-.menu-also-static {
-  display: none;
-}
-
+/* ≤900px: pill-shaped outline expander */
 .menu-also-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  background: none;
+  border: 1.5px dashed #1e254033;
+  border-radius: 999px;
+  text-align: left;
+  color: var(--ink);
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.05rem;
   cursor: pointer;
 }
 
-@media (min-width: 901px) {
-  .menu-also-head {
-    display: none;
-  }
-
-  .menu-also-static {
-    display: flex;
-  }
-}
-
 .menu-also-hint {
-  margin-left: auto;
-  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
-  font-weight: 700;
-  font-size: 1rem;
+  font-family: inherit;
+  font-weight: inherit;
 }
 
 .menu-also-chev {
@@ -501,13 +624,23 @@
   transform: rotate(180deg);
 }
 
+@media (min-width: 901px) {
+  .menu-also-head {
+    display: none;
+  }
+
+  .menu-also-static {
+    display: block;
+  }
+}
+
 /* compact overflow rows: two mini-columns for single-price rows; 3-price
    rows keep the is-cols template and span the full panel width */
 .menu-also-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 10px;
-  margin-top: 0;
+  margin-top: 12px;
 }
 
 .menu-also .menu-row {
@@ -519,17 +652,56 @@
   grid-column: 1 / -1;
 }
 
-/* --- chapter pagination controls -------------------------------------- */
+/* overflow panel structure: a seg that starts a group renders its label
+   (smaller .menu-label variant — the page-size 32px margins are too airy
+   for the compact panel). Both labels and rows span the panel's two
+   mini-columns. */
+.menu-also .menu-label {
+  grid-column: 1 / -1;
+  margin: 12px 0 4px;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
 
-.menu-pager {
+/* --- card footer: footnote + progress + pager -------------------------- */
+
+/* margin-top: auto pins the footer to the page's bottom edge on every
+   width (flex column above); the fixed gap above the dashed rule comes
+   from the nth-last-child(2) margin, so the tallest chapter — measured at
+   natural height, where the auto margin collapses to 0 — keeps 28px */
+.menu-cardfoot {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 14px 24px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 2px dashed #1e254033;
 }
 
-.menu-pager-nav {
+.menu-footnote {
+  margin: 0;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  text-align: left;
+}
+
+.menu-footside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.menu-progress-block {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -586,38 +758,17 @@
   gap: 12px;
 }
 
-.menu-pager .btn:disabled {
+.menu-cardfoot .btn:disabled {
   opacity: 0.6;
   box-shadow: none;
   cursor: default;
   pointer-events: none;
 }
 
-/* --- footnote: readable small-print chip card ------------------------ */
-
-.menu-footnote {
-  justify-self: center;
-  width: fit-content;
-  max-width: 100%;
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  background: var(--paper);
-  border: 1.5px dashed #1e254033;
-  border-radius: 14px;
-  padding: 10px 22px;
-  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
-  font-weight: 700;
-  font-size: 1.06rem;
-  line-height: 1.5;
-  color: var(--ink-soft);
-  transform: rotate(-0.5deg);
-  box-shadow: 0 2px 8px rgba(30, 37, 64, 0.07);
-  text-align: left;
-}
-
-.menu-footnote .menu-star {
-  font-size: 1em;
+/* below-card progress block: only rendered onto the kraft at ≤640px */
+.menu-progress-below {
+  position: relative;
+  display: none;
 }
 
 /* fixed price columns: Hot / Iced 12oz / Iced 16oz line up across every
@@ -632,37 +783,11 @@
 /* --- responsive ------------------------------------------------------- */
 
 @media (max-width: 900px) {
-  /* spread stacks: left page then right page, binding gone, ribbon kept;
-     the Also panel collapses into the "Show N more" expander; inactive
-     panels leave the flow entirely (no fixed frame on mobile) */
-  .menu-spread {
-    grid-template-columns: 1fr;
-  }
-
-  .menu-panel {
-    display: none;
-  }
-
-  .menu-panel.is-active {
-    display: block;
-  }
-
-  .menu-binding {
-    display: none;
-  }
-
-  .menu-also-list {
-    display: none;
-  }
-
-  .menu-also.is-open .menu-also-list {
-    display: grid;
-  }
-}
-
-@media (max-width: 640px) {
-  /* tag strip scrolls horizontally but stays INSIDE the section's gutter
-      box (in-gutter, snap; detached from the spread below) */
+  /* the tab strip becomes a scrollable chip row ABOVE the card (panels
+     keep the base visibility pattern + measured frame, so the footer's
+     dashed rule lands at the same spot on every chapter here too) */
+  /* chips scroll horizontally but stay INSIDE the section's gutter box
+      (in-gutter, snap; detached from the notebook below) */
   .menu-tabs {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -682,16 +807,84 @@
     scroll-snap-align: start;
   }
 
+  /* pager: Previous collapses to a round icon-only back button (the span
+     is display:none — the button's aria-label keeps the accessible name) */
+  .menu-prev {
+    width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 999px;
+    background: var(--paper);
+  }
+
+  .menu-prev-label {
+    display: none;
+  }
+
+  .menu-also-list {
+    display: none;
+  }
+
+  .menu-also.is-open .menu-also-list {
+    display: grid;
+  }
+}
+
+@media (max-width: 640px) {
+  /* "Chapter n of 8" + dots move below the card onto the kraft ground */
+  .menu-progress-below {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 4px 8px;
+  }
+
+  .menu-progress-block {
+    display: none;
+  }
+
   .menu-meta {
     white-space: normal;
+  }
+
+  /* expander pill: one clean line on every chapter — the count-only label
+      ("Show N more", menu.tsx) plus nowrap keeps the pill at its 44px
+      min-height, so the collapsed panel is a constant
+      16 (pad) + 44 (pill) + 18 (pad) = 78px and the footer's dashed rule
+      sits at the same height on every chapter */
+  .menu-also-head,
+  .menu-also-hint {
+    white-space: nowrap;
+  }
+
+  /* two ~130px columns at phone width force mid-word name wraps and
+      one-word-per-line descriptions — stack the list in a single column */
+  .menu-also-list {
+    grid-template-columns: 1fr;
+  }
+
+  /* long single prices ("₱119 (1 pc) / ₱199 (2 pc)") crush the name/meta
+      column into one-word-per-line wraps at phone width — the row stacks:
+      name + dotted leader + meta take the full first line, the price drops
+      to a right-aligned second line. Shared selector (no .menu-also scope)
+      so page rows carrying is-wide get the same treatment. */
+  .menu-row.is-wide {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2px;
+  }
+
+  .menu-row.is-wide .menu-pc {
+    grid-row: 2;
+    justify-self: end;
   }
 }
 
 @media (max-width: 480px) {
   /* 3-price rows: one shared row would squeeze the name into ~50px — the
-     name takes a FULL-width line above (track 1 is a 1fr filler so the
-     span really is the row width) and the three prices tuck underneath,
-     right-aligned in tracks 2–4 under their colsh headers */
+      name takes a FULL-width line above (track 1 is a 1fr filler so the
+      span really is the row width) and the three prices tuck underneath,
+      right-aligned in tracks 2–4 under their colsh headers */
   .menu-row.is-cols {
     grid-template-columns: minmax(0, 1fr) repeat(3, max-content);
   }
@@ -701,7 +894,7 @@
   }
 
   /* track 1 stays empty on the price line; auto-place would drop the first
-     price into the 1fr track (left-aligned) */
+      price into the 1fr track (left-aligned) */
   .menu-row.is-cols .menu-pc:nth-of-type(1) {
     grid-column: 2;
   }

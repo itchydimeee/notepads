@@ -5,6 +5,7 @@
 // lines 105–107 (₱350 Study Space Package). Strings kept as constants
 // outside JSX so ₱ / — / apostrophes survive untouched.
 import {
+  Fragment,
   useLayoutEffect,
   useRef,
   useState,
@@ -14,10 +15,12 @@ import {
 import {
   ArrowLeft,
   ArrowRight,
+  Check,
   ChevronDown,
   Coffee,
   Croissant,
   CupSoda,
+  Egg,
   GlassWater,
   Sandwich,
   Soup,
@@ -29,15 +32,16 @@ import Reveal from "./reveal";
 import SectionTab from "./section-tab";
 import "../menu.css";
 
-// v4 copy (T17 craft pass): headline/lede rewritten warm + cozy
-// (ui_design.md §4.5); every dish name, price, note and dataset name stays
-// verbatim from docs/details.md §5. The ₱350 study-space ticket was REMOVED
-// from this section (it duplicated the About boarding-pass ticket). The book
-// is now a paginated chapter book: navy cover, two-page spread, "Also in
-// this chapter" overflow panel, chapter pagination below.
+// v5 copy (spiral-notebook redesign): headline/lede warm + cozy; every dish
+// name, price, note and dataset name stays verbatim from docs/details.md §5.
+// The book is now a ONE-page spiral-bound notebook card per chapter: top
+// spiral, navy back cover, right-edge chapter tabs, "Also in this chapter"
+// overflow panel, printed-menu footnote + chapter pagination in the card
+// footer (the ₱350 study deal rides along as the approved honey pill badge).
 const LEDE =
   "Rice bowls, crunchy bites, pasta, noodles and fresh-brewed coffee — flip through, find your favorite, and settle in.";
-const FOOTNOTE = "from our printed menu — please confirm the price with us.";
+const FOOTNOTE = "From our printed menu — please confirm the price with us.";
+const DEAL = "in the ₱350 study deal";
 
 // Row/Group/Tab + TABS are exported (T12) so the Notey chatbot can compose
 // category/price answers from this single source — no menu data duplicated.
@@ -45,7 +49,8 @@ export type Row = {
   name: string;
   // single-price rows
   price?: string;
-  // three-column rows: [hot, iced 12oz, iced 16oz]; "—" = not offered, "*" = printed-menu flag
+  // three-column rows: [hot, iced 12oz, iced 16oz]; "—" = not offered,
+  // "*" = printed-menu flag (renders as the honey check by the name)
   prices?: [string, string, string];
   note?: string;
   desc?: string;
@@ -62,10 +67,6 @@ export type Tab = {
   id: string;
   label: string;
   groups: Group[];
-  // two named chapters share one spread: the right page restarts at the
-  // group `startsAt` under its own heading (`label`). Presentation only —
-  // `groups` stays the flat category list the Notey chatbot composes from.
-  rightPage?: { label: string; startsAt: string };
 };
 
 export const TABS: Tab[] = [
@@ -142,7 +143,6 @@ export const TABS: Tab[] = [
   {
     id: "bites",
     label: "Bites & Noodles",
-    rightPage: { label: "Morning & fils", startsAt: "Professor's Pot" },
     groups: [
       {
         label: "Cram Crunchy Bites",
@@ -167,8 +167,13 @@ export const TABS: Tab[] = [
           { name: "Chicken Noodles", price: "₱89", star: true },
         ],
       },
-      // Morning & fils merged into this chapter (few rows on their own) —
-      // group labels and items stay verbatim from docs/details.md §5
+    ],
+  },
+  {
+    id: "morning",
+    label: "Morning & fils",
+    // group labels and items stay verbatim from docs/details.md §5
+    groups: [
       {
         label: "Professor's Pot",
         rows: [
@@ -347,20 +352,15 @@ export const TABS: Tab[] = [
   },
 ];
 
-// Tab-strip view: a chapter with a rightPage gets a second tag that opens
-// the same spread — the right page carries that chapter's own title.
-const VIEW_TABS = TABS.flatMap((t) => [
-  { chapter: t.id, label: t.label },
-  ...(t.rightPage ? [{ chapter: t.id, label: t.rightPage.label }] : []),
-]);
-
-// Chapter spread split: deterministic, no measuring — rows are weighted by
-// rough height (a described row takes ~2× a plain one; a group label ~1) and
-// packed left page first, then right page; overflow lands in the "Also in
-// this chapter" panel. Chapters that fit the spread split ~in half so both
-// pages feel inhabited; overflowing chapters pack to fixed page budgets.
-const LEFT_WEIGHT = 10;
-const SPREAD_WEIGHT = 19;
+// Single-page split: deterministic, no measuring — rows are weighted by
+// rough height (a described/noted row takes ~2× a plain one; a group label
+// ~1) and packed into ONE page budget; the page fills first and everything
+// after the first row that doesn't fit lands in the "Also in this chapter"
+// panel. Budget tuned so Rice Meals (~weight 21) keeps its first 6 rows
+// (through "Corned Beef & Egg") on the page and Fried Chicken…Tocino goes
+// to "Also", matching the approved mockup. A group may straddle the cut —
+// its label renders once, where the group starts.
+const PAGE_WEIGHT = 13;
 
 type Seg = { group: Group; rows: Row[]; head: boolean };
 
@@ -368,34 +368,12 @@ function rowWeight(row: Row): number {
   return row.note || row.desc ? 2 : 1;
 }
 
-function splitChapter(chapter: Tab): [Seg[], Seg[], Seg[]] {
+function splitChapter(chapter: Tab): [Seg[], Seg[]] {
   const solo = chapter.groups.length === 1;
-
-  // Two named chapters on one spread: the right page restarts at the
-  // boundary group with its own heading — no flowing across the gutter.
-  if (chapter.rightPage) {
-    const at = chapter.groups.findIndex((g) => g.label === chapter.rightPage!.startsAt);
-    const leftGroups = at > 0 ? chapter.groups.slice(0, at) : chapter.groups.slice(0, 1);
-    const rightGroups = at > 0 ? chapter.groups.slice(at) : [];
-    const seg = (group: Group): Seg => ({ group, rows: group.rows, head: true });
-    return [
-      leftGroups.map(seg),
-      rightGroups.map(seg),
-      [],
-    ];
-  }
-
-  let total = chapter.groups.length;
-  for (const group of chapter.groups) {
-    for (const row of group.rows) total += rowWeight(row);
-  }
-  // fits both pages? balance them ~in half; otherwise pack to the budgets
-  const fits = total <= SPREAD_WEIGHT + 1;
-  const leftCap = fits ? Math.ceil(total / 2) : LEFT_WEIGHT;
-  const spreadCap = fits ? total : SPREAD_WEIGHT;
-
-  const pages: Seg[][] = [[], [], []];
+  const page: Seg[] = [];
+  const also: Seg[] = [];
   let n = 0;
+  let pageFull = false;
   for (const group of chapter.groups) {
     for (let start = 0; start < group.rows.length; ) {
       const head = start === 0;
@@ -403,34 +381,38 @@ function splitChapter(chapter: Tab): [Seg[], Seg[], Seg[]] {
       // chapters (solo chapters' title already carries it); a 3-price group
       // renders its column headers there instead
       const headBonus = head ? (solo ? (group.cols === 3 ? 1 : 0) : 1) : 0;
-      const w = rowWeight(group.rows[start]) + headBonus;
-      const p = n < leftCap ? 0 : n < spreadCap ? 1 : 2;
-      const cap = p === 0 ? leftCap : p === 1 ? spreadCap : Infinity;
-      // first row of a page always places (a page never stays empty because
-      // its budget is spent) — later rows stop at the cap
-      if (p < 2 && n > 0 && n + w > cap) {
-        n = cap;
-        continue;
+      // page spent? the rest of the chapter overflows to "Also" — a group
+      // that starts past the cut keeps its label there
+      if (!pageFull && n > 0 && n + rowWeight(group.rows[start]) + headBonus > PAGE_WEIGHT) {
+        pageFull = true;
+      }
+      if (pageFull) {
+        also.push({ group, rows: group.rows.slice(start), head });
+        break;
       }
       let take = 0;
       while (start + take < group.rows.length) {
         const rw =
           rowWeight(group.rows[start + take]) + (take === 0 ? headBonus : 0);
-        if (n + rw > cap && p < 2) break;
+        // the first row of a page always places (a page never stays empty);
+        // later rows stop at the budget
+        if (n > 0 && n + rw > PAGE_WEIGHT) break;
         take += 1;
         n += rw;
       }
-      pages[p].push({ group, rows: group.rows.slice(start, start + take), head });
+      page.push({ group, rows: group.rows.slice(start, start + take), head });
       start += take;
+      if (start < group.rows.length) pageFull = true;
     }
   }
-  return [pages[0], pages[1], pages[2]];
+  return [page, also];
 }
 
 // one garnish per chapter: icon coin, ≤2° tilt
 const CHAPTER_ICONS: Record<string, LucideIcon> = {
   rice: Soup,
   bites: Utensils,
+  morning: Egg,
   pasta: Sandwich,
   coffee: Coffee,
   noncoffee: CupSoda,
@@ -438,17 +420,20 @@ const CHAPTER_ICONS: Record<string, LucideIcon> = {
   baked: Croissant,
 };
 
-function Star() {
+// printed-menu flag: a small honey check beside the NAME replaces the old
+// trailing "*" — the abbr keeps the tooltip/ARIA semantics
+function MenuCheck() {
   return (
-    <abbr className="menu-star" title={`* ${FOOTNOTE}`}>
-      *
+    <abbr className="menu-check" title={FOOTNOTE} aria-label={FOOTNOTE}>
+      <Check size={14} strokeWidth={3} aria-hidden="true" />
     </abbr>
   );
 }
 
 function PriceCell({ v }: { v: string }) {
   if (v === "—") return <span className="menu-none">—</span>;
-  if (v === "*") return <Star />;
+  // "*" is the printed-menu flag — flagged by the name check, cell stays empty
+  if (v === "*") return null;
   return <span className="menu-p">{v}</span>;
 }
 
@@ -467,16 +452,18 @@ function MenuRow({
     row.note && row.desc
       ? `${row.note} · ${row.desc}`
       : row.note ?? row.desc ?? null;
+  // star rows + 3-price rows with a "*" price both carry the name check
+  const printed = row.star === true || row.prices?.includes("*") === true;
   return (
     // T17 — row wrapper = one hoverable unit (honey wash + name→blue);
-    // the outer .menu-list is a vertical stack of these. 3-price rows
-    // (Hot / Iced 12oz / Iced 16oz) need the is-cols template on the row.
+    // 3-price rows (Hot / Iced 12oz / Iced 16oz) need the is-cols template.
     <div
       className={`menu-row${cols === 3 ? " is-cols" : ""}${wide ? " is-wide" : ""}`}
     >
       <div className="menu-n">
         <span className="menu-nline">
           <span className="menu-name">{row.name}</span>
+          {printed && <MenuCheck />}
           <span className="menu-leader" aria-hidden="true" />
         </span>
         {meta && <span className="menu-meta">{meta}</span>}
@@ -496,7 +483,6 @@ function MenuRow({
       ) : (
         <span className="menu-pc">
           <span className="menu-p">{row.price}</span>
-          {row.star && <Star />}
         </span>
       )}
     </div>
@@ -505,14 +491,16 @@ function MenuRow({
 
 // One page segment: the slice of a group's rows that lands on this page.
 // The group label + 3-price column headers render only on the segment where
-// the group starts ("head"), so headers stay on the page a group begins on.
+// the group starts ("head"), so headers stay where the group begins.
 // Single-group chapters skip the label — the chapter title already is it.
 function MenuPageSegs({ segs, from, solo }: { segs: Seg[]; from: number; solo?: boolean }) {
   return (
     <>
       {segs.map((seg, i) => (
         <div
-          className="menu-group"
+          className={`menu-group${seg.group.cols === 3 ? " is-cols3" : ""}${
+            solo ? " is-solo" : ""
+          }`}
           style={{ "--i": Math.min(from + i, 3) } as CSSProperties}
           key={seg.group.label}
         >
@@ -553,8 +541,9 @@ function MenuAlso({
       className={`menu-also${expanded ? " is-open" : ""}`}
       style={{ "--i": Math.min(i, 3) } as CSSProperties}
     >
-      {/* desktop: plain header (list is always visible); ≤900px: real
-          expander button — a focusable no-op control would be a dead end */}
+      {/* desktop: uppercase wash-panel heading (list is always visible);
+          ≤900px: real expander pill button — a focusable no-op control would
+          be a dead end */}
       <span className="menu-also-static">Also in this chapter</span>
       <button
         type="button"
@@ -562,23 +551,44 @@ function MenuAlso({
         aria-expanded={expanded}
         onClick={onToggle}
       >
-        <span className="menu-also-title">Also in this chapter</span>
         <span className="menu-also-hint">
+          {/* count-only label: the chapter name ("Show 5 more Bites &
+              Noodles") wrapped the pill to two lines at phone width, which
+              made the collapsed panel — and the footer rule above it — drift
+              per chapter; the panel sits inside the labelled tabpanel, so
+              the chapter context is already in the accessibility tree */}
           {expanded ? "Show less" : `Show ${count} more`}
         </span>
         <ChevronDown size={16} strokeWidth={2.5} aria-hidden="true" className="menu-also-chev" />
       </button>
       <div className="menu-also-list">
-        {segs.map((seg) =>
-          seg.rows.map((row) => (
-            <MenuRow
-              key={row.name}
-              row={row}
-              cols={seg.group.cols}
-              wide={(row.price?.length ?? 0) > 12}
-            />
-          ))
-        )}
+        {/* 3-price groups overflow with head:false segs (no group label), so
+            the Hot/Iced 12oz/16oz column headers must ride along per seg —
+            same aria-hidden header row as the page version above. seg.head
+            segs render their group label (multi-group overflow keeps its
+            structure; solo continuations like Rice have head:false, so they
+            stay label-free). */}
+        {segs.map((seg) => (
+          <Fragment key={seg.group.label}>
+            {seg.head && <h4 className="menu-label">{seg.group.label}</h4>}
+            {seg.group.cols === 3 && (
+              <div className="menu-row is-colsh is-cols" aria-hidden="true">
+                <span className="menu-colsh is-blank">{"\u00a0"}</span>
+                <span className="menu-colsh">Hot</span>
+                <span className="menu-colsh">Iced 12oz</span>
+                <span className="menu-colsh">Iced 16oz</span>
+              </div>
+            )}
+            {seg.rows.map((row) => (
+              <MenuRow
+                key={row.name}
+                row={row}
+                cols={seg.group.cols}
+                wide={(row.price?.length ?? 0) > 12}
+              />
+            ))}
+          </Fragment>
+        ))}
       </div>
     </aside>
   );
@@ -591,21 +601,21 @@ export default function Menu() {
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const panelRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-  // The book frame is sized to the TALLEST chapter's real rendered spread, so
-  // every chapter fits without scrolling and the book never changes size.
+  // The notebook frame is sized to the TALLEST chapter's real rendered page,
+  // so every chapter fits without scrolling and the card never changes size.
   // Inactive panels stay in the layout (visibility:hidden) to be measurable.
   useLayoutEffect(() => {
     const measure = () => {
-      const spreads = panelRefs.current
-        .map((p) => p?.querySelector<HTMLElement>(".menu-spread"))
+      const pages = panelRefs.current
+        .map((p) => p?.querySelector<HTMLElement>(".menu-notebook"))
         .filter((s): s is HTMLElement => !!s);
-      if (!spreads.length) return;
-      const prev = spreads.map((s) => s.style.height);
-      spreads.forEach((s) => {
+      if (!pages.length) return;
+      const prev = pages.map((s) => s.style.height);
+      pages.forEach((s) => {
         s.style.height = "auto";
       });
-      const h = Math.max(...spreads.map((s) => s.offsetHeight));
-      spreads.forEach((s, i) => {
+      const h = Math.max(...pages.map((s) => s.offsetHeight));
+      pages.forEach((s, i) => {
         s.style.height = prev[i] ?? "";
       });
       setBookH((cur) => (cur === h ? cur : h));
@@ -620,13 +630,13 @@ export default function Menu() {
   const prev = idx > 0 ? TABS[idx - 1] : null;
   const next = idx < TABS.length - 1 ? TABS[idx + 1] : null;
 
-  // One switch path for tabs / Previous / Next; ≤900px also pulls the
+  // One switch path for tabs / Previous / Next / dots; ≤900px also pulls the
   // active tab into view (the strip scrolls horizontally there).
   const go = (id: string) => {
     setActive(id);
     setExpanded(false);
     if (window.matchMedia("(max-width: 900px)").matches) {
-      tabRefs.current[VIEW_TABS.findIndex((v) => v.chapter === id)]?.scrollIntoView({
+      tabRefs.current[TABS.findIndex((t) => t.id === id)]?.scrollIntoView({
         inline: "nearest",
         block: "nearest",
       });
@@ -634,8 +644,8 @@ export default function Menu() {
   };
 
   const onKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
-    const n = VIEW_TABS.length;
-    const i = VIEW_TABS.findIndex((v) => v.chapter === active);
+    const n = TABS.length;
+    const i = TABS.findIndex((t) => t.id === active);
     let nextIdx = -1;
     if (e.key === "ArrowRight") nextIdx = (i + 1) % n;
     else if (e.key === "ArrowLeft") nextIdx = (i - 1 + n) % n;
@@ -643,16 +653,39 @@ export default function Menu() {
     else if (e.key === "End") nextIdx = n - 1;
     if (nextIdx < 0) return;
     e.preventDefault();
-    go(VIEW_TABS[nextIdx].chapter);
+    go(TABS[nextIdx].id);
     tabRefs.current[nextIdx]?.focus();
   };
+
+  // chapter progress block — rendered twice (card footer + below the card on
+  // ≤640px ground) and toggled purely with media queries, no extra state
+  const progress = (className: string) => (
+    <div className={className}>
+      <p className="menu-progress">
+        Chapter {idx + 1} of {TABS.length}
+      </p>
+      <div className="menu-dots">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className="menu-dot"
+            aria-label={`Go to ${t.label}`}
+            aria-current={active === t.id ? "true" : undefined}
+            onClick={() => go(t.id)}
+          >
+            <span className="menu-dot-core" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <section id="menu" className="menu" aria-labelledby="menu-title">
       <div className="menu-inner">
         <Reveal>
-          {/* T17/M9 — one-column header, no ₱350 ticket (removed — it
-              duplicated the About boarding-pass ticket). */}
+          {/* T17/M9 — one-column header (ui_design.md §4.5). */}
           <header className="menu-head">
             <SectionTab num="02" label="Menu" tone="peach" />
             <h2 id="menu-title" className="menu-title">
@@ -662,13 +695,13 @@ export default function Menu() {
           </header>
         </Reveal>
 
-        {/* T13 — ONE Reveal over the whole menu-main stack (tabs + panels +
-            controls + footnote come in together). */}
+        {/* T13 — ONE Reveal over the whole menu-main stack (tabs + notebook +
+            progress come in together). */}
         <Reveal delay={0.06}>
           <div className="menu-main">
-            {/* Chapter book: detached tab strip above an open two-page
-                spread on the warm ground (no cover); tabs/panels keep the
-                panel ARIA/keyboard untouched. */}
+            {/* Spiral notebook: chapter tabs hang off the notebook's right
+                edge (desktop) / scroll above the card (mobile); tabs/panels
+                keep the panel ARIA/keyboard untouched. */}
             <div className="menu-bookwrap">
               <div
                 className="menu-tabs"
@@ -676,9 +709,9 @@ export default function Menu() {
                 aria-label="Menu chapters"
                 onKeyDown={onKeyDown}
               >
-                {VIEW_TABS.map((v, i) => (
+                {TABS.map((t, i) => (
                   <button
-                    key={`${v.chapter}:${v.label}`}
+                    key={t.id}
                     ref={(el) => {
                       tabRefs.current[i] = el;
                     }}
@@ -686,22 +719,29 @@ export default function Menu() {
                     suppressHydrationWarning
                     className="menu-tab"
                     role="tab"
-                    aria-selected={active === v.chapter}
-                    aria-controls={`menu-panel-${v.chapter}`}
-                    tabIndex={active === v.chapter ? 0 : -1}
-                    onClick={() => go(v.chapter)}
+                    aria-selected={active === t.id}
+                    aria-controls={`menu-panel-${t.id}`}
+                    tabIndex={active === t.id ? 0 : -1}
+                    onClick={() => go(t.id)}
                   >
-                    {v.label}
+                    {t.label}
                   </button>
                 ))}
               </div>
 
               <div className="menu-book" style={bookH ? ({ "--book-h": `${bookH}px` } as CSSProperties) : undefined}>
-                <span className="menu-ribbon" aria-hidden="true" />
                 {TABS.map((t, ti) => {
-                  const [left, right, also] = splitChapter(t);
+                  const [page, also] = splitChapter(t);
                   const Icon = CHAPTER_ICONS[t.id] ?? Utensils;
-                  const title = t.groups.length === 1 ? t.groups[0].label : t.label;
+                  // solo chapters title the card with their dataset group
+                  // name; a trailing parenthetical is display-only noise
+                  // ("Knowledge Bowl (Rice Meal)" → "Knowledge Bowl") since
+                  // the eyebrow already carries the chapter label. TABS and
+                  // the Also-panel labels stay verbatim (chatbot source).
+                  const title =
+                    t.groups.length === 1
+                      ? t.groups[0].label.replace(/\s*\([^)]*\)$/, "")
+                      : t.label;
                   return (
                     <div
                       key={t.id}
@@ -710,107 +750,78 @@ export default function Menu() {
                       }}
                       id={`menu-panel-${t.id}`}
                       role="tabpanel"
-                      aria-labelledby={`menu-tab-${VIEW_TABS.findIndex((v) => v.chapter === t.id)}`}
+                      aria-labelledby={`menu-tab-${ti}`}
                       className={`menu-panel${active === t.id ? " is-active" : ""}`}
                       aria-hidden={active !== t.id}
                       suppressHydrationWarning
                     >
-                    <div className="menu-body" key={`${t.id}:${active}`}>
-                      <div className="menu-spread">
-                        <span className="menu-binding" aria-hidden="true" />
-                        <div className="menu-page">
-                          <header className="menu-pagehead">
-                            <span className="menu-coin" aria-hidden="true">
-                              <Icon size={20} strokeWidth={2} />
-                            </span>
-                            <h3 className="menu-chapter">{title}</h3>
-                          </header>
-                          <MenuPageSegs segs={left} from={0} solo={t.groups.length === 1} />
-                          <span className="menu-pageno" aria-hidden="true">
-                            {ti * 2 + 1}
-                          </span>
-                        </div>
-                        <div className="menu-page">
-                          {t.rightPage && (
-                            <header className="menu-pagehead">
+                      <div className="menu-body" key={`${t.id}:${active}`}>
+                        <article className="menu-notebook">
+                          <span className="menu-spiral" aria-hidden="true" />
+                          <div className="menu-page">
+                            <header className="menu-cardhead">
+                              <div className="menu-headtext">
+                                <span className="menu-eyebrow">{`Chapter ${ti + 1} · ${t.label}`}</span>
+                                <h3 className="menu-chapter">{title}</h3>
+                                <span className="menu-deal">
+                                  <Check size={14} strokeWidth={3} aria-hidden="true" /> {DEAL}
+                                </span>
+                              </div>
                               <span className="menu-coin" aria-hidden="true">
-                                <Utensils size={20} strokeWidth={2} />
+                                <Icon size={20} strokeWidth={2} />
                               </span>
-                              <h3 className="menu-chapter">{t.rightPage.label}</h3>
                             </header>
-                          )}
-                          <MenuPageSegs
-                            segs={right}
-                            from={left.length}
-                            solo={t.groups.length === 1}
-                          />
-                          {also.length > 0 && (
-                            <MenuAlso
-                              segs={also}
-                              expanded={expanded}
-                              onToggle={() => setExpanded((v) => !v)}
-                              i={left.length + right.length}
-                            />
-                          )}
-                          <span className="menu-pageno" aria-hidden="true">
-                            {ti * 2 + 2}
-                          </span>
-                        </div>
+                            <div className="menu-pagebody">
+                              <MenuPageSegs segs={page} from={0} solo={t.groups.length === 1} />
+                            </div>
+                            {also.length > 0 && (
+                              <MenuAlso
+                                segs={also}
+                                expanded={expanded}
+                                onToggle={() => setExpanded((v) => !v)}
+                                i={page.length}
+                              />
+                            )}
+                            <footer className="menu-cardfoot">
+                              <p className="menu-footnote">
+                                <MenuCheck /> {FOOTNOTE}
+                              </p>
+                              <div className="menu-footside">
+                                {progress("menu-progress-block")}
+                                <div className="menu-pager-ctas">
+                                  <button
+                                    type="button"
+                                    className="btn btn-ghost menu-prev"
+                                    disabled={!prev}
+                                    onClick={() => prev && go(prev.id)}
+                                    aria-label="Previous chapter"
+                                  >
+                                    <ArrowLeft size={16} strokeWidth={2.5} aria-hidden="true" />
+                                    <span className="menu-prev-label">Previous</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-blue"
+                                    disabled={!next}
+                                    onClick={() => next && go(next.id)}
+                                  >
+                                    {next ? `Next: ${next.label}` : "Next"}{" "}
+                                    <ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />
+                                  </button>
+                                </div>
+                              </div>
+                            </footer>
+                          </div>
+                        </article>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
               </div>
-            </div>
 
-            <div className="menu-pager">
-              <div className="menu-pager-nav">
-                <p className="menu-progress">
-                  Chapter {idx + 1} of {TABS.length}
-                </p>
-                <div className="menu-dots">
-                  {TABS.map((t) => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      className="menu-dot"
-                      aria-label={`Go to ${t.label}`}
-                      aria-current={active === t.id ? "true" : undefined}
-                      onClick={() => go(t.id)}
-                    >
-                      <span className="menu-dot-core" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="menu-pager-ctas">
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  disabled={!prev}
-                  onClick={() => prev && go(prev.id)}
-                >
-                  <ArrowLeft size={16} strokeWidth={2.5} aria-hidden="true" /> Previous
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-blue"
-                  disabled={!next}
-                  onClick={() => next && go(next.id)}
-                >
-                  {next ? `Next: ${next.label}` : "Next"}{" "}
-                  <ArrowRight size={16} strokeWidth={2.5} aria-hidden="true" />
-                </button>
-              </div>
+              {/* ≤640px only: progress moves below the card onto the kraft */}
+              {progress("menu-progress-below")}
             </div>
-
-            <p className="menu-footnote">
-              <abbr className="menu-star" title={`* ${FOOTNOTE}`}>
-                *
-              </abbr>{" "}
-              {FOOTNOTE}
-            </p>
           </div>
         </Reveal>
       </div>
