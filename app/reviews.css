@@ -1,9 +1,10 @@
 /* Reviews (#reviews) — T9. Header row (copy left + ★5.0 stat card right)
-   above a masonry grid of 5 review cards + navy CTA card, on the parchment
-   ground. 2026-11-09 redesign, second pass (user decision): the mockup
-   PLACEMENT was adopted — stat card beside the heading, CSS-columns masonry
-   (3/2/1, the same mechanism as The Place), CTA card last; the featured
-   panel + scroll-snap row are retired and the bordered look stays rejected.
+   above three column stacks of review cards + navy CTA card (one shared
+   bottom line ≥ 980), on the mustard-soft ground. 2026-11-09 redesign,
+   third pass (user decisions): mockup PLACEMENT adopted — stat card beside
+   the heading, CJ R.'s long review runs longest, all columns end on one
+   bottom line; the featured panel + scroll-snap row are retired and the
+   bordered look stays rejected.
    All colors/fonts/shadows via globals.css tokens (Golden Corner). Copy
    verbatim from docs/details.md §8. */
 
@@ -29,8 +30,11 @@
   width: 100%;
 }
 
+/* copy column: wide enough that the H2 "What our guests are saying" stays
+   on ONE line at desktop (user-pinned 2026-11-09); the lede keeps its own
+   38em measure below. */
 .rev-head-copy {
-  max-width: 640px;
+  max-width: 860px;
 }
 
 .rev-title {
@@ -55,7 +59,8 @@
 }
 
 /* stat card: --paper chip card, big Fredoka "5.0" + drawn mustard stars +
-   the verbatim remainder. Sits beside the heading like the mockup. */
+   the verbatim remainder. Sits beside the heading like the mockup, with the
+   user-pinned playful tilt to the right (2026-11-09). */
 .rev-summary {
   display: inline-flex;
   align-items: center;
@@ -65,6 +70,7 @@
   border-radius: 18px;
   background: var(--paper);
   box-shadow: var(--shadow-soft);
+  rotate: 3deg;
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 700;
   color: var(--ink);
@@ -99,19 +105,47 @@
   letter-spacing: -0.01em;
 }
 
-/* --- aligned grid (CSS Grid 3/2/1) -----------------------------------------
-    Rows stretch to the tallest card so every TOP and BOTTOM edge lines up
-    (2026-11-09 user decision — replaces the ragged CSS-columns masonry).
+/* --- three column stacks, one shared bottom line (3/2/1) --------------------
+    2026-11-09 user decision, third pass: the mockup masonry arrangement —
+    CJ R.'s long review runs longest, and all three columns end on ONE bottom
+    line. CSS columns can't stretch cards, so the grid holds three explicit
+    .rev-col stacks and every card in a stack grows a little (flex-grow
+    distributes the leftover space equally — Jayhan94/Belle/CTA lengthen).
+    Column widths step 1/2/3 at the BOTTOM of this file (order matters — the
+    3-col rule must come after the 2-col rule). Below 980 the stacks dissolve
+    (display: contents) into a plain 2/1-col grid whose rows stretch per-row.
     Cards are --paper with tinted avatar circles; ink text ≥ 4.5:1. */
 
 .rev-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  align-items: stretch;
+  grid-template-columns: 1fr;
   max-width: var(--maxw);
   margin: 40px auto 0;
   width: 100%;
+}
+
+.rev-col {
+  display: contents;
+}
+
+.rev-card,
+.rev-cta {
+  min-width: 0;
+}
+
+@media (min-width: 980px) {
+  .rev-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* every card grows a little toward the column's shared bottom line; the
+     CTA button rides the growth via its margin-top: auto */
+  .rev-col > * {
+    flex: 1 1 auto;
+  }
 }
 
 .rev-card {
@@ -123,6 +157,22 @@
   border-radius: 16px;
   background: var(--paper);
   box-shadow: var(--shadow-soft);
+}
+
+/* gentle tilts like The Place's cards — but pinned PER CARD by the user
+   (2026-11-09): Jayhan94 softened left, Belle N. + Corman A. right,
+   Peter left; Cj R. and the CTA card stay level (no class). Hover settles
+   every card to level (see the motion block). */
+.rev-tilt-soft-l {
+  rotate: -0.4deg;
+}
+
+.rev-tilt-l {
+  rotate: -0.8deg;
+}
+
+.rev-tilt-r {
+  rotate: 0.8deg;
 }
 
 /* quote watermark: one drawn glyph per card, top-right, ≤ the .12 cap —
@@ -256,10 +306,11 @@
   color: var(--ink);
 }
 
-/* warm topic chip — kraft pill, ink text (high contrast), Gaegu 700 */
+/* warm topic chip — kraft pill, ink text (high contrast), Gaegu 700.
+   Follows the quote (no bottom pin): grown cards keep their content
+   top-aligned like the mockup, with the card's extra space below. */
 .rev-tag {
   align-self: flex-start;
-  margin-top: auto;
   padding: 3px 12px 4px;
   border-radius: 999px;
   background: var(--kraft);
@@ -332,21 +383,31 @@
   .rev-cta {
     transition:
       box-shadow 0.25s var(--ease),
-      translate 0.25s var(--ease);
+      translate 0.25s var(--ease),
+      rotate 0.25s var(--ease);
   }
 
+  /* hover settles the tilt to level (The Place idiom) + lift */
   .rev-card:hover,
   .rev-cta:hover {
+    rotate: 0deg;
     translate: 0 -2px;
     box-shadow: var(--shadow-lift);
   }
 }
 
-/* --- breakpoints ---------------------------------------------------------- */
+/* --- breakpoints (column widths step 1/2/3 — ORDER MATTERS: the 3-col
+       rule must come after the 2-col rule or it never applies) ------------- */
 
-@media (max-width: 980px) {
+@media (min-width: 640px) {
   .rev-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 980px) {
+  .rev-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -362,7 +423,6 @@
   }
 
   .rev-grid {
-    grid-template-columns: 1fr;
     margin-top: 32px;
   }
 

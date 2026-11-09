@@ -11,6 +11,7 @@ import {
   PlugZap,
   Wifi,
 } from "lucide-react";
+import type { CSSProperties } from "react";
 import "../about.css";
 import Accent from "./accent";
 import Reveal from "./reveal";
@@ -24,12 +25,17 @@ import SectionTab from "./section-tab";
 //   · Doodle budget = 2 floating motifs/section (cleanliness bar): one coffee
 //     cup + one linking arrow, both hand-drawn crisp linework, aria-hidden.
 // T13: transitions ride the shared <Reveal> wrapper only. Stagger = cap
-// i × 60ms over 4 groups (intro/stats/amenities/package). Polaroids stay
+// i × 60ms over 4 groups (intro/stats/amenities/package). Photo cards stay
 // unwrapped — the sheet's still-life, not part of its staged reveal group.
+//
+// Photo shelf (round 7, 2026-11-09): The Place's card anatomy (place.tsx) —
+// slim --paper frame, full-photo box at the photo's intrinsic --ar (zero
+// CLS), mustard numbered badge, ink scrim, Fredoka caption + Gaegu sub
+// overlaid bottom-left. Tape on 2 of 4 cards (The Place's budget).
 //
 // Structure: (1) warm oat floating sheet — intro copy (title + location
 // chip / lede), smaller sticky-note trio with the doodles flanking it, then
-// a 4-up taped photo strip (2×2 responsive); (2) a UNIFORM 4×2 amenities
+// the 4-up numbered photo shelf (2×2 responsive); (2) a UNIFORM 4×2 amenities
 // card wall on the parchment ground; (3) a boarding-pass package ticket:
 // deal column + tear-off stub.
 
@@ -49,29 +55,42 @@ const STICKIES = [
   { value: "Open daily", label: "Mon – Sat · 7 – 10", extra: "Sunday · 10 – 8", tone: "mustard" },
 ];
 
-// Photo shelf (round 5): FOUR taped polaroids side by side in a row.
-// Captions stay verbatim site copy; src points at the real photo in
-// public/images whose subject matches the caption (alt describes it).
+// Photo shelf (round 7, 2026-11-09): The Place's numbered full-photo card
+// anatomy carried over — slim --paper frame, mustard 01–04 badge, ink scrim,
+// Fredoka caption + Gaegu sub-line overlaid bottom-left. `ratio` = each
+// photo's intrinsic aspect-ratio (zero CLS, same --ar mechanism as place.tsx).
+// Tape stays on 2 of 4 cards (The Place's tape budget). Captions stay
+// verbatim site copy; subs are new warm copy, no new facts.
 const POLAROIDS = [
   {
     src: "/images/full-house-evening.webp",
     alt: "Communal study table full of guests in the evening",
     caption: "study hub, in full swing",
+    sub: "Evenings fill up fast — come claim a chair.",
+    ratio: "3 / 4",
+    tape: true,
   },
   {
     src: "/images/students-communal-table.webp",
     alt: "Guests studying at the long communal table",
     caption: "single space · 2 hrs of focus",
+    sub: "Long tables made for long sessions.",
+    ratio: "3 / 4",
   },
   {
     src: "/images/drinks-tray-shop-view.webp",
     alt: "Three NotePads drinks on a tray inside the café",
     caption: "coffee that never rushes you",
+    sub: "Freshly brewed, never rushed.",
+    ratio: "3 / 4",
   },
   {
     src: "/images/glowing-sign-night.webp",
     alt: "The glowing NotePads Study Hub Café sign at dusk",
     caption: "look for the glowing sign",
+    sub: "Follow the light up to the 2nd floor.",
+    ratio: "3 / 2",
+    tape: true,
   },
 ];
 
@@ -187,10 +206,13 @@ export default function About() {
           </Reveal>
 
           <div className="about-shots">
-            {POLAROIDS.map((p) => (
-              <figure key={p.src} className="about-shot u-polaroid">
-                <span className="u-tape" aria-hidden="true" />
-                <div className="about-shot-photo">
+            {POLAROIDS.map((p, i) => (
+              <figure key={p.src} className="about-shot">
+                {p.tape && <span className="u-tape" aria-hidden="true" />}
+                <div
+                  className="about-shot-photo"
+                  style={{ "--ar": p.ratio } as CSSProperties}
+                >
                   <Image
                     src={p.src}
                     alt={p.alt}
@@ -198,8 +220,15 @@ export default function About() {
                     sizes="(max-width: 1020px) 46vw, 280px"
                     style={{ objectFit: "cover" }}
                   />
+                  <span className="about-scrim" aria-hidden="true" />
+                  <span className="about-num" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
-                <figcaption className="about-shot-cap">{p.caption}</figcaption>
+                <figcaption className="about-shot-cap">
+                  <span className="about-cap">{p.caption}</span>
+                  <span className="about-sub">{p.sub}</span>
+                </figcaption>
               </figure>
             ))}
           </div>

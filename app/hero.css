@@ -181,9 +181,10 @@
 
 /* --- single slideshow polaroid ------------------------------------------------
    One taped polaroid is the whole right column: the torn-edge photo area
-   carries the page-tear slideshow, the caption + dots + pause share the foot
-   row, and the round "2 hrs" stamp rides the top-right corner. The polaroid
-   is deliberately LARGE — the visual anchor that balances the copy column. */
+   carries the page-tear slideshow with the numbered badge + caption/sub
+   overlay (The Place card anatomy), and the dots + pause share the foot row.
+   The polaroid is deliberately LARGE — the visual anchor that balances the
+   copy column. */
 
 .hero-shots {
   position: relative;
@@ -192,15 +193,16 @@
 }
 
 /* THE polaroid — the figure IS the frame. Gentle tilt, full column width;
-   z 1 above the badge's backdrop band. Grid: photo full width, then caption
-   (left) + slideshow controls (right) share the foot row. */
+   z 1 above the badge's backdrop band. Grid: photo full width, then the
+   slideshow controls right-aligned in the foot row (the caption moved onto
+   the photo, The Place card anatomy — see .shot-cap below). */
 .shot-frame {
   position: relative;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-areas:
     "photo photo"
-    "cap ctrl";
+    "ctrl ctrl";
   align-items: center;
   column-gap: 12px;
   margin: 0;
@@ -283,17 +285,68 @@
   }
 }
 
-/* caption: IN FLOW under the photo (grid cell) — structurally cannot overlap
-   the print. Rises in once the tear has landed. */
+/* The Place card anatomy on the hero print: ink scrim + numbered badge
+   (01–05, tracks the current slide) layered over the photo, same look as
+   .place-scrim / .place-num in place.css. Static across the tear — the
+   ripping piece flies over them (tear z lives inside .shot-photo's
+   clip-path stacking context; these sit above the slides). */
+.shot-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 40%, rgba(30, 37, 64, 0.82));
+}
+
+.shot-num {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--mustard);
+  color: var(--ink);
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow-soft);
+}
+
+/* caption: OVERLAY bottom-left on the scrim (The Place card anatomy).
+   Grid trick: the figcaption shares the photo's grid cell (grid-area:
+   photo, align-self: end) so it paints over the print's lower band with no
+   magic offsets — and stays a direct child of the figure for valid HTML. */
 .shot-cap {
-  grid-area: cap;
-  min-height: 2.6em;
-  padding: 9px 4px 4px;
-  font-family: var(--font-gaegu), cursive;
-  color: var(--ink-soft);
-  font-size: 1.05rem;
-  line-height: 1.3;
+  grid-area: photo;
+  align-self: end;
+  z-index: 2;
+  margin: 0;
+  padding: 12px 14px;
+  display: grid;
+  gap: 2px;
+  text-align: left;
   overflow: hidden;
+}
+
+.shot-cap-title {
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.25;
+  color: var(--paper);
+}
+
+.shot-cap-sub {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--paper);
+  opacity: 0.92;
 }
 
 .shot-cap.tear-in {
@@ -311,12 +364,14 @@
   }
 }
 
-/* slideshow controls (reference): pagination dots + pause, in the foot row */
+/* slideshow controls (reference): pagination dots + pause, in the foot row
+   (caption moved onto the photo; the foot row is theirs alone now) */
 .shot-ctrls {
   grid-area: ctrl;
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  justify-self: end;
   padding: 9px 4px 4px 0;
 }
 

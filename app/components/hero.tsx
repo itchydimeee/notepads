@@ -18,14 +18,16 @@ import "../hero.css";
 
 // Real photos from public/images (descriptive file names). src is null when no
 // photo matches the caption yet — null slides are filtered out before render.
-type HeroShot = { src: string | null; alt: string; caption: string };
+// 2026-11-09: caption + Gaegu sub-line now overlay the photo bottom-left on
+// an ink scrim with a numbered badge (01–05) — The Place card anatomy.
+type HeroShot = { src: string | null; alt: string; caption: string; sub: string };
 
 const SLIDES: HeroShot[] = [
-  { src: "/images/lounge-navy-sofas.webp", alt: "Lounge corner with navy sofas and a street view", caption: "the lounge, in its natural state" },
-  { src: "/images/glowing-sign-night.webp", alt: "The glowing NotePads Study Hub Café sign at dusk", caption: "look for the glowing sign" },
-  { src: "/images/study-stations-printing.webp", alt: "Workstation pods with ergonomic chairs by the window", caption: "stations with a plug and a view" },
-  { src: "/images/counter-evening-lights.webp", alt: "Coffee counter and menu board in warm evening light", caption: "the counter with warm lights" },
-  { src: "/images/the-open-pantry.webp", alt: "The open pantry with fruit trays, cereal dispensers, and snack jars", caption: "pantry within reach" },
+  { src: "/images/lounge-navy-sofas.webp", alt: "Lounge corner with navy sofas and a street view", caption: "the lounge, in its natural state", sub: "Soft seats, slow afternoons." },
+  { src: "/images/glowing-sign-night.webp", alt: "The glowing NotePads Study Hub Café sign at dusk", caption: "look for the glowing sign", sub: "You can't miss it after dark." },
+  { src: "/images/study-stations-printing.webp", alt: "Workstation pods with ergonomic chairs by the window", caption: "stations with a plug and a view", sub: "Your own plug, your own quiet." },
+  { src: "/images/counter-evening-lights.webp", alt: "Coffee counter and menu board in warm evening light", caption: "the counter with warm lights", sub: "Order first, stay long." },
+  { src: "/images/the-open-pantry.webp", alt: "The open pantry with fruit trays, cereal dispensers, and snack jars", caption: "pantry within reach", sub: "Snacks within arm's reach." },
 ];
 
 function manilaNow() {
@@ -224,6 +226,12 @@ export default function Hero() {
                   }}
                 />
               ))}
+              {/* The Place card anatomy: ink scrim + numbered badge (tracks
+                  the current slide) over the print, static across the tear */}
+              <span className="shot-scrim" aria-hidden="true" />
+              <span className="shot-num" aria-hidden="true">
+                {String(slide + 1).padStart(2, "0")}
+              </span>
               {tearing !== null && slides[tearing] ? (
                 <div
                   className="shot-tear"
@@ -243,10 +251,11 @@ export default function Hero() {
                 </div>
               ) : null}
             </div>
-            {/* Caption sits IN FLOW under the photo — it can never overlap
-                the print. key={} restarts the rise-in on every tear. */}
+            {/* Caption overlays the photo bottom-left on the scrim (The Place
+                card anatomy). key={} restarts the rise-in on every tear. */}
             <figcaption className="shot-cap tear-in" key={slide} aria-live="off">
-              {slides[slide].caption}
+              <span className="shot-cap-title">{slides[slide].caption}</span>
+              <span className="shot-cap-sub">{slides[slide].sub}</span>
             </figcaption>
             {/* slideshow controls: pagination dots + pause, per reference */}
             <div className="shot-ctrls">
