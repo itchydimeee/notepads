@@ -1,23 +1,37 @@
-/* Reviews (#reviews) — T9. Fredoka H2 + drawn ★ summary + 5 index-card
-   reviews on the parchment ground in a NATIVE scroll-snap row (no JS).
-   All colors/fonts/shadows via globals.css tokens (Ink & Indigo).
-   Copy verbatim from docs/details.md §8. */
+/* Reviews (#reviews) — T9. Header row (copy left + ★5.0 stat card right)
+   above a masonry grid of 5 review cards + navy CTA card, on the parchment
+   ground. 2026-11-09 redesign, second pass (user decision): the mockup
+   PLACEMENT was adopted — stat card beside the heading, CSS-columns masonry
+   (3/2/1, the same mechanism as The Place), CTA card last; the featured
+   panel + scroll-snap row are retired and the bordered look stays rejected.
+   All colors/fonts/shadows via globals.css tokens (Golden Corner). Copy
+   verbatim from docs/details.md §8. */
 
-/* --- section ground: parchment (free from the body) ---------------------- */
+/* --- section ground: warm mustard-soft (2026-11-09 user decision — the
+   mockup's yellow ground; --paper cards pop against it. Alternative if this
+   ever reads too loud: --kraft, the menu/Saturdays section ground.) */
 
 .rev {
   padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
-  background: var(--parchment);
+  background: var(--mustard-soft);
 }
 
-.rev-inner {
+/* --- header: copy left + stat card right (mockup placement) -------------- */
+
+.rev-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px 48px;
   max-width: var(--maxw);
   margin: 0 auto;
   width: 100%;
 }
 
-/* --- title + summary (section index-tab label above — 2026-10-28 user
-   decision supersedes the old no-eyebrow ban; tab = globals .u-sectab) --- */
+.rev-head-copy {
+  max-width: 640px;
+}
 
 .rev-title {
   margin: 0;
@@ -30,27 +44,48 @@
   color: var(--ink);
 }
 
-/* Fredoka 700 summary: drawn filled stars + the verbatim remainder
-   ("5.0 from 5 five-star reviews · drag to browse"). Mustard fill keeps the
-   stars seasoning-toned like the site's check bullets; ink stroke keeps
-   their edge defined on parchment. */
+/* warm non-factual lede (v4 tone rules); ink-soft on parchment ≥ 4.5:1 */
+.rev-lede {
+  margin: 12px 0 0;
+  max-width: 38em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.35rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* stat card: --paper chip card, big Fredoka "5.0" + drawn mustard stars +
+   the verbatim remainder. Sits beside the heading like the mockup. */
 .rev-summary {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  margin: 18px 0 0;
+  gap: 14px;
+  margin: 8px 0 0;
+  padding: 16px 24px;
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
   font-family: var(--font-fredoka), system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
   color: var(--ink);
+}
+
+.rev-summary-score {
+  font-size: clamp(2.2rem, 3.4vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.rev-summary-rest {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .rev-summary-stars {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
   color: var(--ink);
 }
 
@@ -58,119 +93,45 @@
   fill: var(--mustard);
 }
 
-/* --- the native scroll-snap row ------------------------------------------
-   The row bleeds out of the content band (negative margin = the section
-   gutter) and gives that margin back as its own edge padding, so the first
-   card's left edge sits exactly at the content/gutter line the H2 sits on,
-   and the last card can settle with a gutter of air after it.
-   scroll-padding-inline follows the same gutter, keeping snap-align: start
-   honest on every viewport. proximity (not mandatory) — kinder for long
-   quote cards that need partial swipes to read. */
+.rev-summary-text {
+  font-size: 0.98rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
 
-.rev-row {
-  display: flex;
+/* --- aligned grid (CSS Grid 3/2/1) -----------------------------------------
+    Rows stretch to the tallest card so every TOP and BOTTOM edge lines up
+    (2026-11-09 user decision — replaces the ragged CSS-columns masonry).
+    Cards are --paper with tinted avatar circles; ink text ≥ 4.5:1. */
+
+.rev-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  margin: 40px calc(var(--gutter) * -1) 0;
-  padding: 4px var(--gutter) 16px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
-  scroll-padding-inline: var(--gutter);
-  list-style: none;
-
-  /* browser surface themed from the palette: thin, ink-tinted, rounded —
-     never hidden (the drag/scroll affordance stays visible on desktop) */
-  scrollbar-width: thin;
-  scrollbar-color: #1e254033 transparent;
+  align-items: stretch;
+  max-width: var(--maxw);
+  margin: 40px auto 0;
+  width: 100%;
 }
-
-.rev-row::-webkit-scrollbar {
-  height: 8px;
-}
-
-.rev-row::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.rev-row::-webkit-scrollbar-thumb {
-  background: #1e254033;
-  border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-/* keyboard users focus the row (cards hold no focusable elements) and
-   arrow-key through it; the global :focus-visible outline marks it. */
-.rev-row:focus-visible {
-  outline: 3px solid var(--blue-deep);
-  outline-offset: 3px;
-  border-radius: 12px;
-}
-
-/* --- index cards ----------------------------------------------------------
-   Tone cycle across the 5 cards (no two neighbours alike): paper /
-   mustard-soft / paper / dusty-soft / mustard-soft — the v3 derived tints,
-   not raw seasonings. Ink text on all three stays ≥ 4.5:1. */
 
 .rev-card {
   position: relative;
   display: flex;
-  flex: 0 0 clamp(280px, 78vw, 420px);
   flex-direction: column;
-  gap: 6px;
-  border-radius: 14px;
-  padding: 26px 28px 30px;
+  gap: 10px;
+  padding: 24px 26px 26px;
+  border-radius: 16px;
+  background: var(--paper);
   box-shadow: var(--shadow-soft);
 }
 
-.rev-card-paper {
-  background: var(--paper);
-}
-
-.rev-card-butter {
-  background: var(--butter-soft);
-}
-
-.rev-card-peach {
-  background: var(--peach-soft);
-}
-
-.rev-card-dusty {
-  background: var(--dusty-soft);
-}
-
-/* ruled index-card lines behind the quote (the subject's own world),
-   faintest ink tint so the text above keeps full contrast */
-.rev-quote {
-  position: relative;
-  z-index: 1;
-  margin: 14px 0 0;
-  padding-top: 14px;
-  border-top: 2px dotted #1e254026;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    #1e254010 0 1px,
-    transparent 1px 33px
-  );
-  background-position: 0 15px;
-}
-
-.rev-quote p {
-  margin: 0;
-  max-width: 32em;
-  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
-  font-size: 1.25rem;
-  line-height: 1.6;
-  color: var(--ink);
-}
-
-/* quote watermark: one drawn overlap glyph per card, oversized, at .01 under
-   the .12 cap — contextual card furniture, not a floating section motif
-   (floating décor budget for this section: 0 — nothing escapes the cards) */
+/* quote watermark: one drawn glyph per card, top-right, ≤ the .12 cap —
+   contextual card furniture, not a floating motif (floating décor budget
+   for this section: 0) */
 .rev-quote-mark {
   position: absolute;
-  top: 10px;
-  right: 16px;
+  top: 14px;
+  right: 18px;
   rotate: 7deg;
   z-index: 0;
   color: var(--ink);
@@ -182,19 +143,85 @@
 }
 
 /* card furniture stays above the watermark */
-.rev-card-head,
-.rev-name,
-.rev-role {
+.rev-card-byline,
+.rev-card-stars,
+.rev-quote,
+.rev-tag {
   position: relative;
   z-index: 1;
 }
 
-.rev-card-head {
+/* byline: tinted initial-avatar circle + name/role stack */
+.rev-card-byline {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
+.rev-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+
+/* avatar tints cycle the v4 derived tones (no two neighbours alike) */
+.rev-avatar-mustard {
+  background: var(--mustard-soft);
+}
+
+.rev-avatar-dusty {
+  background: var(--dusty-soft);
+}
+
+.rev-avatar-peach {
+  background: var(--peach-soft);
+}
+
+.rev-avatar-sage {
+  background: var(--sage-soft);
+}
+
+.rev-avatar-butter {
+  background: var(--butter-soft);
+}
+
+.rev-card-id {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.rev-name {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.15rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* role: small Gaegu line, parens kept verbatim from the source layout.
+   Ink-soft on --paper ≥ 4.5:1. */
+.rev-role {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--ink-soft);
+}
+
+/* drawn filled stars; the rating is spoken via the sr-only note */
 .rev-card-stars {
   display: inline-flex;
   align-items: center;
@@ -217,38 +244,129 @@
   white-space: nowrap;
 }
 
-.rev-name {
-  margin: 4px 0 0;
-  font-family: var(--font-fredoka), system-ui, sans-serif;
-  font-weight: 600;
-  font-style: normal;
-  font-size: 1.35rem;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+.rev-quote {
+  margin: 2px 0 0;
+}
+
+.rev-quote p {
+  margin: 0;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.2rem;
+  line-height: 1.6;
   color: var(--ink);
 }
 
-/* role: small Gaegu line, parens kept verbatim from the source layout.
-   Ink (not ink-soft) so every tint stays ≥ 4.5:1 — hierarchy comes from
-   size + face, never gray or opacity. */
-.rev-role {
-  margin: 0;
+/* warm topic chip — kraft pill, ink text (high contrast), Gaegu 700 */
+.rev-tag {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 3px 12px 4px;
+  border-radius: 999px;
+  background: var(--kraft);
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   line-height: 1.3;
   color: var(--ink);
 }
 
+/* --- CTA card (closes the grid, bottom-right) -----------------------------
+    Deep warm navy --forest — the one dark moment in the section; gold accent
+    words are permitted here (§2.1 rule 4, goldtext variant). */
+
+.rev-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 28px 28px 30px;
+  border-radius: 16px;
+  background: var(--forest);
+  box-shadow: var(--shadow-soft);
+}
+
+.rev-cta-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+}
+
+.rev-cta-copy {
+  margin: 0;
+  max-width: 24em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--paper);
+  opacity: 0.88;
+}
+
+.rev-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto; /* pins to the card's bottom edge like the review tags */
+  padding: 10px 20px 11px;
+  border-radius: 999px;
+  background: var(--mustard);
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.02rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--forest);
+  text-decoration: none;
+}
+
 /* --- motion ---------------------------------------------------------------
-   Nothing to neutralize: this section authors no animation or transition
-   (no bespoke reveal — T13 owns the shared reveal). The native scroll-snap
-   row keeps working as-is with prefers-reduced-motion. */
+    One hover lift on the cards + CTA button, inside
+    (prefers-reduced-motion: no-preference); the global kill-switch in
+    globals.css also zeroes transition durations. No JS anywhere. */
+@media (prefers-reduced-motion: no-preference) {
+  .rev-card,
+  .rev-cta {
+    transition:
+      box-shadow 0.25s var(--ease),
+      translate 0.25s var(--ease);
+  }
+
+  .rev-card:hover,
+  .rev-cta:hover {
+    translate: 0 -2px;
+    box-shadow: var(--shadow-lift);
+  }
+}
 
 /* --- breakpoints ---------------------------------------------------------- */
 
-@media (max-width: 560px) {
+@media (max-width: 980px) {
+  .rev-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .rev-head {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .rev-summary {
+    align-self: flex-start;
+    margin-top: 0;
+  }
+
+  .rev-grid {
+    grid-template-columns: 1fr;
+    margin-top: 32px;
+  }
+
   .rev-card {
-    padding: 22px 24px 26px;
+    padding: 22px 22px 24px;
   }
 }
