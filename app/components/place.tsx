@@ -1,106 +1,118 @@
 "use client";
 
-// T7 — The Place (#place) gallery. Client island: the lightbox needs state. Captions verbatim from docs/details.md §6 (no
-// invented copy). Images are the real photos in public/images (descriptive
-// file names), mapped to slots by subject match with the caption; alt text
-// describes the actual photo. src is null where no honest match exists —
-// those cards render as styled empty frames (photo coming soon) and never
-// open the lightbox. Shots run the room's narrative: arrive → order →
-// snacks → study → perch → lounge → company → address. No priority: the
-// hero owns LCP; every gallery src is lazy by default.
+// T7 — The Place (#place) gallery. Client island: the lightbox needs state.
+// Card anatomy (reference redesign 2026-11-09): a slim --paper frame around a
+// full-photo box whose aspect-ratio matches the photo's intrinsic dimensions
+// (--ar var, zero CLS). Over the photo: a mustard 01–08 badge top-left and the
+// caption + Gaegu sub-line bottom-left on an ink scrim gradient. src is null
+// where no honest match exists — those slots render a kraft "photo coming
+// soon" frame (badge/caption/sub grouped bottom-left in --ink) and never open
+// the lightbox. A --blue CTA banner closes the section. Shots run the room's
+// narrative: arrive → order → snacks → study → perch → lounge → company →
+// address. No priority: the hero owns LCP; every gallery src is lazy.
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import Reveal from "./reveal";
 import Accent from "./accent";
 import SectionTab from "./section-tab";
 import "../place.css";
 
-type RatioHint = "wide" | "tall" | "square";
-
 type Shot = {
   src: string | null;
   alt: string; // describes the actual photo (or the wanted one when src is null)
   caption: string; // verbatim from details.md §6
-  ratio: RatioHint; // layout hint from details.md §6
+  sub: string; // warm sub-line under the caption (shot order)
+  ratio: string; // intrinsic aspect-ratio of the photo, e.g. "3 / 2"
   pos?: string; // object-position crop; differentiates reused srcs
   tape?: boolean; // décor budget: max 2 taped cards in the whole section
   sizes?: string; // overrides CARD_SIZES when the cover crop needs more width (see cardSizes)
 };
 
-// object-fit: cover scales a photo up until it covers the box, so a LANDSCAPE
-// source in a square/tall box is scaled by the box HEIGHT, not the width. A
-// width-only `sizes` hint then underserves the card: the browser picks the
-// w=384 variant for a ~356px column and cover stretches it 1.2–1.9×, which
-// reads as blur (worst on the tall communal-table card). mult = how much
-// wider than the box the painted image is: 1.34 ≈ 4/3 source in a square box,
-// 1.5 ≈ 3/2 source in a square box, 2 ≈ 4/3 source in a tall box (or a ~2:1
-// source in a square box).
+// object-fit: cover scales a photo up until it covers the box, so a source
+// wider than the box is painted wider than the box and a width-only `sizes`
+// hint underserves the card. mult = painted width ÷ box width =
+// (source ratio) ÷ (box ratio). Every card box now matches its photo's
+// intrinsic ratio, so mult is 1 for all shots — the mechanism stays for any
+// future reused-src crop that needs it.
 const cardSizes = (mult: number) =>
   `(min-width: 980px) calc((min(100vw, 1200px) - 160px) / 3 * ${mult}), (min-width: 640px) calc((100vw - 96px) / 2 * ${mult}), calc((100vw - 48px) * ${mult})`;
 
 const SHOTS: Shot[] = [
   {
-    src: "/images/glowing-sign-night.webp", // the actual glowing sign at dusk
+    src: "/images/glowing-sign-night.webp", // the actual glowing sign at dusk (3:2)
     alt: "The glowing NotePads Study Hub Café sign at dusk",
     caption: "Look for the glowing sign",
-    ratio: "wide",
+    sub: "Follow the glowing sign up to the 2nd floor.",
+    ratio: "3 / 2",
     tape: true,
   },
   {
-    src: "/images/counter-menu-board.webp", // counter + barista + menu board
+    src: "/images/counter-menu-board.webp", // counter + barista + menu board (4:3)
     alt: "Coffee counter and menu board behind the barista",
     caption: "The coffee counter",
-    ratio: "square",
-    sizes: cardSizes(1.34), // 4:3 landscape source, cover-scaled to a square box
+    sub: "Round tables and red chairs for coffee with friends.",
+    ratio: "4 / 3",
   },
   {
-    src: "/images/the-open-pantry.webp", // the actual open pantry — fruit trays, cereal dispensers, snack jars
+    src: "/images/the-open-pantry.webp", // the actual open pantry (3:2)
     alt: "The open pantry with fruit trays, cereal dispensers, and snack jars under a Pantry sign",
     caption: "The open pantry",
-    ratio: "square",
-    sizes: cardSizes(1.5), // 3:2 landscape source, cover-scaled to a square box
+    sub: "Snacks and brain fuel. Help yourself.",
+    ratio: "3 / 2",
   },
   {
-    src: "/images/communal-table-red-chairs.webp", // empty communal table, clear view
+    src: "/images/communal-table-red-chairs.webp", // empty communal table, clear view (4:3)
     alt: "Empty communal table with red chairs under the logo wall",
     caption: "The communal table, in full focus",
-    ratio: "tall",
+    sub: "Spread out, plug in, and stay a while.",
+    ratio: "4 / 3",
     pos: "50% 20%",
-    sizes: cardSizes(2), // 4:3 landscape source, cover-scaled to a tall box
   },
   {
-    src: "/images/study-stations-printing.webp", // workstation pods — reused from hero
+    src: "/images/study-stations-printing.webp", // workstation pods — reused from hero (4:3)
     alt: "Workstation pods with ergonomic chairs by the window",
     caption: "Study stations",
-    ratio: "wide",
+    sub: "Your own desk, your own plug, your own quiet.",
+    ratio: "4 / 3",
   },
   {
-    src: "/images/logo-wall-mural.webp", // NotePads mural wall + booth seating
+    src: "/images/logo-wall-mural.webp", // NotePads mural wall + booth seating (4:3)
     alt: "NotePads Café mural wall with booth seating",
     caption: "Lounge corner & logo wall",
-    ratio: "square",
-    sizes: cardSizes(1.34), // 4:3 landscape source, cover-scaled to a square box
+    sub: "Soft seats under our logo. Slow chats welcome.",
+    ratio: "4 / 3",
   },
   {
-    src: "/images/laptops-daylight.webp", // guests with laptops, bright room
+    src: "/images/laptops-daylight.webp", // guests with laptops, bright room (2:3 portrait)
     alt: "Guests working on laptops in the bright café",
     caption: "Laptops, coffee, good company",
-    ratio: "tall",
+    sub: "Good company for a long work session.",
+    ratio: "2 / 3",
     pos: "20% 45%",
   },
   {
-    src: "/images/SDC-building-2nd-floor.webp", // NotePads sign on the 2nd-floor balcony, Easymart below
+    src: "/images/SDC-building-2nd-floor.webp", // NotePads sign on the 2nd-floor balcony (~2:1 source, boxed 3/2 to balance the pantry card)
     alt: "The SDC Building on Guzman–Jesena Street with the NotePads sign on its 2nd-floor balcony",
     caption: "SDC Building · 2nd floor · Guzman–Jesena St",
-    ratio: "square",
+    sub: "2nd floor, Guzman–Jesena Street, Mandurriao.",
+    ratio: "3 / 2",
     tape: true,
-    sizes: cardSizes(2), // ~2:1 landscape source, cover-scaled to a square box
   },
 ];
 
 // Indices of shots that have a photo — the lightbox only cycles through these.
 const VIEWABLE_INDICES = SHOTS.flatMap((s, i) => (s.src ? [i] : []));
+
+// Zero-CLS: the reserved photo box reads its ratio from this var (see
+// .place-shot-photo / .place-lb-photo in place.css).
+const arStyle = (ratio: string) => ({ "--ar": ratio }) as CSSProperties;
 
 // v4 copy: headline carries the accent word; lede stays warm (details facts).
 const LEDE =
@@ -110,6 +122,14 @@ const LEDE =
 // column count at each breakpoint (3 ≥980, 2 ≥640, 1 below).
 const CARD_SIZES = cardSizes(1);
 const LB_SIZES = "(min-width: 1100px) 900px, 92vw";
+
+// CTA banner — same directions URL the visit section's "Get directions"
+// uses (copied verbatim from visit.tsx; %2C segments pre-encoded there).
+const DIRECTIONS =
+  "https://www.google.com/maps/dir/?api=1&destination=Notepads+Cafe%2C+SDC+Building%2C+Guzman-Jesena+Street%2C+Mandurriao%2C+Iloilo+City";
+
+const CTA_BODY =
+  "Walk in anytime. We're on the 2nd floor of the SDC Building, Guzman–Jesena Street, Mandurriao. Look for the glowing sign.";
 
 const BUTTON_BOTH = { strokeWidth: 2.4 } as const;
 
@@ -230,10 +250,12 @@ export default function Place() {
       <div className="place-inner">
         <Reveal>
           <header className="place-head">
-            <SectionTab num="03" label="The Place" tone="mustard" />
-            <h2 id="place-title" className="place-title">
-              Make yourself at <Accent>home</Accent>
-            </h2>
+            <div className="place-head-col">
+              <SectionTab num="03" label="The Place" tone="mustard" />
+              <h2 id="place-title" className="place-title">
+                Make yourself at <Accent>home</Accent>
+              </h2>
+            </div>
             <p className="place-lede">{LEDE}</p>
           </header>
         </Reveal>
@@ -262,7 +284,7 @@ export default function Place() {
                 >
                   <figure className="place-shot">
                     {shot.tape && <span className="u-tape place-tape" aria-hidden="true" />}
-                    <div className={`place-shot-photo place-ar-${shot.ratio}`}>
+                    <div className="place-shot-photo" style={arStyle(shot.ratio)}>
                       <Image
                         src={shot.src}
                         alt={shot.alt}
@@ -273,29 +295,66 @@ export default function Place() {
                           objectPosition: shot.pos,
                         }}
                       />
+                      <span className="place-scrim" aria-hidden="true" />
+                      <span className="place-num" aria-hidden="true">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
                     </div>
-                    <figcaption className="place-shot-cap">{shot.caption}</figcaption>
+                    <figcaption className="place-shot-cap">
+                      <span className="place-cap">{shot.caption}</span>
+                      <span className="place-sub">{shot.sub}</span>
+                    </figcaption>
                   </figure>
                 </button>
               </li>
             ) : (
-              // No matching photo yet: a non-interactive empty frame keeps the
-              // masonry rhythm (same tilt/tape/caption, kraft box + note) and
-              // never opens the lightbox.
+              // No matching photo yet: a non-interactive kraft frame at the
+              // slot's exact ratio — "photo coming soon" top-left, the badge +
+              // caption/sub grouped bottom-left in --ink. Never opens the
+              // lightbox.
               <li key={shot.alt} className="place-item">
                 <figure
                   className={`place-shot place-shot-empty place-tilt-${i % 2 === 0 ? "l" : "r"}`}
                 >
                   {shot.tape && <span className="u-tape place-tape" aria-hidden="true" />}
-                  <div className={`place-shot-photo place-ar-${shot.ratio}`}>
-                    <span className="place-empty-note">photo coming soon</span>
+                  <div className="place-shot-photo" style={arStyle(shot.ratio)}>
+                    <span className="place-empty-note">Photo coming soon</span>
                   </div>
-                  <figcaption className="place-shot-cap">{shot.caption}</figcaption>
+                  <figcaption className="place-shot-cap place-shot-cap--empty">
+                    <span className="place-num place-num--empty" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="place-cap">{shot.caption}</span>
+                    <span className="place-sub">{shot.sub}</span>
+                  </figcaption>
                 </figure>
               </li>
             ),
           )}
           </ul>
+        </Reveal>
+
+        <Reveal delay={0.12}>
+          <div className="place-cta">
+            <h3 className="place-cta-title">
+              Found your favorite <span className="place-cta-accent">spot</span>?
+            </h3>
+            <p className="place-cta-body">{CTA_BODY}</p>
+            <div className="place-cta-btns">
+              <a
+                className="place-cta-btn place-cta-btn--solid"
+                href={DIRECTIONS}
+                target="_blank"
+                rel="noopener"
+              >
+                Get directions
+                <ArrowRight size={18} aria-hidden="true" {...BUTTON_BOTH} />
+              </a>
+              <a className="place-cta-btn place-cta-btn--ghost" href="#menu">
+                See the menu
+              </a>
+            </div>
+          </div>
         </Reveal>
       </div>
 
@@ -369,7 +428,10 @@ export default function Place() {
               className={dir ? `place-lb-fig place-lb-fig--${dir}` : "place-lb-fig"}
               key={open}
             >
-              <div className={`place-lb-photo place-ar-${SHOTS[VIEWABLE_INDICES[open]].ratio}`}>
+              <div
+                className="place-lb-photo"
+                style={arStyle(SHOTS[VIEWABLE_INDICES[open]].ratio)}
+              >
                 <Image
                   src={SHOTS[VIEWABLE_INDICES[open]].src!}
                   alt={SHOTS[VIEWABLE_INDICES[open]].alt}
@@ -382,7 +444,12 @@ export default function Place() {
                 />
               </div>
               <figcaption className="place-lb-cap">
-                {SHOTS[VIEWABLE_INDICES[open]].caption}
+                <span className="place-lb-cap-title">
+                  {SHOTS[VIEWABLE_INDICES[open]].caption}
+                </span>
+                <span className="place-lb-cap-sub">
+                  {SHOTS[VIEWABLE_INDICES[open]].sub}
+                </span>
               </figcaption>
             </figure>
           </div>

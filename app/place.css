@@ -1,8 +1,11 @@
-/* The Place (#place) — T7 gallery. 8 polaroid photo cards in a CSS
-   multi-column masonry (3 ≥980 / 2 ≥640 / 1 below) + client lightbox.
-   ≥980px the wall drifts organically (nth-child translateY offsets ≤10px).
-   Colors/fonts/shadows all via globals.css tokens. Captions + alt text
-   verbatim from docs/details.md §6. */
+/* The Place (#place) — T7 gallery, reference redesign 2026-11-09.
+   Two-column head ≥980 (SectionTab + H2 left / lede right). 8 numbered
+   full-photo cards in a CSS multi-column masonry (3 ≥980 / 2 ≥640 / 1
+   below): slim --paper frame, mustard 01–08 badge, caption + Gaegu
+   sub-line on an ink scrim, per-shot intrinsic --ar box (zero CLS).
+   --blue CTA banner after the wall. Client lightbox. Colors/fonts/shadows
+   all via globals.css tokens. Captions + alt text verbatim from
+   docs/details.md §6. */
 
 .place {
   padding: clamp(4rem, 10vw, 7.5rem) var(--gutter);
@@ -16,7 +19,20 @@
   gap: clamp(40px, 5vw, 64px);
 }
 
-/* --- title + lede --- */
+/* --- head: ONE column — SectionTab, title, lede beneath (user-pinned
+   2026-11-09: the reference's side-by-side head was rejected) --- */
+
+.place-head {
+  display: grid;
+  gap: 16px;
+}
+
+.place-head-col {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  align-content: start;
+}
 
 .place-title {
   margin: 0;
@@ -31,12 +47,11 @@
 
 .place-lede {
   margin: 0;
-  max-width: 38em;
+  max-width: 36em;
   font-family: var(--font-gaegu), "Comic Sans MS", cursive;
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   line-height: 1.6;
   color: var(--ink-soft);
-  margin-top: 16px;
 }
 
 /* --- masonry wall: CSS multi-column (documented call in the tsx) ---
@@ -64,7 +79,7 @@
   margin-bottom: 0;
 }
 
-/* --- taped-polaroid cards (same idiom as About, re-expressed locally) --- */
+/* --- numbered full-photo cards --- */
 
 .place-card {
   display: block;
@@ -75,11 +90,12 @@
   margin: 0;
   cursor: zoom-in;
   font: inherit;
-  text-align: center;
+  text-align: left;
 }
 
-/* tilt ≤ 1.5° total — alternating ±0.8°, clearly calmer than About's ±1.2°,
-   and hover never exceeds it (rotation settles to 0) */
+/* tilt ≤ 1.5° total — alternating ±0.8°, and hover never exceeds it
+   (rotation settles to 0). Hover transform lives on the inner .place-shot;
+   the ≥980 drift transform lives on the outer .place-item. */
 .place-tilt-l .place-shot {
   transform: rotate(-0.8deg);
 }
@@ -100,13 +116,14 @@
   box-shadow: var(--shadow-lift);
 }
 
+/* slim paper frame around the photo */
 .place-shot {
   position: relative;
   margin: 14px 0 0;
   background: var(--paper);
-  padding: 14px 14px 0;
+  padding: 10px;
   box-shadow: var(--shadow-soft);
-  border-radius: 3px;
+  border-radius: 14px;
 }
 
 .place-shot .place-tape {
@@ -122,52 +139,197 @@
   rotate: 2.5deg;
 }
 
-/* photo box = zero-CLS reserved aspect box (wide 3/2 · tall 2/3 · square 1/1) */
+/* photo box = zero-CLS reserved aspect box; --ar comes per-shot from the
+   tsx (each matches its photo's intrinsic dimensions) */
 .place-shot-photo {
   position: relative;
   width: 100%;
-  border-radius: 2px;
+  aspect-ratio: var(--ar, 3 / 2);
+  border-radius: 8px;
   overflow: hidden;
   background: var(--kraft);
   box-shadow: inset 0 0 0 1px #1e254014;
 }
 
-.place-ar-wide {
-  aspect-ratio: 3 / 2;
+/* ink scrim the caption sits on — transparent upper band, deep ink below */
+.place-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 40%, rgba(30, 37, 64, 0.82));
 }
 
-.place-ar-tall {
-  aspect-ratio: 2 / 3;
-}
-
-.place-ar-square {
-  aspect-ratio: 1 / 1;
-}
-
-/* Empty frame — a slot waiting for its photo: same kraft box, dashed inner
-   edge + handwritten note instead of an image. Non-interactive by markup. */
-.place-shot-empty .place-shot-photo {
+/* numbered circular badge, top-left over the photo */
+.place-num {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
   display: grid;
   place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--mustard);
+  color: var(--ink);
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow-soft);
+}
+
+/* caption + sub-line overlaid bottom-left on the scrim (figcaption stays a
+   direct child of the figure for valid HTML; it aligns with the photo box
+   via the frame's 10px padding) */
+.place-shot-cap {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  margin: 0;
+  padding: 12px 14px;
+  display: grid;
+  gap: 2px;
+  text-align: left;
+}
+
+.place-cap {
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.25;
+  color: var(--paper);
+}
+
+.place-sub {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--paper);
+  opacity: 0.92;
+}
+
+/* Empty slot — a kraft box at the slot's exact ratio, dashed inner edge,
+   "photo coming soon" top-left, badge + caption/sub grouped bottom-left
+   in --ink. Non-interactive by markup (no button). */
+.place-shot-empty .place-shot-photo {
   border: 1.5px dashed #1e254033;
 }
 
 .place-empty-note {
-  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
-  font-size: 1.02rem;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--ink-soft);
-  opacity: 0.75;
-  padding: 0 12px;
-  text-align: center;
 }
 
-.place-shot-cap {
-  padding: 12px 8px 14px;
-  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
-  font-size: 1.08rem;
-  line-height: 1.35;
+.place-shot-cap--empty {
   color: var(--ink);
-  text-align: center;
+}
+
+.place-shot-cap--empty .place-cap,
+.place-shot-cap--empty .place-sub {
+  color: var(--ink);
+  opacity: 1;
+}
+
+.place-num--empty {
+  position: static;
+  width: 32px;
+  height: 32px;
+  font-size: 0.85rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* --- CTA banner --- */
+
+.place-cta {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: clamp(32px, 5vw, 48px);
+  background: var(--blue);
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+}
+
+.place-cta-title {
+  margin: 0;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--paper);
+}
+
+/* simple color accent — large text only, no swash (ui_design.md §2.1 rule 4) */
+.place-cta-accent {
+  color: var(--mustard);
+}
+
+.place-cta-body {
+  margin: 0;
+  max-width: 36em;
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  line-height: 1.55;
+  color: var(--paper);
+  opacity: 0.92;
+}
+
+.place-cta-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.place-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    background-color 0.25s;
+}
+
+.place-cta-btn--solid {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.place-cta-btn--ghost {
+  border: 2px solid rgba(253, 250, 242, 0.7);
+  color: var(--paper);
+}
+
+.place-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+.place-cta-btn:focus-visible {
+  outline: 3px solid var(--mustard);
+  outline-offset: 3px;
 }
 
 /* --- lightbox --- */
@@ -261,10 +423,11 @@
   }
 }
 
-/* reserved box for the lightbox photo; aspect-ratio from the layout hint.
-   Height trimmed from 72svh so the paper frame + caption still fit; the
-   max-width also reserves room for the figure's own 20px padding so the
-   paper card can't spill past the overlay padding zone */
+/* reserved box for the lightbox photo; per-shot --ar from the tsx, same
+   mechanism as the wall cards. Height trimmed from 72svh so the paper
+   frame + caption still fit; the max-width also reserves room for the
+   figure's own 20px padding so the paper card can't spill past the
+   overlay padding zone */
 .place-lb-photo {
   position: relative;
   height: min(66svh, 132vw);
@@ -276,26 +439,25 @@
   box-shadow: inset 0 0 0 1px #1e254014;
 }
 
-.place-lb-photo.place-ar-wide {
-  --ar: 3 / 2;
-}
-
-.place-lb-photo.place-ar-tall {
-  --ar: 2 / 3;
-}
-
-.place-lb-photo.place-ar-square {
-  --ar: 1 / 1;
-}
-
 .place-lb-cap {
   max-width: 38em;
   padding: 10px 8px 14px;
-  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  display: grid;
+  gap: 2px;
+  font-family: var(--font-fredoka), system-ui, sans-serif;
+  font-weight: 700;
   font-size: 1.1rem;
   line-height: 1.4;
   color: var(--ink);
   text-align: center;
+}
+
+.place-lb-cap-sub {
+  font-family: var(--font-gaegu), "Comic Sans MS", cursive;
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  color: var(--ink-soft);
 }
 
 .place-lb-close,
@@ -392,13 +554,15 @@
 
   .place-card .place-shot,
   .place-lb-close,
-  .place-lb-nav {
+  .place-lb-nav,
+  .place-cta-btn {
     transition: none;
   }
 
   /* hover lift off too */
   .place-lb-close:hover,
-  .place-lb-nav:hover {
+  .place-lb-nav:hover,
+  .place-cta-btn:hover {
     transform: none;
   }
 }
