@@ -322,8 +322,9 @@
 }
 
 /* --- CTA card (closes the grid, bottom-right) -----------------------------
-    Deep warm navy --forest — the one dark moment in the section; gold accent
-    words are permitted here (§2.1 rule 4, goldtext variant). */
+    Cobalt --blue — same blue as the About package board and the Place CTA
+    banner; gold accent words are permitted here (§2.1 rule 4, goldtext
+    variant). */
 
 .rev-cta {
   display: flex;
@@ -332,7 +333,7 @@
   gap: 10px;
   padding: 28px 28px 30px;
   border-radius: 16px;
-  background: var(--forest);
+  background: var(--blue);
   box-shadow: var(--shadow-soft);
 }
 

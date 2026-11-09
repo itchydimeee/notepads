@@ -71,25 +71,26 @@ const POLAROIDS = [
     tape: true,
   },
   {
-    src: "/images/students-communal-table.webp",
-    alt: "Guests studying at the long communal table",
-    caption: "single space · 2 hrs of focus",
-    sub: "Long tables made for long sessions.",
+    src: "/images/caramel-iced-coffee.webp",
+    alt: "NotePads caramel iced coffee in a branded cup on the counter",
+    caption: "sweet fuel for focus",
+    sub: "Caramel iced coffee, brewed to keep you going.",
     ratio: "3 / 4",
   },
   {
-    src: "/images/drinks-tray-shop-view.webp",
-    alt: "Three NotePads drinks on a tray inside the café",
-    caption: "coffee that never rushes you",
-    sub: "Freshly brewed, never rushed.",
+    src: "/images/logo-wall.webp",
+    alt: "The NotePads mural logo wall with booth seating",
+    caption: "soft seats, bold walls",
+    sub: "Cozy booths under our logo wall.",
     ratio: "3 / 4",
+    pos: "90% 50%", // favor the logo lockup in the 3/4 crop
   },
   {
-    src: "/images/glowing-sign-night.webp",
-    alt: "The glowing NotePads Study Hub Café sign at dusk",
-    caption: "look for the glowing sign",
-    sub: "Follow the light up to the 2nd floor.",
-    ratio: "3 / 2",
+    src: "/images/staff-at-counter.webp",
+    alt: "The smiling NotePads staff behind the counter under the menu board",
+    caption: "the crew behind your cup",
+    sub: "Friendly faces at the counter, always.",
+    ratio: "3 / 4",
     tape: true,
   },
 ];
@@ -218,7 +219,7 @@ export default function About() {
                     alt={p.alt}
                     fill
                     sizes="(max-width: 1020px) 46vw, 280px"
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: "cover", objectPosition: p.pos }}
                   />
                   <span className="about-scrim" aria-hidden="true" />
                   <span className="about-num" aria-hidden="true">
