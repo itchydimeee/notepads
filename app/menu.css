@@ -671,13 +671,20 @@
    natural height, where the auto margin collapses to 0 — keeps 28px */
 .menu-cardfoot {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px 24px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
   margin-top: auto;
   padding-top: 18px;
   border-top: 2px dashed #1e254033;
+}
+
+.menu-footrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
 }
 
 .menu-footnote {
@@ -694,17 +701,11 @@
   text-align: left;
 }
 
-.menu-footside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-}
-
 .menu-progress-block {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-start;
   gap: 4px 14px;
 }
 
@@ -763,12 +764,6 @@
   box-shadow: none;
   cursor: default;
   pointer-events: none;
-}
-
-/* below-card progress block: only rendered onto the kraft at ≤640px */
-.menu-progress-below {
-  position: relative;
-  display: none;
 }
 
 /* fixed price columns: Hot / Iced 12oz / Iced 16oz line up across every
@@ -831,19 +826,6 @@
 }
 
 @media (max-width: 640px) {
-  /* "Chapter n of 8" + dots move below the card onto the kraft ground */
-  .menu-progress-below {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 4px 8px;
-  }
-
-  .menu-progress-block {
-    display: none;
-  }
-
   .menu-meta {
     white-space: normal;
   }

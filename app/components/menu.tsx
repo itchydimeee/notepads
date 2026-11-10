@@ -686,8 +686,7 @@ export default function Menu() {
     tabRefs.current[nextIdx]?.focus();
   };
 
-  // chapter progress block — rendered twice (card footer + below the card on
-  // ≤640px ground) and toggled purely with media queries, no extra state
+  // chapter progress block (card footer, second row)
   const progress = (className: string) => (
     <div className={className}>
       <p className="menu-progress">
@@ -812,11 +811,10 @@ export default function Menu() {
                               />
                             )}
                             <footer className="menu-cardfoot">
-                              <p className="menu-footnote">
-                                <MenuCheck /> {FOOTNOTE}
-                              </p>
-                              <div className="menu-footside">
-                                {progress("menu-progress-block")}
+                              <div className="menu-footrow">
+                                <p className="menu-footnote">
+                                  <MenuCheck /> {FOOTNOTE}
+                                </p>
                                 <div className="menu-pager-ctas">
                                   <button
                                     type="button"
@@ -839,6 +837,7 @@ export default function Menu() {
                                   </button>
                                 </div>
                               </div>
+                              {progress("menu-progress-block")}
                             </footer>
                           </div>
                         </article>
@@ -847,9 +846,6 @@ export default function Menu() {
                   );
                 })}
               </div>
-
-              {/* ≤640px only: progress moves below the card onto the kraft */}
-              {progress("menu-progress-below")}
             </div>
           </div>
         </Reveal>
