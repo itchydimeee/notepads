@@ -38,6 +38,10 @@
   margin: 0 auto;
   width: 100%;
   display: grid;
+  /* minmax(0, 1fr): the track may shrink below any child's min-content — a
+     wide descendant (e.g. the 9-dot progress row) must overflow-clip inside
+     the card, never widen the whole section past the viewport */
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(40px, 5vw, 64px);
 }
 
@@ -720,12 +724,18 @@
 
 .menu-dots {
   display: flex;
+  justify-content: center;
+  min-width: 0;
 }
 
 .menu-dot {
   display: grid;
   place-items: center;
-  width: 44px;
+  /* 36px basis + shrink: tighter spacing than the old fixed 44px on desktop,
+     and the 9 stops narrow evenly on phones so they always stay on ONE line
+     (floored at 18px so the 10px visual cores never collide) */
+  flex: 0 1 36px;
+  min-width: 18px;
   height: 44px;
   padding: 0;
   background: none;
@@ -844,6 +854,36 @@
       one-word-per-line descriptions — stack the list in a single column */
   .menu-also-list {
     grid-template-columns: 1fr;
+  }
+
+  /* 9 full-width dot stops no longer overflow (see .menu-dot flex shrink),
+      so the progress row stays one centered line — no per-width overrides */
+
+  /* pager: prev + Next always share ONE row — the Next button takes the
+      remaining width and its label shrinks (font + padding) instead of the
+      whole button wrapping below the round prev button */
+  .menu-pager-ctas {
+    flex-wrap: nowrap;
+    width: 100%;
+  }
+
+  .menu-pager-ctas .btn {
+    min-width: 0;
+  }
+
+  .menu-pager-ctas .menu-prev {
+    flex: 0 0 44px;
+  }
+
+  .menu-pager-ctas .btn-blue {
+    flex: 1 1 0;
+    font-size: 0.9rem;
+    padding: 0 10px;
+  }
+
+  /* "Chapter N of 9" + dots read as one centered block when they wrap */
+  .menu-progress-block {
+    justify-content: center;
   }
 
   /* long single prices ("₱119 (1 pc) / ₱199 (2 pc)") crush the name/meta
