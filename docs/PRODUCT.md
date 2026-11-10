@@ -50,7 +50,7 @@ A local cafe website that persuades visitors to visit (or reserve workshop spots
 
 - 35 real production photos (cafe interior, sign, counter, pantry, workshops poster) in public/images/ (extracted from production site).
 - 5 real five-star customer reviews with reviewer names (docs/details.md §8) — real testimonials, do not fabricate more.
-- Complete factual menu: 14 categories, ~90 priced items (docs/details.md §5).
+- Complete factual menu: 15 categories, ~100 priced items (docs/details.md §5).
 - 2026 workshop batch schedule with real dates, prices, and contact numbers (docs/details.md §7).
 - Precedent design system of the production site (docs/ui_design.md appendix) — evidence of the incumbent look, being replaced by the v2 warm redesign.
 

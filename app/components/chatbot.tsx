@@ -142,7 +142,7 @@ const AIRCON_TEXT = "Climate controlled — a calm, air-conditioned space made f
 const REVIEWS_TEXT = "All 5 reviews on our page are 5 stars ⭐ — hear from our customers on the page.";
 
 const RECO_TEXT =
-  "Customer favorites ✨\nSalted Caramel Latte — perfectly balanced, not too sweet (hot ₱120 · iced 12oz ₱129 · iced 16oz ₱149)\nLemon muffins & chocolate cheesecake\nAdobo rice meals\nSignature Chocolate";
+  "Customer favorites ✨\nSalted Caramel Latte — perfectly balanced, not too sweet (hot ₱120 · iced 12oz ₱129 · iced 16oz ₱149)\nLemon muffins & chocolate cheesecake\nAdobo rice meals\nSignature Hot Chocolate";
 
 const NOT_POSTED_TEXT =
   "That one isn't posted online — message us and we'll fill you in!";
@@ -167,6 +167,7 @@ const ALL_ROWS: Entry[] = TABS.flatMap((tab) =>
 // dish/keyword → menu GROUP (finer grained than tabs; checked in order — the
 // "iced tea"/"cheese sticks" style multi-words sit above their shorter rivals).
 const GROUP_KEYS: Array<[string, RegExp]> = [
+  ["Yang Chow Rice Bowl", /\b(yang ?chow)\b/],
   ["Noodle Notes", /\b(ramen|noodles?|chicken noodles)\b/],
   ["Cram Crunchy Bites", /\b(bites|fries|lumpia|nuggets?|cheese sticks?|sausage)\b/],
   ["Pandesal Almusal", /\b(pandesal|almusal)\b/],

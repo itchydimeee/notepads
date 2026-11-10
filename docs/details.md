@@ -122,7 +122,7 @@ Extra time: `₱40 per hour beyond the 2-hour stay`. A Premium Space package exi
 - Welcome page: `hello, scholar!` — study package summary
 - Back cover: `thank you!` / `where learning meets comfort`
 
-### Full Menu List (14 categories, prices in ₱)
+### Full Menu List (15 categories, prices in ₱)
 
 Items marked `*` are flagged "from our printed menu" (price confirmation requested).
 
@@ -144,7 +144,21 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 | Chorizo & Egg | rice meal | ₱199 | — |
 | Tocino & Egg | rice meal | ₱199 | — |
 
-#### 2. Cram Crunchy Bites
+#### 2. Yang Chow Rice Bowl
+
+| Item | Price |
+|---|---|
+| Plain | ₱99 |
+| Fish Fillet | ₱169 |
+| Cheese Sticks | ₱169 |
+| Lumpia | ₱149 |
+| Chicken Nuggets | ₱169 |
+| Embutido | ₱159 |
+| Chorizo | ₱169 |
+| Bacon | ₱179 |
+| Spam | ₱179 |
+
+#### 3. Cram Crunchy Bites
 
 | Item | Price |
 |---|---|
@@ -155,27 +169,28 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 | Chicken Nuggets (6 pcs) | ₱109 |
 | New York Frank Sausage & Fries | ₱189 |
 
-#### 3. Noodle Notes
+#### 4. Noodle Notes
 
 | Item | Price | Note |
 |---|---|---|
 | Korean Ramen | ₱139 * | Flavors: Spicy · Mild · Hot Beef · Cheesy · Cheesy Spicy |
 | Chicken Noodles | ₱89 * | — |
 
-#### 4. Professor's Pot
+#### 5. Professor's Pot
 
 | Item | Price | Description |
 |---|---|---|
 | Pancit Molo Soup (sharing) | ₱149 | Handmade dumplings filled with seasoned pork, in a light and savory broth. |
 
-#### 5. Brain Fuel Pasta
+#### 6. Brain Fuel Pasta
 
 | Item | Price | Description |
 |---|---|---|
 | Spaghetti Scarlatto | ₱189 | Spaghetti with hearty red tomato sauce, garlic, and ground meat. Best with garlic bread. |
 | Creamy Bacon Carbonara | ₱189 | Pasta in a light, creamy sauce with smoky bacon and parmesan. |
+| Aglio e Olio | ₱179 | — |
 
-#### 6. Brain Booster Sandwiches
+#### 7. Brain Booster Sandwiches
 
 | Item | Price | Description |
 |---|---|---|
@@ -183,9 +198,10 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 | Ham & Cheese Sandwich | ₱149 | Smoked ham and creamy cheese grilled between buttered bread. |
 | Bacon & Egg Sandwich | ₱149 | Freshly cracked egg, crispy bacon, and light mayo on toasted bread. |
 | Crunchy Chicken Burger | ₱129 | — |
+| Classic Cheeseburger | ₱189 | — |
 | Tuna Gourmet Sandwich | ₱179 | — |
 
-#### 7. Pandesal Almusal
+#### 8. Pandesal Almusal
 
 | Item | Price |
 |---|---|
@@ -194,7 +210,7 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 | Corned Beef & Egg | ₱109 |
 | Spam & Egg | ₱100 |
 
-#### 8. Coffee Based (hot / iced 12oz / iced 16oz)
+#### 9. Coffee Based (hot / iced 12oz / iced 16oz)
 
 | Item | Hot | 12oz | 16oz |
 |---|---|---|---|
@@ -209,36 +225,37 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 | Salted Caramel Latte | ₱120 | ₱129 | ₱149 |
 | Butterscotch Latte | ₱120 | ₱129 | ₱149 |
 | Hazelnut Latte | ₱120 | ₱129 | ₱149 |
-| Hazelnut Mocha Latte | ₱120 | ₱129 | ₱149 |
+| Hazelnut Mocha Latte | ₱130 | ₱139 | ₱159 |
 | Spanish Latte | ₱120 | ₱129 | ₱149 |
 | Caramel Macchiato | ₱120 | ₱129 | ₱149 |
 | Dirty Matcha Latte | ₱140 | ₱149 | ₱159 |
 | Strawberry Mocha | ₱130 | ₱139 | ₱159 |
 | Strawberry White Mocha | ₱130 | ₱139 | ₱159 |
-| Henny Strawberry Latte | — | ₱129 | — |
-| Gingerbread Latte (seasonal) | ₱130 | ₱139 | ₱159 |
+| Henny Strawberry Latte | — | ₱249 | ₱299 |
+| Affogato (ice cream with cookie and espresso) | — | ₱149 | — |
+| Gingerbread Latte | ₱130 | ₱139 | ₱159 |
 
-#### 9. Non-Coffee Based
+#### 10. Non-Coffee Based
 
 | Item | Hot | 12oz | 16oz |
 |---|---|---|---|
-| Flower Tea | ₱80 | ₱80 | — |
+| Flower Tea | ₱80 | ₱89 | ₱109 |
 | Green Tea | ₱80 | ₱89 | ₱109 |
-| Signature Chocolate | ₱100 | ₱110 | ₱129 |
+| Signature Hot Chocolate | ₱100 | ₱110 | ₱129 |
 | Strawberry Latte | ₱120 | ₱129 | ₱149 |
-| Strawberry Choco Latte | ₱130 | ₱139 | ₱159 |
+| Strawberry Choco Latte | ₱130 | ₱129 | ₱149 |
 | Strawberry Matcha Latte | ₱120 | ₱139 | ₱159 |
 | Green Matcha Latte | ₱130 | ₱139 | ₱159 |
 
-#### 10. Frappuccino
+#### 11. Frappuccino
 
 | Item | Price |
 |---|---|
-| Caramel Macchiato | ₱169 |
+| Caramel Macchiato | ₱159 |
 | Peppermint Mocha | ₱169 |
 | Mocha Hazelnut | ₱169 |
 
-#### 11. Fruit Based Soda
+#### 12. Fruit Based Soda
 
 | Item | Price |
 |---|---|
@@ -249,7 +266,7 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 | Grape | ₱90 |
 | Wintermelon | ₱110 |
 
-#### 12. Other Beverages
+#### 13. Other Beverages
 
 | Item | Price |
 |---|---|
@@ -258,10 +275,10 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 | Iced Tea | ₱70 * |
 | Pink Lychee | ₱70 * |
 | Cucumber Lemonade | ₱70 * |
-| Yakult | ₱20 * |
-| Bottled Water | ₱20 * |
+| Yakult | ₱30 * |
+| Bottled Water | ₱25 * |
 
-#### 13. Cookies (by arabella)
+#### 14. Cookies (by arabella)
 
 | Item | Price |
 |---|---|
@@ -273,7 +290,7 @@ Items marked `*` are flagged "from our printed menu" (price confirmation request
 | Oreo Bliss Bites (cookies & cream) | ₱125 * |
 | Assorted Cookies (5 pieces) | ₱400 * |
 
-#### 14. Brownies & Blondies (by arabella)
+#### 15. Brownies & Blondies (by arabella)
 
 | Item | Price |
 |---|---|
@@ -411,9 +428,9 @@ Lazy-loaded widget (mounts ~3.5s after load or first interaction).
 | charging | Charging stations free for everyone; blackout-friendly work spot; first 2 hours on the house |
 | rates | Up to 2 hours of stay free; ₱40/hour beyond; ask about the ₱350 Study Space package |
 | package | Full Study Space package list + Premium Space package (message us for details) |
-| menu | All 14 categories listed; "Tell me a category or dish and I'll share prices." |
+| menu | All 15 categories listed; "Tell me a category or dish and I'll share prices." |
 | category intents (12) | Full price list per menu category (same data as the menu); baked goods adds "Reviewers also love our lemon muffins and chocolate cheesecake" |
-| recommend | Customer favorites ✨ — Salted Caramel Latte ("perfectly balanced, not too sweet"), lemon muffins & chocolate cheesecake, adobo rice meals, Signature Chocolate; Salted Caramel Latte prices: hot ₱120 / iced 12oz ₱129 / iced 16oz ₱149 |
+| recommend | Customer favorites ✨ — Salted Caramel Latte ("perfectly balanced, not too sweet"), lemon muffins & chocolate cheesecake, adobo rice meals, Signature Hot Chocolate; Salted Caramel Latte prices: hot ₱120 / iced 12oz ₱129 / iced 16oz ₱149 |
 | saturday | Workshop listing with dates + reserve early note (or "The 2026 batch of sessions has wrapped up — message us for the next dates!") |
 | workshop-price / -included / -age / reserve / venue | Workshop prices, inclusions, ages 6–10, reservation methods, venue booking |
 | games | Yes — board games and chess 🎲♟️ |

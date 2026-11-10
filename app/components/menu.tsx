@@ -1,7 +1,7 @@
 "use client";
 
 // T6 — Menu (tabbed chapters). Client island: the tab list needs state.
-// All copy verbatim from docs/details.md §5 (14 datasets intact) and §4
+// All copy verbatim from docs/details.md §5 (15 datasets intact) and §4
 // lines 105–107 (₱350 Study Space Package). Strings kept as constants
 // outside JSX so ₱ / — / apostrophes survive untouched.
 import {
@@ -18,6 +18,7 @@ import {
   Check,
   ChevronDown,
   Coffee,
+  CookingPot,
   Croissant,
   CupSoda,
   Egg,
@@ -141,6 +142,26 @@ export const TABS: Tab[] = [
     ],
   },
   {
+    id: "yangchow",
+    label: "Yang Chow Rice Bowl",
+    groups: [
+      {
+        label: "Yang Chow Rice Bowl",
+        rows: [
+          { name: "Plain", price: "₱99" },
+          { name: "Fish Fillet", price: "₱169" },
+          { name: "Cheese Sticks", price: "₱169" },
+          { name: "Lumpia", price: "₱149" },
+          { name: "Chicken Nuggets", price: "₱169" },
+          { name: "Embutido", price: "₱159" },
+          { name: "Chorizo", price: "₱169" },
+          { name: "Bacon", price: "₱179" },
+          { name: "Spam", price: "₱179" },
+        ],
+      },
+    ],
+  },
+  {
     id: "bites",
     label: "Bites & Noodles",
     groups: [
@@ -212,6 +233,7 @@ export const TABS: Tab[] = [
             price: "₱189",
             desc: "Pasta in a light, creamy sauce with smoky bacon and parmesan.",
           },
+          { name: "Aglio e Olio", price: "₱179" },
         ],
       },
       {
@@ -233,6 +255,7 @@ export const TABS: Tab[] = [
             desc: "Freshly cracked egg, crispy bacon, and light mayo on toasted bread.",
           },
           { name: "Crunchy Chicken Burger", price: "₱129" },
+          { name: "Classic Cheeseburger", price: "₱189" },
           { name: "Tuna Gourmet Sandwich", price: "₱179" },
         ],
       },
@@ -257,14 +280,19 @@ export const TABS: Tab[] = [
           { name: "Salted Caramel Latte", prices: ["₱120", "₱129", "₱149"] },
           { name: "Butterscotch Latte", prices: ["₱120", "₱129", "₱149"] },
           { name: "Hazelnut Latte", prices: ["₱120", "₱129", "₱149"] },
-          { name: "Hazelnut Mocha Latte", prices: ["₱120", "₱129", "₱149"] },
+          { name: "Hazelnut Mocha Latte", prices: ["₱130", "₱139", "₱159"] },
           { name: "Spanish Latte", prices: ["₱120", "₱129", "₱149"] },
           { name: "Caramel Macchiato", prices: ["₱120", "₱129", "₱149"] },
           { name: "Dirty Matcha Latte", prices: ["₱140", "₱149", "₱159"] },
           { name: "Strawberry Mocha", prices: ["₱130", "₱139", "₱159"] },
           { name: "Strawberry White Mocha", prices: ["₱130", "₱139", "₱159"] },
-          { name: "Henny Strawberry Latte", prices: ["—", "₱129", "—"] },
-          { name: "Gingerbread Latte (seasonal)", prices: ["₱130", "₱139", "₱159"] },
+          { name: "Henny Strawberry Latte", prices: ["—", "₱249", "₱299"] },
+          {
+            name: "Affogato",
+            note: "ice cream with cookie and espresso",
+            prices: ["—", "₱149", "—"],
+          },
+          { name: "Gingerbread Latte", prices: ["₱130", "₱139", "₱159"] },
         ],
       },
     ],
@@ -277,11 +305,11 @@ export const TABS: Tab[] = [
         label: "Non-Coffee Based",
         cols: 3,
         rows: [
-          { name: "Flower Tea", prices: ["₱80", "₱80", "—"] },
+          { name: "Flower Tea", prices: ["₱80", "₱89", "₱109"] },
           { name: "Green Tea", prices: ["₱80", "₱89", "₱109"] },
-          { name: "Signature Chocolate", prices: ["₱100", "₱110", "₱129"] },
+          { name: "Signature Hot Chocolate", prices: ["₱100", "₱110", "₱129"] },
           { name: "Strawberry Latte", prices: ["₱120", "₱129", "₱149"] },
-          { name: "Strawberry Choco Latte", prices: ["₱130", "₱139", "₱159"] },
+          { name: "Strawberry Choco Latte", prices: ["₱130", "₱129", "₱149"] },
           { name: "Strawberry Matcha Latte", prices: ["₱120", "₱139", "₱159"] },
           { name: "Green Matcha Latte", prices: ["₱130", "₱139", "₱159"] },
         ],
@@ -289,7 +317,7 @@ export const TABS: Tab[] = [
       {
         label: "Frappuccino",
         rows: [
-          { name: "Caramel Macchiato", price: "₱169" },
+          { name: "Caramel Macchiato", price: "₱159" },
           { name: "Peppermint Mocha", price: "₱169" },
           { name: "Mocha Hazelnut", price: "₱169" },
         ],
@@ -319,8 +347,8 @@ export const TABS: Tab[] = [
           { name: "Iced Tea", price: "₱70", star: true },
           { name: "Pink Lychee", price: "₱70", star: true },
           { name: "Cucumber Lemonade", price: "₱70", star: true },
-          { name: "Yakult", price: "₱20", star: true },
-          { name: "Bottled Water", price: "₱20", star: true },
+          { name: "Yakult", price: "₱30", star: true },
+          { name: "Bottled Water", price: "₱25", star: true },
         ],
       },
     ],
@@ -411,6 +439,7 @@ function splitChapter(chapter: Tab): [Seg[], Seg[]] {
 // one garnish per chapter: icon coin, ≤2° tilt
 const CHAPTER_ICONS: Record<string, LucideIcon> = {
   rice: Soup,
+  yangchow: CookingPot,
   bites: Utensils,
   morning: Egg,
   pasta: Sandwich,
@@ -761,7 +790,7 @@ export default function Menu() {
                           <div className="menu-page">
                             <header className="menu-cardhead">
                               <div className="menu-headtext">
-                                <span className="menu-eyebrow">{`Chapter ${ti + 1} · ${t.label}`}</span>
+                                <span className="menu-eyebrow">{`Chapter ${ti + 1}`}</span>
                                 <h3 className="menu-chapter">{title}</h3>
                                 <span className="menu-deal">
                                   <Check size={14} strokeWidth={3} aria-hidden="true" /> {DEAL}
